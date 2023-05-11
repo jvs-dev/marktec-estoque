@@ -1,0 +1,27 @@
+.introduction__title {
+    font-weight: 600;
+    font-size: 40px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    background: linear-gradient(180deg, #0AD4B5 0%, rgba(10, 212, 182, 0.322) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
+}
+
+.title__h2 {
+    font-weight: 500;
+    font-size: 30px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--green);
+    margin: 0px 0px 20px 0px;
+    display: flex;
+    align-items: center;
+}
+.title__h2 ion-icon {
+    font-size: 40px;
+    color: var(--green);
+    margin-right: 10px;
+}

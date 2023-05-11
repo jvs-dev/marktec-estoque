@@ -1,0 +1,33 @@
+#main__introduction {
+    display: flex;
+    position: fixed;
+    justify-content: right;
+    align-items: end;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background: var(--green);
+    transition: 0.5s;
+    z-index: 100;
+}
+.introduction__bg {
+    background-color: var(--white);
+    width: 1000%;
+    height: 100%;
+    border-radius: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    padding: 40px;
+    border-radius: 0px;
+}
+
+.introduction__div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.introduction__p {
+    margin: 0px 0px 10px 0px;
+}

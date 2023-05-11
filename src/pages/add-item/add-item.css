@@ -1,0 +1,198 @@
+.main__addItem {
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(246.26deg, #0AD4B5 -17.89%, rgba(255, 255, 255, 0) 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 0px 40px 90px;
+}
+
+.main__form {
+    background: var(--white);
+    width: 90%;
+    height: 100%;
+    border-radius: 20px;
+    box-shadow: 0px 0px 3px var(--dark-gray);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    text-transform: capitalize;
+    letter-spacing: 1.3px;
+}
+
+.form__h2 {
+    color: var(--green);
+}
+
+.form__button {
+    background-color: var(--green);
+    border-radius: 100px;
+    font-size: 18px;
+    text-align: center;
+    text-transform: uppercase;
+    color: var(--white);
+    padding: 10px 40px;
+    border: 0px;
+    outline-width: 0px;
+    letter-spacing: 2px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.form__div {
+    background: #e7e7e799;
+    padding: 10px 0px;
+    border-radius: 10px;
+    width: 60%;
+    display: flex;
+    align-items: center;
+    margin: 5px 0px;
+    transition: 0.2s;
+}
+
+.form__div:has(> input:focus) {
+    background-color: var(--white);
+    color: var(--green);
+    border-bottom: solid 2px var(--green);
+    box-shadow: none;
+    border-radius: 0px;
+}
+
+.form__div .form__input:focus::placeholder {
+    color: var(--green);
+}
+
+.form__div .form__input:focus {
+    color: var(--green);
+}
+
+.form__icon {
+    font-size: 23px;
+    margin: 0px 10px;
+}
+
+.form__input {
+    background: transparent;
+    border: 0px;
+    outline-width: 0px;
+    width: 100%;
+    height: 100%;
+    font-size: 18px;
+}
+
+.form__input::placeholder {
+    color: var(--black);
+    opacity: 0.9;
+}
+
+.form__button.loading {
+    background: transparent;
+    padding: 5px 0px 0px 0px;
+    cursor: wait;
+}
+
+.form__select {
+    background: transparent;
+    color: var(--black);
+    border: 0px;
+    width: 100%;
+    height: 100%;
+    margin-right: 10px;
+    font-size: 18px;
+    font-weight: 400;
+    cursor: pointer;
+}
+
+.form__select:focus {
+    color: var(--green);
+    border: 0px;
+    outline-width: 0px;
+}
+
+.form__div:has(> select:focus) {
+    background-color: var(--white);
+    color: var(--green);
+    border-bottom: solid 2px var(--green);
+    box-shadow: none;
+    border-radius: 0px;
+}
+
+.form__div .form__select:focus {
+    color: var(--green);
+}
+
+#addField {
+    background-color: var(--green);
+    color: #fff;
+    padding: 10px;
+    border-radius: 100%;
+    cursor: pointer;
+    padding: 8px;
+    border: 0px;
+    margin: 0px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+#addField ion-icon {
+    font-size: 32px;
+}
+
+#addField span {
+    visibility: hidden;
+    position: absolute;
+    color: var(--white);
+    background-color: var(--green);
+    padding: 5px 10px;
+    border-radius: 10px;
+    transition-delay: 0s;
+    transform: translateX(100px);
+    opacity: 0;
+}
+
+#addField span::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 100%;
+    margin-top: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent var(--green) transparent transparent;
+}
+
+#addField:hover ion-icon {
+    animation: rotate linear 2s infinite;
+}
+
+@keyframes  rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+#addField:hover span {
+    visibility: visible;
+    transition-delay: 1s;
+    transition-duration: 0.5s;
+    transform: translateX(120px);
+    opacity: 0.8;
+}
+
+#helpAdd {
+    text-transform: none;
+    letter-spacing: normal;
+    font-size: 18px;
+    margin: 15px 0px 10px 0px;
+}

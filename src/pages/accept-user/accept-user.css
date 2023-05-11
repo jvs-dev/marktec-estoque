@@ -1,0 +1,83 @@
+.main__acceptUser {
+    width: 100vw;
+    min-height: 100vh;
+    background: linear-gradient(246.26deg, #0AD4B5 -17.89%, rgba(255, 255, 255, 0) 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 0px 40px 90px;
+}
+#awaitSection {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 40px;
+}
+
+.awaitSection__article {
+    width: 80%;
+    background: #fff;
+    padding: 10px 20px;
+    border-radius: 20px;
+    border: solid 2px var(--green);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 20px 0px;
+}
+
+.awaitSection__div {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.awaitSection__fullName {
+    margin: 0px;
+    font-size: 30px;
+    color: var(--green);
+    font-weight: 600;
+}
+
+.awaitSection__email {
+    margin: 0px;
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.awaitSection__work {
+    margin: 0px;
+    font-size: 18px;
+    font-weight: 400;
+}
+.awaitSection__reject {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f00;
+    color: #fff;
+    border-radius: 100%;
+    border: none;
+    height: 60px;
+    width: 60px;
+    font-size: 40px;
+    cursor: pointer;
+}
+
+.awaitSection__accept {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--green);
+    color: #fff;
+    border-radius: 100%;
+    border: none;
+    height: 60px;
+    width: 60px;
+    font-size: 40px;
+    cursor: pointer;
+    margin-left: 20px;
+    justify-self: right;
+}

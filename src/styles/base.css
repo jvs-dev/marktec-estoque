@@ -1,0 +1,19 @@
+:root {
+    --black: #1d1d1d;
+    --white: #f7fffe;
+    --green: #0AD4B5;
+    --orange: #FF9700;
+    --gray: #c3c8de;
+    --dark-gray: #414856;;
+}
+body {
+    margin: 0px;
+    font-family: 'Poppins', sans-serif;
+}
+.main__container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
