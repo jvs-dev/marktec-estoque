@@ -88,13 +88,8 @@ async function setDocsAccount(email, fullName, work) {
         photo: `https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png`,
         permission: false
     });
-    if (work == "Técnico") {
-        await setDoc(doc(db, "tecnics", `${fullName}`), {
-
-        });
-    }
     if (work == "Estoquista") {
-        await setDoc(doc(db, "Estoquista", `${fullName}`), {
+        await setDoc(doc(db, "estoquista", `${email}`), {
 
         });
     }

@@ -80,6 +80,7 @@ async function sucessAddItem(itemName, measure, quantyMin, inStock, itemImg) {
         inStock: `${inStock}`,
         measure: `${measure}`,
         quantyMin: `${quantyMin}`,
+        withTecnics: 0,
         active: true
     });
     helpAdd.style.color = "#0f0"

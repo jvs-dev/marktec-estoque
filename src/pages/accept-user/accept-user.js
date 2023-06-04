@@ -76,19 +76,34 @@ const unsubscribe = onSnapshot(q, (querySnapshot) => {
         acceptPermission.innerHTML = `<ion-icon name="checkmark-outline"></ion-icon>`
         acceptPermission.onclick = function () {
             acptPermission(doc.data().email)
+            if (doc.data().work == "Técnico") {
+                addTecnicItem(doc.data().email)
+            }
         }
     });
 });
 
 function loadItems() {
-    
+}
+loadItems()
+
+function addTecnicItem(email) {
+    let items = []
     let a = query(collection(db, "items"), where("active", "==", true));
     let unsubscribeItems = onSnapshot(a, (querySnapshot) => {
         querySnapshot.forEach((doc) => {
-            
-            
+            items.push({ itemName: doc.data().itemName, itemImg: doc.data().itemImg, tecnicStock: 0, measure: doc.data().measure })
         });
+        setDoc(doc(db, "tecnics", `${email}`), {
+            items: items,
+            permission: true
+        });
+        verifyData(email)
     });
-
 }
-loadItems()
+
+function verifyData(email) {
+    let unsub = onSnapshot(doc(db, "tecnics", `${email}`), (doc) => {
+        console.log("Current data: ", doc.data());
+    });
+}

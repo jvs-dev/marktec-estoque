@@ -70,7 +70,7 @@
     position: absolute;
     width: 100px;
     background-image: linear-gradient(180deg, var(--green), var(--green));
-    height: 190%;
+    height: 210%;
     animation: rotBGimg 3s linear infinite;
     transition: all 0.2s linear;
 }

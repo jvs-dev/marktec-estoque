@@ -6,6 +6,7 @@
 }
 .tecnicItensCard {
     width: 80%;
+    max-width: 850px;
     height: 140px;
     background: #fff;
     border: solid 2px var(--black);

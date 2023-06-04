@@ -14,7 +14,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.4/font/bootstrap-icons.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
-    <link rel="stylesheet" href="src/pages/index/index.css">
     <link rel="stylesheet" href="src/styles/base.css">
     <link rel="stylesheet" href="src/styles/reset.css">
     <link rel="stylesheet" href="src/components/loader/bar-loader.css">
@@ -23,7 +22,10 @@
     <link rel="stylesheet" href="src/components/navBar/nav.css">
     <link rel="stylesheet" href="src/components/alert/alert.css">
     <link rel="stylesheet" href="src/components/loader/cube-await.css">
-    <link rel="stylesheet" href="src/components/cards/tecnicItensCard.css">
+    <link rel="stylesheet" href="src/pages/add-item/add-item.css">
+    <link rel="stylesheet" href="src/components/loader/ball-spinner.css">
+    <link rel="stylesheet" href="src/pages/historic/historic.css">
+    <link rel="stylesheet" href="src/components/cards/historicCard.css">
     <link rel="stylesheet" href="src/components/scroll/scroll.css">
 </head>
 
@@ -47,53 +49,30 @@
                 <div class="text" data-text="Conectando..."></div>
             </div>
         </section>
-        <section class="main__home">
+        <section class="main__historic">
             <nav class="home__nav navBar">
                 <ul class="nav__ul">
-                    <a href="index.html" class="nav__a active">
-                        <li class="nav__li"><ion-icon name="home-outline" class="nav__icon active"></ion-icon></li>
-                    </a>
-                    <a href="stock.html" class="nav__a">
-                        <li class="nav__li"><i class="bi bi-box-seam nav__icon"></i></li>
-                    </a>
-                    <a href="tecnics.html" class="nav__a">
-                        <li class="nav__li"><i class="bi bi-car-front-fill nav__icon"></i></li>
-                    </a>
-                    <a href="historic.html" class="nav__a">
-                        <li class="nav__li"><i class="bi bi-clock-history nav__icon"></i></li>
-                    </a>
-                    <a id="transfer" href="transfer.html" class="nav__a">
-                        <li class="nav__li"><ion-icon name="swap-horizontal-outline" class="nav__icon"></ion-icon></li>
-                    </a>
-                    <a href="add-item.html" id="addItem" class="nav__a">
-                        <li class="nav__li"><i class="bi bi-plus-circle nav__icon"></i></li>
-                    </a>
-                    <a href="accept-user.html" id="acceptUser" class="nav__a">
-                        <li class="nav__li"><i class="bi bi-person-vcard nav__icon"></i></li>
-                    </a>
+                    <a href="index.html" class="nav__a"><li class="nav__li"><ion-icon name="home-outline" class="nav__icon"></ion-icon></li></a>
+                    <a href="stock.html" class="nav__a"><li class="nav__li"><i class="bi bi-box-seam nav__icon"></i></li></a>
+                    <a href="tecnics.html" class="nav__a"><li class="nav__li"><i class="bi bi-car-front-fill nav__icon"></i></li></a>
+                    <a href="historic.html" class="nav__a active"><li class="nav__li"><i class="bi bi-clock-history nav__icon active"></i></li></a>
+                    <a id="transfer" href="transfer.html" class="nav__a"><li class="nav__li"><ion-icon name="swap-horizontal-outline" class="nav__icon"></ion-icon></li></a>
+                    <a href="add-item.html" id="addItem" class="nav__a"><li class="nav__li"><i class="bi bi-plus-circle nav__icon"></i></li></a>
+                    <a href="accept-user.html" id="acceptUser" class="nav__a"><li class="nav__li"><i class="bi bi-person-vcard nav__icon"></i></li></a>
                     <p class="nav__p"><span id="timeLeft"></span></p>
                 </ul>
                 <div class="nav__line"></div>
             </nav>
-            <button type="button" id="signOut">Sair <ion-icon name="log-out-outline"></ion-icon></button>
-            <div class="home__photoContainer">
-                <img src="" alt="" id="userPhoto">
-                <button type="button" id="changePhotoBtn"><ion-icon name="camera"></ion-icon></button>
-            </div>
-            <p id="userFullName"></p>
-            <p id="userWork"></p>
-            <div class="home__dataChange">
-                <h2 class="dataChange__h2">Alterar Dados</h2>
-                <p class="dataChange__p" id="userEmail"></p>
-                <button class="dataChange__btn">Alterar Email</button>
-                <p class="dataChange__help" id="emailHelp"></p>
-                <p class="dataChange__p"><ion-icon name="lock-closed-outline"></ion-icon>********</p>
-                <button class="dataChange__btn" id="changePassword">Alterar Senha</button>
-                <p class="dataChange__help" id="passwordHelp"></p>
-            </div>
-            <h2 class="home__h2">Meu Estoque</h2>
-            <section id="myItems">
+            <section class="main__section">
+                <div class="section__search--div">
+                    <ion-icon name="search-outline" class="section__search--icon"></ion-icon>
+                    <input type="search" placeholder="Pesquisar" id="searchInput">
+                </div>
+                <section id="historicSection">
+
+                </section>
             </section>
+                
         </section>
     </main>
 
@@ -106,9 +85,9 @@
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <script src="src/components/offline/offline-loading.js"></script>
-    <script type="module" src="src/pages/index/index.js"></script>
     <script src="src/components/timeLeft/timeLeft.js"></script>
     <script type="module" src="src/components/verifyPermission/verifyPermission.js"></script>
+    <script type="module" src="src/pages/historic/historic.js"></script>
     <script type="module" src="src/components/navBar/nav.js"></script>
 </body>
 

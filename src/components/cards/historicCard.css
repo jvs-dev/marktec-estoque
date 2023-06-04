@@ -1,0 +1,89 @@
+.historicCard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80%;
+    padding: 20px;
+    border-radius: 20px;
+    border: solid 1px var(--black);
+    background: var(--white);
+    box-shadow: 0px 3px 10px #00000049;
+    margin: 20px 0px;
+}
+
+.historicCard__div--1 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.historicCard__div--2 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin: 20px 0px;
+    padding: 20px 0px;
+    border-top: solid 1px var(--black);
+    border-bottom: solid 1px var(--black);
+}
+
+.historicCard__div--3 {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: flex-start;
+    height: 100%;
+}
+
+.historicCard__name {
+    margin: 0px;
+    font-size: 20px;
+    font-weight: 500;
+    width: 265px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.historicCard__icon {
+    font-size: 25px;
+}
+
+.historicCard__itemImg {
+    height: 100px;
+    margin-right: 20px;
+}
+
+.historicCard__itemName {
+    font-size: 25px;
+    font-weight: 600;
+    color: var(--black);
+    margin: 0px;
+}
+
+.historicCard__measure {
+    margin: 0px;
+    font-size: 20px;
+    color: var(--black);
+    text-transform: capitalize;
+}
+
+.historicCard__status {
+    font-size: 20px;
+    margin: 0px;
+    text-transform: capitalize;
+}
+
+.historicCard__motive {
+    font-size: 18px;
+    margin: 0px;
+    font-weight: 600;
+}
+
+.historicCard__date {
+    font-size: 20px;
+    margin: 0px;
+
+}

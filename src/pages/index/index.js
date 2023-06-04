@@ -28,9 +28,9 @@ let addItem = document.getElementById("addItem")
 signOutBtn.onclick = function () {
     signOut(auth).then(() => {
         window.location.href = "login-signin.html"
-      }).catch((error) => {
+    }).catch((error) => {
         window.location.href = "login-signin.html"
-      });
+    });
 }
 
 
@@ -52,6 +52,14 @@ function loadData() {
                     acceptUser.style.display = "none"
                     addItem.style.display = "none"
                 }
+                if (doc.data().work == "Técnico") {
+                    loadTecnicItems(doc.data().email)
+                } else {
+                    let home_h2 = document.querySelector(".home__h2")
+                    let myItems = document.getElementById("myItems")
+                    home_h2.style.display = "none"
+                    myItems.style.display = "none"
+                }
             });
 
             changePassword.onclick = function () {
@@ -66,7 +74,7 @@ function loadData() {
                         const errorMessage = error.message;
                         // ..
                     });
-            
+
             }
         }
     });
@@ -74,3 +82,22 @@ function loadData() {
 
 loadData()
 
+function loadTecnicItems(email) {
+    let unsub = onSnapshot(doc(db, `tecnics`, `${email}`), (doc) => {
+        doc.data().items.forEach(Element => {
+            let myItems = document.getElementById("myItems")
+            let article = document.createElement("article")
+            myItems.insertAdjacentElement("beforeend", article)
+            article.classList.add("tecnicItensCard")
+            article.innerHTML = `
+            <img class="tecnicItensCard__img" src="${Element.itemImg}" alt="Imagem do ${Element.itemName}">
+            <div class="tecnicItensCard__div">
+                <p class="tecnicItensCard__p">${Element.itemName}</p>
+                <span class="tecnicItensCard__span">Possui: ${Element.tecnicStock} ${Element.measure}</span>
+            </div>`
+            if (Element.tecnicStock > 0) {
+                article.style.order = "-1"
+            }
+        });
+    });
+}

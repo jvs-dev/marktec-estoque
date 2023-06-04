@@ -1,0 +1,115 @@
+.requestCard {
+    background: var(--white);
+    border: solid 1px var(--black);
+    border-radius: 20px;
+    box-shadow: 0px 6px 10px #0000003d;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    width: 80%;
+    margin: 20px 0px;
+}
+.requestCard__div--content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.requestCard__tecnic {
+    color: var(--black);
+    font-size: 25px;
+    text-transform: capitalize;
+    width: 100%;
+}
+.requestCard__item {
+    color: var(--black);
+    font-size: 23px;
+    color: var(--orange);
+    width: 100%;
+}
+.requestCard__quanty {
+    width: 100%;
+}
+.requestCard__div--1 {
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+    font-weight: 500;
+    margin-top: 10px;
+    width: 100%;
+}
+
+.requestCard__img {
+    width: 100px;
+    margin-right: 20px;
+}
+.requestCard__motive {
+    font-size: 20px;
+    margin: 0px 0px 10px 0px;
+}
+.requestCard__date {
+    font-size: 20px;
+    margin: 0px 0px 10px 20px;
+}
+.requestCard__accept {
+    background: #0f0;
+    border: solid 1px var(--black);
+    outline-width: 0px;
+    margin: 0px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 100%;
+    padding: 10px;
+    font-size: 35px;
+}
+.requestCard__recuse {
+    background: #f00;
+    border: solid 1px var(--black);
+    outline-width: 0px;
+    margin: 0px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 100%;
+    padding: 10px;
+    font-size: 35px;
+}
+.requestCard__div--buttons {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    height: 100%;
+    margin-left: 20px;
+}
+
+.requestCard__div--3 {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    width: 100%;
+}
+
+/**/
+
+.itemSelectSection__card {
+    width: 80%;
+    max-width: 700px;
+    border: solid 1px var(--black);
+    padding: 20px;
+    background: #fff;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin: 20px 0px;
+}
+.itemSelectSection__img {
+    height: 120px;
+    margin-right: 20px;
+}
+.itemSelectSection__p {
+    font-size: 25px;
+    font-weight: 600;
+    margin: 0px;
+}

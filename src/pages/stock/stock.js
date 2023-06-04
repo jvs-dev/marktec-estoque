@@ -9,22 +9,12 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, onAuthStateChanged, sendPasswordResetEmail, signOut } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, doc, setDoc, onSnapshot, query, where, updateDoc } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, doc, setDoc, onSnapshot, query, where } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
 const db = getFirestore(app);
 const auth = getAuth();
-let acceptUser = document.getElementById("acceptUser")
 let transfer = document.getElementById("transfer")
-const q = query(collection(db, "users"), where("permission", "==", false));
-
-
-const unsubscribe = onSnapshot(q, (querySnapshot) => {
-    acceptUser.classList.remove("awaiting")
-    querySnapshot.forEach((doc) => {
-        if (doc.data().permission == false) {
-            acceptUser.classList.add("awaiting")
-        }
-    })
-})
+let acceptUser = document.getElementById("acceptUser")
+let addItem = document.getElementById("addItem")
 
 function loadData() {
     onAuthStateChanged(auth, (user) => {
@@ -39,22 +29,40 @@ function loadData() {
                     transfer.style.display = "flex"
                     acceptUser.style.display = "none"
                     addItem.style.display = "none"
-                    loadRequests(user.email)
                 }
             });
         }
     });
 }
 
-function loadRequests(actualUser) {
-    let q = query(collection(db, "transfers"), where("reciverEmail", "==", `${actualUser}`));
+loadData()
+
+async function loadItems() {
+    let q = query(collection(db, "items"), where("active", "==", true));
     let unsubscribe = onSnapshot(q, (querySnapshot) => {
-        querySnapshot.forEach((doc) => { 
-            if (doc.data().status == "pendente") {
-                transfer.classList.add("awaiting")   
+        querySnapshot.forEach((doc) => {
+            let stockSection = document.getElementById("stockSection")
+            let article = document.createElement("article")
+            stockSection.insertAdjacentElement("beforeend", article)
+            article.classList.add("card__stock")
+            if (Number(doc.data().inStock) + doc.data().withTecnics < doc.data().quantyMin) {
+                article.classList.add("lowStock")
             }
-        })
-    })
+            article.innerHTML = `
+            <img src="${doc.data().itemImg}" alt="" class="card__img">
+            <div class="card__div--1">
+                <h2 class="card__h2">${doc.data().itemName}</h2>
+                <div class="card__div--2">
+                    <span class="card__span">Em estoque: ${Number(doc.data().inStock)}</span>
+                    <span class="card__span">Com técnicos: ${doc.data().withTecnics}</span>
+                    <span class="card__span">Total: ${Number(doc.data().inStock) + doc.data().withTecnics}</span>
+                </div>
+            </div>`
+        });
+    });
+
 }
 
-loadData()
+loadItems()
+
+

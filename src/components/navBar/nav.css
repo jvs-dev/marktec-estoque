@@ -71,19 +71,6 @@
     margin: 0px 0px 20px 0px;
 }
 
-#transfer {
-    width: 90%;
-    margin: 10px 0px;
-    padding: 10px 0px;
-    border-left: solid 4px transparent;
-    border-right: solid 4px transparent;
-    transition: 0.2s;
-    cursor: pointer;
-}
-
-#transfer:hover {
-    border-left: solid 4px var(--green);
-}
 
 .nav__a.awaiting::after {
     content: '';
