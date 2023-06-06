@@ -108,6 +108,8 @@ body.displayCenter {
     padding: 0px 10px 3px 10px;
     font-size: 20px;
     width: 80%;
+    overflow: hidden;
+    white-space: nowrap;
     text-overflow: ellipsis;
 }
 .dataChange__p ion-icon {
@@ -141,4 +143,23 @@ body.displayCenter {
     margin: 10px 0px 0px 0px;
     text-align: center;
     color: var(--black) !important;
+}
+@media only screen and (max-width: 500px) {
+    .main__home {
+        padding: 60px 20px 20px 20px;
+    }
+    #userFullName {
+        text-align: center;
+        font-size: 30px;
+    }
+    #signOut {
+        margin: 20px 20px 0px 0px;
+    }
+    .home__dataChange {
+        width: 100%;
+        padding: 20px;
+    }
+    .dataChange__p {
+        width: 90%;
+    }
 }

@@ -4,8 +4,22 @@ let signin_section = document.getElementById("signin_section")
 let swich_section = document.getElementById("swich-section")
 let swich__h2 = document.querySelector(".swich__h2")
 let swich__p = document.querySelector(".swich__p")
+let signInSpan = document.getElementById("signInSpan")
+let loginSpan = document.getElementById("loginSpan")
+
+loginSpan.onclick = function () {
+    swichWindows()
+}
+
+signInSpan.onclick = function () {
+    swichWindows()
+}
 
 swich.onclick = function () {
+    swichWindows()
+}
+
+function swichWindows() {
     if (signin_section.style.display == "flex") {
         login_section.style.display = "flex"
         signin_section.style.display = "none"

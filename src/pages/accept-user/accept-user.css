@@ -81,3 +81,15 @@
     margin-left: 20px;
     justify-self: right;
 }
+
+@media only screen and (max-width: 500px) {
+    .main__acceptUser {
+        padding: 40px 0px;
+    }
+    #awaitSection {
+        margin-top: 20px;
+    }
+    .awaitSection__article {
+        flex-direction: column;
+    }
+}

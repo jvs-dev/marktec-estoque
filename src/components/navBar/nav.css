@@ -84,3 +84,9 @@
 .nav__a.active.awaiting::after {
     background: var(--green);
 }
+
+@media only screen and (max-width: 500px) {
+    .navBar {
+        display: none;
+    }
+}

@@ -25,6 +25,7 @@
     <link rel="stylesheet" href="src/components/loader/cube-await.css">
     <link rel="stylesheet" href="src/components/cards/tecnicItensCard.css">
     <link rel="stylesheet" href="src/components/scroll/scroll.css">
+    <link rel="stylesheet" href="src/components/navMobile/navMobile.css">
 </head>
 
 <body>
@@ -48,6 +49,15 @@
             </div>
         </section>
         <section class="main__home">
+            <nav id="navMobile">
+                <span id="timeLeftMobile"></span>
+                <ion-icon class="openCloseNav" id="openCloseNav" name="add-outline"></ion-icon>
+                <a href="transfer.html" class="navMobile__a" id="transferMobile"><ion-icon name="swap-horizontal-outline" class="navMobile__icon"></ion-icon></a>
+                <a href="historic.html" class="navMobile__a"><i class="bi bi-clock-history navMobile__icon"></i></a>
+                <a href="tecnics.html" class="navMobile__a"><i class="bi bi-car-front-fill navMobile__icon"></i></a>
+                <a href="stock.html" class="navMobile__a"><i class="bi bi-box-seam navMobile__icon"></i></a>
+                <a href="index.html" class="navMobile__a active"><ion-icon name="home-outline" class="navMobile__icon active"></ion-icon></a>
+            </nav>
             <nav class="home__nav navBar">
                 <ul class="nav__ul">
                     <a href="index.html" class="nav__a active">
@@ -107,9 +117,10 @@
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <script src="src/components/offline/offline-loading.js"></script>
     <script type="module" src="src/pages/index/index.js"></script>
-    <script src="src/components/timeLeft/timeLeft.js"></script>
+    <script type="module" src="src/components/timeLeft/timeLeft.js"></script>
     <script type="module" src="src/components/verifyPermission/verifyPermission.js"></script>
     <script type="module" src="src/components/navBar/nav.js"></script>
+    <script type="module" src="src/components/navMobile/navMobile.js"></script>
 </body>
 
 </html>

@@ -1,0 +1,99 @@
+#navMobile {
+    background: var(--black);
+    width: 50px;
+    height: 50px;
+    border-radius: 100px;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    margin: 0px 20px 20px 0px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: column-reverse;
+    padding: 15px 0px 0px 0px;
+    overflow: hidden;
+    transition: 0.5s;
+    visibility: hidden;
+}
+.openCloseNav {
+    color: var(--white);
+    font-size: 20px;
+    transition: 0.5s;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 30px;
+    padding: 10px 0px;
+    cursor: pointer;
+    order: -1;
+}
+.navMobile__a {
+    text-decoration: none;
+    color: var(--white);
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 25px;
+    border-right: solid 2px transparent;
+    border-left: solid 2px transparent;
+    padding: 5px 0px;
+    cursor: pointer;
+}
+.navMobile__a.active {
+    border-right: solid 2px var(--green);
+    color: var(--green);
+}
+#navMobile.active {
+    height: 340px;
+}
+#navMobile.active .openCloseNav {
+    rotate: 135deg;
+}
+
+.navMobile__a.awaiting .navMobile__icon {
+    border-bottom: solid 1px var(--orange);
+}
+
+.navMobile__a.awaiting::after {
+    content: '';
+    height: 15px;
+    width: 15px;
+    border-radius: 100%;
+    background: var(--orange);
+    position: absolute;
+    transform: translate(13px, -10px);
+}
+.navMobile__a.active.awaiting::after {
+    background: var(--green);
+}
+#navMobile.userAdmin.active {
+    height: 360px;
+}
+
+#timeLeftMobile {
+    position: fixed;
+    color: var(--white);
+    margin-right: 40px;
+    transform: translate(-10px, 0px);
+    font-size: 20px;
+    font-weight: 600;
+    background: var(--black);
+    padding: 5px 24px;
+    border-radius: 20px 0px 0px 20px;
+    opacity: 0;
+    transition: 0.5s;
+    cursor: default;
+}
+
+#navMobile.active #timeLeftMobile {
+    transform: translate(-33px, 0px);
+    opacity: 1;
+}
+@media only screen and (max-width: 500px) {
+    #navMobile {
+        visibility: visible;
+    }
+}
