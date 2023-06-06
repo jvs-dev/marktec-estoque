@@ -68,6 +68,7 @@ const unsubscribe = onSnapshot(q, (querySnapshot) => {
         let acceptPermission = document.createElement("button")
         newArticle.insertAdjacentElement("beforeend", div)
         div.style.display = "flex"
+        div.classList.add("acceptRejectDiv")
         div.insertAdjacentElement("beforeend", rejectPermission)
         div.insertAdjacentElement("beforeend", acceptPermission)
         rejectPermission.classList.add("awaitSection__reject")

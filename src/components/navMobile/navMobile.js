@@ -43,6 +43,12 @@ function loadData() {
                     addItemsBtn.href="add-item.html"
                     navMobile.classList.add("userAdmin")
                     transferMobile.style.display = "none"
+                    if (window.location.href.indexOf("accept-user") !== -1) {
+                        acceptUserBtn.classList.add("active")
+                    }
+                    if (window.location.href.indexOf("add-item") !== -1) {
+                        addItemsBtn.classList.add("active")
+                    }
                 } else {
                     transferMobile.style.display = "flex"
 

@@ -47,7 +47,7 @@ function loadRequests() {
         querySnapshot.forEach((doc) => {
             let historicSection = document.getElementById("historicSection")
             let article = document.createElement("article")
-            historicSection.insertAdjacentElement("beforeend", article)
+            historicSection.insertAdjacentElement("afterbegin", article)
             article.classList.add("historicCard")
             article.innerHTML = `
                 <div class="historicCard__div--1">

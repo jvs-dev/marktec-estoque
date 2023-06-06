@@ -69,6 +69,12 @@
 .navMobile__a.active.awaiting::after {
     background: var(--green);
 }
+
+.navMobile__a.active.awaiting .navMobile__icon {
+    border-bottom: solid 1px var(--green);
+}
+
+
 #navMobile.userAdmin.active {
     height: 360px;
 }

@@ -91,5 +91,33 @@
     }
     .awaitSection__article {
         flex-direction: column;
+        width: 90%;
+    }
+    .awaitSection__reject {
+        height: 40px;
+        width: 40px;
+    }
+    .awaitSection__accept {
+        height: 40px;
+        width: 40px;
+    }
+    .acceptRejectDiv {
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        width: 100%;
+        margin-top: 10px;
+    }
+    .awaitSection__work {
+        align-self: center;
+    }
+    .awaitSection__fullName {
+        font-size: 20px;
+        text-align: center;
+        align-self: center;
+    }
+    .awaitSection__email {
+        align-self: center;
+        font-size: 18px
     }
 }
