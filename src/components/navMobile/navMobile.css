@@ -83,7 +83,7 @@
     position: fixed;
     color: var(--white);
     margin-right: 40px;
-    transform: translate(-10px, 0px);
+    transform: translate(-21px, -1px);
     font-size: 20px;
     font-weight: 600;
     background: var(--black);

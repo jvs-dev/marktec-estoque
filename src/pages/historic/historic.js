@@ -62,7 +62,7 @@ function loadRequests() {
                         <p class="historicCard__measure">Transferido: ${doc.data().quanty} ${doc.data().measure}</p>
                     </div>
                 </div>
-                <div class="historicCard__div--1">
+                <div class="historicCard__div--4">
                     <p class="historicCard__status" style="color: ${returnColor(doc.data().status)};">${doc.data().status}</p>
                     <p class="historicCard__motive">${doc.data().motive}</p>
                     <p class="historicCard__date">${doc.data().date}</p>
