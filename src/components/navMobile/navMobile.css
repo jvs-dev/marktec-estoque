@@ -92,11 +92,13 @@
     opacity: 0;
     transition: 0.5s;
     cursor: default;
+    visibility: hidden;
 }
 
 #navMobile.active #timeLeftMobile {
     transform: translate(-33px, 0px);
     opacity: 1;
+    visibility: visible;
 }
 @media only screen and (max-width: 500px) {
     #navMobile {
