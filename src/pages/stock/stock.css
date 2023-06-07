@@ -47,3 +47,14 @@
     align-items: center;
     margin-top: 40px;
 }
+@media only screen and (max-width: 500px) {
+    .main__stock {
+        padding: 40px 0px;
+    }
+    .section__search--div {
+        width: 80vw;
+    }
+    #stockSection {
+        margin-top: 20px;
+    }
+}

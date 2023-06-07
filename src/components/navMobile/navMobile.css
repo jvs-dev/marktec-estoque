@@ -103,5 +103,6 @@
 @media only screen and (max-width: 500px) {
     #navMobile {
         visibility: visible;
+        z-index: 3;
     }
 }
