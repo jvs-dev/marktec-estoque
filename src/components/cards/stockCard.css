@@ -75,6 +75,7 @@
     }
     .card__stock .card__div--2 {
         width: 100%;
+        flex-direction: column;
     }
     .card__stock {
         flex-direction: column;

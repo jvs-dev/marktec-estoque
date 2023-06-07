@@ -83,12 +83,13 @@
     position: fixed;
     color: var(--white);
     margin-right: 40px;
-    transform: translate(-21px, -1px);
+    left: 0;
+    transform: translate(-100px, 0px);
     font-size: 20px;
     font-weight: 600;
     background: var(--black);
     padding: 5px 24px;
-    border-radius: 20px 0px 0px 20px;
+    border-radius: 0px 20px 20px 0px;
     opacity: 0;
     transition: 0.5s;
     cursor: default;
@@ -96,7 +97,7 @@
 }
 
 #navMobile.active #timeLeftMobile {
-    transform: translate(-33px, 0px);
+    transform: translate(0px, 0px);
     opacity: 1;
     visibility: visible;
 }
