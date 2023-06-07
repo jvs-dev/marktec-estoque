@@ -322,4 +322,7 @@
     #signin_section {
         width: 100vw;
     }
+    .section__icon {
+        font-size: 30px;
+    }
 }

@@ -2,6 +2,7 @@ body {
     overflow-x: hidden;
     overflow-y: auto;
 }
+
 body.displayCenter {
     display: flex;
     align-items: center;
@@ -45,6 +46,7 @@ body.displayCenter {
     border: solid 2px var(--black);
     cursor: pointer;
 }
+
 #changePhotoBtn ion-icon {
     font-size: 35px;
     color: var(--white);
@@ -66,6 +68,7 @@ body.displayCenter {
     align-items: center;
     transition: 0.5s;
 }
+
 #signOut ion-icon {
     margin-left: 5px;
     font-size: 30px;
@@ -81,10 +84,11 @@ body.displayCenter {
     font-size: 30px;
     margin: 20px 0px 0px 0px;
 }
+
 #userWork {
     color: var(--black);
     font-size: 22px;
-    
+
 }
 
 .home__h2 {
@@ -100,6 +104,7 @@ body.displayCenter {
     text-align: center;
     margin: 0px 0px 20px 0px;
 }
+
 .dataChange__p {
     color: var(--green);
     display: flex;
@@ -112,10 +117,12 @@ body.displayCenter {
     white-space: nowrap;
     text-overflow: ellipsis;
 }
+
 .dataChange__p ion-icon {
     font-size: 30px;
     margin-right: 10px;
 }
+
 .home__dataChange {
     background: #fff;
     border-radius: 20px;
@@ -126,6 +133,7 @@ body.displayCenter {
     flex-direction: column;
 
 }
+
 .dataChange__btn {
     color: #fff;
     background-color: var(--green);
@@ -144,22 +152,37 @@ body.displayCenter {
     text-align: center;
     color: var(--black) !important;
 }
+
 @media only screen and (max-width: 500px) {
     .main__home {
         padding: 60px 20px 20px 20px;
     }
+
     #userFullName {
         text-align: center;
         font-size: 30px;
-    }
-    #signOut {
-        margin: 20px 20px 0px 0px;
     }
     .home__dataChange {
         width: 100%;
         padding: 20px;
     }
+
     .dataChange__p {
         width: 90%;
+    }
+
+    #userPhoto {
+        height: 150px;
+        width: 150px;
+    }
+
+    #changePhotoBtn {
+        height: 50px;
+        width: 50px;
+    }
+
+    #signOut {
+        margin: 20px 20px 0px 0px;
+        font-size: 20px;
     }
 }

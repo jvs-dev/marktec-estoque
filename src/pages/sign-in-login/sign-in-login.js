@@ -23,7 +23,32 @@ let helpLogin = document.getElementById("helpLogin")
 let resetEmailBtn = document.getElementById("resetEmail")
 let closeResetEmailSection = document.getElementById("closeResetEmailSection")
 let resetEmailSection = document.getElementById("resetEmailSection")
+let showLogin = document.getElementById("showLogin")
+let showSignIn = document.getElementById("showSignIn")
 
+showSignIn.onclick = function () {
+    let password = document.getElementById("password")
+    if (password.type != "text") {
+        password.type = "text"
+        showSignIn.name = "eye-off-outline"
+    } else {
+        password.type = "password"
+        showSignIn.name = "eye-outline"
+    }
+
+}
+
+showLogin.onclick = function () {
+    let password = document.getElementById("loginPassword")
+    if (password.type != "text") {
+        password.type = "text"
+        showLogin.name = "eye-off-outline"
+    } else {
+        password.type = "password"
+        showLogin.name = "eye-outline"
+    }
+
+}
 
 
 createAccount.onclick = function () {
