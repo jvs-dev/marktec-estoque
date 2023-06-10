@@ -1,7 +1,7 @@
 .card__stock {
     display: flex;
     align-items: center;
-    width: 100%;
+    width: 90%;
     padding: 20px;
     background: var(--white);
     border-radius: 20px;
@@ -35,7 +35,7 @@
 }
 .card__stock .card__h2 {
     color: var(--black);
-    font-size: 30px;
+    font-size: 22px;
     font-weight: 600;
 }
 

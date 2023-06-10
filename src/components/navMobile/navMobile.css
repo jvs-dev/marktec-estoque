@@ -79,6 +79,10 @@
     height: 360px;
 }
 
+#userStock.userStock.active {
+    height: 360px;
+}
+
 #timeLeftMobile {
     position: fixed;
     color: var(--white);

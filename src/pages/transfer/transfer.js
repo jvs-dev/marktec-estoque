@@ -101,17 +101,12 @@ function loadUsers() {
                 if (doc.data().admin != true) {
                     let option = document.createElement("option")
                     person.insertAdjacentElement("beforeend", option)
-                    option.textContent = doc.data().fullName
+                    option.textContent = `${doc.data().fullName} (${doc.data().work})`
                     option.value = doc.data().email
                 }
             }
         });
     });
-}
-
-function checkTecnicQuanty(email, item) {
-
-
 }
 
 sendRequest.onclick = function () {

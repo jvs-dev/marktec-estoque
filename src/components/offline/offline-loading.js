@@ -17,7 +17,7 @@ function disable() {
         setTimeout(() => {
             offline_window.style.display = "none"
         }, 500);
-    }, 3000);
+    }, 1000);
 }
 
 

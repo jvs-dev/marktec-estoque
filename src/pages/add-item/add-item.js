@@ -9,7 +9,7 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, onAuthStateChanged, sendPasswordResetEmail, signOut } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, doc, setDoc, onSnapshot, query, where, updateDoc } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, doc, setDoc, onSnapshot, query, where, updateDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
 const db = getFirestore(app);
 const auth = getAuth();
 let transfer = document.getElementById("transfer")
@@ -31,9 +31,14 @@ function loadData() {
                     acceptUser.style.display = "flex"
                     addItem.style.display = "flex"
                 } else {
-                    let body = document.querySelector("body")
-                    body.innerHTML = ""
-                    window.location.href = "index.html"
+                    if (doc.data().work == "Estoquista") {
+                        transfer.style.display = "flex"
+                        addItem.style.display = "flex"
+                    } else {
+                        let body = document.querySelector("body")
+                        body.innerHTML = ""
+                        window.location.href = "index.html"
+                    }
                 }
             });
         }
@@ -60,8 +65,9 @@ createItem.onclick = function () {
     let inStock = document.getElementById("inStock").value
     let itemName = document.getElementById("itemName").value
     let itemImg = document.getElementById("itemImg").value
-    if (quantyMin != "" && measure != "" && inStock != "" && itemName != "" && itemImg != "") {
-        sucessAddItem(itemName, measure, quantyMin, inStock, itemImg)
+    let itemValue = document.getElementById("itemValue").value
+    if (quantyMin != "" && measure != "" && inStock != "" && itemName != "" && itemImg != "" && itemValue != "") {
+        sucessAddItem(itemName, measure, quantyMin, inStock, itemImg, itemValue)
     } else {
         helpAdd.style.color = "red"
         helpAdd.textContent = "Por favor, preencha todos os campos."
@@ -73,29 +79,53 @@ createItem.onclick = function () {
     }
 }
 
-async function sucessAddItem(itemName, measure, quantyMin, inStock, itemImg) {
+async function sucessAddItem(itemName, measure, quantyMin, inStock, itemImg, itemValue) {
     await setDoc(doc(db, "items", `${itemName}`), {
         itemName: `${itemName}`,
         itemImg: `${itemImg}`,
         inStock: `${inStock}`,
         measure: `${measure}`,
         quantyMin: `${quantyMin}`,
+        itemValue: `${itemValue}`,
         withTecnics: 0,
         active: true
     });
+    returnTecnicEmail(itemName, measure, quantyMin, inStock, itemImg, itemValue)
     helpAdd.style.color = "#0f0"
     helpAdd.textContent = "Item adicionado com sucesso."
     let quantyMinInput = document.getElementById("quantyMin")
     let inStockInput = document.getElementById("inStock")
     let itemNameInput = document.getElementById("itemName")
     let itemImgInput = document.getElementById("itemImg")
+    let itemValueInput = document.getElementById("itemValue")
     itemNameInput.value = ""
     quantyMinInput.value = ""
     inStockInput.value = ""
     itemImgInput.value = ""
+    itemValueInput.value = ""
     createItem.innerHTML = "ADICIONAR"
     createItem.classList.remove("loading")
     setTimeout(() => {
         helpAdd.textContent = ""
     }, 3000);
+}
+
+async function returnTecnicEmail(itemName, measure, quantyMin, inStock, itemImg, itemValue) {
+    let q = query(collection(db, "tecnics"), where("permission", "==", true));
+    let unsubscribe = onSnapshot(q, (querySnapshot) => {
+        let tecnicsName = [];
+        querySnapshot.forEach((doc) => {
+            tecnicsName.push(doc.id);
+        });
+        addTecnicItem(itemName, measure, quantyMin, inStock, itemImg, itemValue, tecnicsName)
+    });
+}
+
+async function addTecnicItem(itemName, measure, quantyMin, inStock, itemImg, itemValue, tecnicsName) {
+    tecnicsName.forEach(name => {
+        let tecnicRef = doc(db, "tecnics", `${name}`);
+        updateDoc(tecnicRef, {
+            items: arrayUnion({ itemName: itemName, itemImg: itemImg, tecnicStock: 0, measure: measure, itemValue: itemValue })
+        });
+    });
 }

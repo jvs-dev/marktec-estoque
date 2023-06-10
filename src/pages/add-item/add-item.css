@@ -26,6 +26,7 @@
 
 .form__h2 {
     color: var(--green);
+    font-size: 23px;
 }
 
 .form__button {

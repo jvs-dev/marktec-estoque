@@ -39,8 +39,8 @@ function loadData() {
                     acceptUserBtn.classList.add("navMobile__a")
                     addItemsBtn.innerHTML = `<i class="bi bi-plus-circle navMobile__icon">`
                     addItemsBtn.classList.add("navMobile__a")
-                    acceptUserBtn.href="accept-user.html"
-                    addItemsBtn.href="add-item.html"
+                    acceptUserBtn.href = "accept-user.html"
+                    addItemsBtn.href = "add-item.html"
                     navMobile.classList.add("userAdmin")
                     transferMobile.style.display = "none"
                     if (window.location.href.indexOf("accept-user") !== -1) {
@@ -50,9 +50,18 @@ function loadData() {
                         addItemsBtn.classList.add("active")
                     }
                 } else {
-                    transferMobile.style.display = "flex"
-
-                    loadRequests(user.email)
+                    if (doc.data().work == "Estoquista") {
+                        navMobile.insertAdjacentElement("afterbegin", addItemsBtn)
+                        addItemsBtn.innerHTML = `<i class="bi bi-plus-circle navMobile__icon">`
+                        addItemsBtn.classList.add("navMobile__a")
+                        addItemsBtn.href = "add-item.html"
+                        navMobile.classList.add("userStock")
+                        transferMobile.style.display = "flex"
+                        loadRequests(user.email)
+                    } else {
+                        transferMobile.style.display = "flex"
+                        loadRequests(user.email)
+                    }
                 }
             });
         }

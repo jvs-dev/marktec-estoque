@@ -36,10 +36,16 @@ function loadData() {
                     acceptUser.style.display = "flex"
                     addItem.style.display = "flex"
                 } else {
-                    transfer.style.display = "flex"
-                    acceptUser.style.display = "none"
-                    addItem.style.display = "none"
-                    loadRequests(user.email)
+                    if (doc.data().work == "Estoquista") {
+                        acceptUser.style.display = "none"
+                        addItem.style.display = "flex"
+                        loadRequests(user.email)
+                    } else {
+                        transfer.style.display = "flex"
+                        acceptUser.style.display = "none"
+                        addItem.style.display = "none"
+                        loadRequests(user.email)
+                    }
                 }
             });
         }
@@ -49,9 +55,9 @@ function loadData() {
 function loadRequests(actualUser) {
     let q = query(collection(db, "transfers"), where("reciverEmail", "==", `${actualUser}`));
     let unsubscribe = onSnapshot(q, (querySnapshot) => {
-        querySnapshot.forEach((doc) => { 
+        querySnapshot.forEach((doc) => {
             if (doc.data().status == "pendente") {
-                transfer.classList.add("awaiting")   
+                transfer.classList.add("awaiting")
             }
         })
     })

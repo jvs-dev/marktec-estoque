@@ -93,7 +93,7 @@ function addTecnicItem(email) {
     let a = query(collection(db, "items"), where("active", "==", true));
     let unsubscribeItems = onSnapshot(a, (querySnapshot) => {
         querySnapshot.forEach((doc) => {
-            items.push({ itemName: doc.data().itemName, itemImg: doc.data().itemImg, tecnicStock: 0, measure: doc.data().measure })
+            items.push({ itemName: doc.data().itemName, itemImg: doc.data().itemImg, tecnicStock: 0, measure: doc.data().measure, itemValue: doc.data().itemValue})
         });
         setDoc(doc(db, "tecnics", `${email}`), {
             items: items,

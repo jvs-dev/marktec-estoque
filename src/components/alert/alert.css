@@ -92,3 +92,32 @@
     inset: 5px;
     border-radius: 15px;
 }
+
+@media only screen and (max-width: 500px) {
+    .alert {
+        width: 90vw;
+        height: 60vh
+    }
+    .alert__button {
+        z-index: 3;
+        width: 120px;
+        border: none;
+        background: none;
+        font-size: 19px;
+        font-weight: 500;
+        border-radius: 15px;
+        padding: 5px 0px;
+    }
+    .alert__p {
+        text-align: center;
+    }
+    .alert::before {
+        content: '';
+        position: absolute;
+        width: 100px;
+        background-image: linear-gradient(180deg, var(--green), var(--green));
+        height: 310%;
+        animation: rotBGimg 3s linear infinite;
+        transition: all 0.2s linear;
+    }
+}

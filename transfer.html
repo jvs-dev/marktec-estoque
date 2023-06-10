@@ -29,10 +29,75 @@
     <link rel="stylesheet" href="src/components/scroll/scroll.css">
     <link rel="stylesheet" href="src/pages/sign-in-login/sign-in-login.css">
     <link rel="stylesheet" href="src/components/navMobile/navMobile.css">
+    <link rel="stylesheet" href="src/pages/transfer/discharge.css">
+    <link rel="stylesheet" href="src/components/cards/dischargeCard.css">
 </head>
 
 <body>
     <main id="main">
+
+
+
+        <section id="dischargeSection">
+
+
+            <section id="sectionSelectDischarge">
+
+                <div id="centralize">
+                    <article class="editUsedQuanty">
+                        <button id="closeEditUsedQuanty"><ion-icon name="close-outline"></ion-icon></button>
+                        <h2 class="editUsedQuanty__h2">Quantia usada</h2>
+                        <div class="section__div">
+                            <ion-icon name="stats-chart-outline" class="section__icon"></ion-icon>
+                            <input type="number" placeholder="Digite a quantia usada" class="section__input" id="usedQuantyInput">
+                        </div>
+                        <p id="editUsedQuantyAlert"></p>
+                        <button id="confirmUsedQuantyBtn">Confirmar</button>
+                    </article>
+                </div>
+                <button id="closeSectionSelectDischarge"><ion-icon name="close-outline"></ion-icon></button>
+                <h2 class="discharge__h2">Adicionar items usados</h2>
+                <div class="section__search--div">
+                    <ion-icon name="search-outline" class="section__search--icon"></ion-icon>
+                    <input type="search" placeholder="Pesquisar" id="searchInput">
+                </div>
+                <section id="SectionItemsCards">
+                </section>
+            </section>
+
+            <button id="closeDischargeSection"><ion-icon name="close-outline"></ion-icon></button>
+            <h2 class="discharge__h2">Relatório de baixa</h2>
+            <div class="section__div">
+                <ion-icon name="person-outline" class="section__icon"></ion-icon>
+                <input type="text" placeholder="Nome do cliente" class="section__input" id="clientName">
+            </div>
+            <div class="section__div">
+                <ion-icon name="location-outline" class="section__icon"></ion-icon>
+                <input type="text" placeholder="Local utilizado" class="section__input" id="location">
+            </div>
+            <div class="section__div">
+                <ion-icon name="build-outline" class="section__icon"></ion-icon>
+                <select name="" id="service" class="section__select">
+                    <option value="Instalação">Serviço feito: Instalação</option>
+                    <option value="Manutenção">Serviço feito: Manutenção</option>
+                </select>
+            </div>
+            <div class="section__div">
+                <ion-icon name="document-text-outline" class="section__icon"></ion-icon>
+                <input type="text" placeholder="Descrição do relatório" class="section__input" id="description">
+            </div>
+            <h2 class="discharge__h2 subtitle">Items usados</h2>
+            <section id="dischargeSelectedSection">
+                
+            </section>
+            <button id="addUsedItems">Adicionar items usados</button>
+            <p id="dischargeItemsAlert"></p>
+            <button id="dischargeItems">Fazer relatório</button>
+        </section>
+
+
+
+
         <section id="sendSection">
             <section id="finalizeSend">
                 <button id="closeFinalizeSend"><ion-icon name="close-outline"></ion-icon></button>
@@ -135,6 +200,7 @@
     <script type="module" src="src/pages/transfer/transfer.js"></script>
     <script type="module" src="src/components/navBar/nav.js"></script>
     <script type="module" src="src/components/navMobile/navMobile.js"></script>
+    <script type="module" src="src/pages/transfer/discharge.js"></script>
 </body>
 
 </html>
