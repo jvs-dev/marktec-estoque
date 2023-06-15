@@ -9,7 +9,7 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, onAuthStateChanged, sendPasswordResetEmail, signOut } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, doc, setDoc, onSnapshot, query, where, updateDoc, arrayUnion, arrayRemove, getDoc } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, doc, setDoc, onSnapshot, query, where, updateDoc, arrayUnion, arrayRemove, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
 const db = getFirestore(app);
 const auth = getAuth();
 let closeSectionSelectDischarge = document.getElementById("closeSectionSelectDischarge")
@@ -20,6 +20,7 @@ let usedButton = document.getElementById("usedButton")
 let dischargeItems = document.getElementById("dischargeItems")
 let actualUser = ""
 let itemsSelecteds = {}
+let tecnicName = ""
 
 function loadData() {
     let SectionItemsCards = document.getElementById("SectionItemsCards")
@@ -28,6 +29,18 @@ function loadData() {
         if (user) {
             const uid = user.uid;
             actualUser = user.email
+            let usersdocref = onSnapshot(doc(db, `users`, `${user.email}`), (doc) => {
+                tecnicName = doc.data().fullName
+                if (doc.data().admin == true) {
+                    transfer.style.display = "none"
+                    acceptUser.style.display = "flex"
+                    addItem.style.display = "flex"
+                } else {
+                    transfer.style.display = "flex"
+                    acceptUser.style.display = "none"
+                    addItem.style.display = "none"
+                }
+            });
             let unsub = onSnapshot(doc(db, "tecnics", `${user.email}`), (doc) => {
                 doc.data().items.forEach(element => {
                     if (element.tecnicStock > 0) {
@@ -55,27 +68,70 @@ function loadData() {
                             confirmUsedQuantyBtn.onclick = function () {
                                 let usedQuantyInput = document.getElementById("usedQuantyInput").value
                                 if (usedQuantyInput != "" && usedQuantyInput != 0) {
+                                    if (element.measure == "Unidades" && parseInt(usedQuantyInput) == parseFloat(usedQuantyInput)) {
+                                        if (usedQuantyInput <= element.tecnicStock) {
+                                            let name = element.itemName;
+                                            itemsSelecteds[name] = { used: usedQuantyInput, name: element.itemName, measure: element.measure, img: element.itemImg, value: element.itemValue };
 
-                                    let name = element.itemName;
-                                    itemsSelecteds[name] = { used: usedQuantyInput, name: element.itemName, measure: element.measure, img: element.itemImg };
+                                            let clearInput = document.getElementById("usedQuantyInput")
+                                            clearInput.value = ""
+                                            editQuanty.style.display = "none"
 
-                                    let clearInput = document.getElementById("usedQuantyInput")
-                                    clearInput.value = ""
-                                    editQuanty.style.display = "none"
+                                            article.innerHTML = `
+                                                <img src="${element.itemImg}" alt="" class="discharge__img">
+                                                <div class="discharge__div">
+                                                    <p class="discharge__name">${element.itemName}</p>
+                                                    <p class="discharge__used">Usou: ${itemsSelecteds[element.itemName] == undefined ? "0" : itemsSelecteds[element.itemName].used} ${element.measure}</p>
+                                                </div>`
+                                            if (itemsSelecteds[element.itemName].used != 0) {
+                                                article.classList.add("used")
+                                                addToForm(user.email, itemsSelecteds)
+                                            }
+                                        } else {
+                                            let editUsedQuantyAlert = document.getElementById("editUsedQuantyAlert")
+                                            editUsedQuantyAlert.textContent = "Quantia em estoque insuficiente"
+                                            setTimeout(() => {
+                                                editUsedQuantyAlert.textContent = ""
+                                            }, 5000);
+                                        }
+                                    } else {
+                                        if (element.measure != "Unidades") {
+                                            if (usedQuantyInput <= element.tecnicStock) {
+                                                let name = element.itemName;
+                                                itemsSelecteds[name] = { used: usedQuantyInput, name: element.itemName, measure: element.measure, img: element.itemImg, value: element.itemValue };
 
-                                    article.innerHTML = `
-                                        <img src="${element.itemImg}" alt="" class="discharge__img">
-                                        <div class="discharge__div">
-                                            <p class="discharge__name">${element.itemName}</p>
-                                            <p class="discharge__used">Usou: ${itemsSelecteds[element.itemName] == undefined ? "0" : itemsSelecteds[element.itemName].used} ${element.measure}</p>
-                                        </div>`
-                                    if (itemsSelecteds[element.itemName].used != 0) {
-                                        article.classList.add("used")
-                                        addToForm(user.email, itemsSelecteds)
+                                                let clearInput = document.getElementById("usedQuantyInput")
+                                                clearInput.value = ""
+                                                editQuanty.style.display = "none"
+
+                                                article.innerHTML = `
+                                                    <img src="${element.itemImg}" alt="" class="discharge__img">
+                                                    <div class="discharge__div">
+                                                        <p class="discharge__name">${element.itemName}</p>
+                                                        <p class="discharge__used">Usou: ${itemsSelecteds[element.itemName] == undefined ? "0" : itemsSelecteds[element.itemName].used} ${element.measure}</p>
+                                                    </div>`
+                                                if (itemsSelecteds[element.itemName].used != 0) {
+                                                    article.classList.add("used")
+                                                    addToForm(user.email, itemsSelecteds)
+                                                }
+                                            } else {
+                                                let editUsedQuantyAlert = document.getElementById("editUsedQuantyAlert")
+                                                editUsedQuantyAlert.textContent = "Quantia em estoque insuficiente"
+                                                setTimeout(() => {
+                                                    editUsedQuantyAlert.textContent = ""
+                                                }, 5000);
+                                            }
+                                        } else {
+                                            let editUsedQuantyAlert = document.getElementById("editUsedQuantyAlert")
+                                            editUsedQuantyAlert.textContent = "Digite um valor inteiro para unidades"
+                                            setTimeout(() => {
+                                                editUsedQuantyAlert.textContent = ""
+                                            }, 5000);
+                                        }
                                     }
                                 } else {
                                     let editUsedQuantyAlert = document.getElementById("editUsedQuantyAlert")
-                                    editUsedQuantyAlert.textContent = "Digite um valor válido"
+                                    editUsedQuantyAlert.textContent = "Digite um valor diferente de 0"
                                     setTimeout(() => {
                                         editUsedQuantyAlert.textContent = ""
                                     }, 5000);
@@ -95,7 +151,7 @@ closeSectionSelectDischarge.onclick = function () {
 }
 addUsedItems.onclick = function () {
     sectionSelectDischarge.style.display = "flex"
-    SectionItemsCards.innerHTML=""
+    SectionItemsCards.innerHTML = ""
     loadData()
 }
 closeDischargeSection.onclick = function () {
@@ -179,13 +235,26 @@ async function setUsedItems() {
     let service = document.getElementById("service").value
     let location = document.getElementById("location").value
     let clientName = document.getElementById("clientName").value
-    /* let docRef = await addDoc(collection(db, "discharges"), {
+    let timeElapsed = Date.now();
+    let today = new Date(timeElapsed);
+    let date = today.toLocaleDateString()
+    let dataAtual = new Date();
+    let hora = dataAtual.getHours();
+    let minutos = dataAtual.getMinutes();
+    let horaFormatada = hora < 10 ? '0' + hora : hora;
+    let minutosFormatados = minutos < 10 ? '0' + minutos : minutos;
+    let hours = horaFormatada + ":" + minutosFormatados
+    let docRef = await addDoc(collection(db, "discharges"), {
         service: service,
         clientName: clientName,
+        tecnicName: tecnicName,
         location: location,
         description: description,
-        itemsUsed: itemsSelecteds
-    }); */
+        itemsUsed: itemsSelecteds,
+        date: date,
+        hours: hours,
+        timestamp: serverTimestamp()
+    });
     Object.keys(itemsSelecteds).forEach(element => {
         SectionItemsCards.innerHTML = ""
         let unsub = onSnapshot(doc(db, "tecnics", `${actualUser}`), (doc) => {

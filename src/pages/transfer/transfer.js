@@ -9,7 +9,7 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, onAuthStateChanged, sendPasswordResetEmail, signOut } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, doc, setDoc, onSnapshot, query, where, updateDoc } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, doc, setDoc, onSnapshot, query, where, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
 const db = getFirestore(app);
 const auth = getAuth();
 let transfer = document.getElementById("transfer")
@@ -111,8 +111,15 @@ function loadUsers() {
 
 sendRequest.onclick = function () {
     let reciverEmail = document.getElementById("person").value
-    let actualDate = new Date();
-    let date = `${actualDate.getDate().length == 1 ? actualDate.getDate() : "0" + actualDate.getDate()}/${actualDate.getMonth().length == 1 ? actualDate.getMonth() + 1 : `0${actualDate.getMonth() + 1}`}/${actualDate.getFullYear()}`
+    let dataAtual = new Date();
+    let hora = dataAtual.getHours();
+    let minutos = dataAtual.getMinutes();
+    let horaFormatada = hora < 10 ? '0' + hora : hora;
+    let minutosFormatados = minutos < 10 ? '0' + minutos : minutos;
+    let hours = horaFormatada + ":" + minutosFormatados
+    let timeElapsed = Date.now();
+    let today = new Date(timeElapsed);
+    let date = today.toLocaleDateString()
     let motive = document.getElementById("motive").value
     let quanty = document.getElementById("quanty").value
     let itemName = transferSelected
@@ -127,7 +134,7 @@ sendRequest.onclick = function () {
                         sendRequestAlert.style.visibility = "visible"
                         sendRequestAlert.textContent = "Você não tem esta quantia em estoque"
                     } else {
-                        addRequest(actualUser, reciverEmail, date, motive, quanty, itemName, itemImg)
+                        addRequest(actualUser, reciverEmail, date, motive, quanty, itemName, itemImg, hours)
                     }
                 }
             });
@@ -142,7 +149,7 @@ sendRequest.onclick = function () {
     }
 }
 
-async function addRequest(senderEmail, reciverEmail, date, motive, quanty, itemName, itemImg) {
+async function addRequest(senderEmail, reciverEmail, date, motive, quanty, itemName, itemImg, hours) {
     let senderName = actualUserName
     let unsub = onSnapshot(doc(db, "users", `${reciverEmail}`), (doc) => {
         finalize(doc.data().fullName)
@@ -159,7 +166,9 @@ async function addRequest(senderEmail, reciverEmail, date, motive, quanty, itemN
             itemName: itemName,
             itemImg: itemImg,
             measure: measure,
-            reciverName: reciverName
+            reciverName: reciverName,
+            timestamp: serverTimestamp(),
+            hours: hours
         });
     }
     cleanQuanty()

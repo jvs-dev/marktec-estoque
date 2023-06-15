@@ -1,0 +1,152 @@
+.dischargeCard {
+    background: #fff;
+    color: var(--black);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 20px;
+    padding: 24px 24px 10px 24px;
+    width: 60%;
+    position: relative;
+    transition: 0.2s;
+    cursor: pointer;
+    margin: 15px 0px;
+}
+
+.dischargeCard__div {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    transition: 0.2s;
+}
+
+.dischargeCard__h2 {
+    text-transform: capitalize;
+    font-weight: 600;
+    font-size: 25px;
+    letter-spacing: 1.4px;
+    margin: 0px;
+    transition: 0.2s;
+}
+
+.dischargeCard__service {
+    margin: 0px;
+    font-size: 19px;
+    font-weight: 600;
+    text-transform: capitalize;
+    transition: 0.2s;
+}
+
+.dischargeCard__p {
+    margin: 0px;
+    font-size: 22px;
+    font-weight: 600;
+    width: 100%;
+    text-align: left;
+    text-transform: capitalize;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden; 
+    transition: 0.2s;
+}
+
+.dischargeCard__p__icon {
+    font-size: 30px;
+    margin-right: 10px;
+}
+
+.dischargeCard__description {
+    font-size: 18px;
+    font-weight: 500;
+    margin: 25px 0px 20px 0px;
+    text-align: left;
+    align-self: flex-start;
+    width: 80%;
+    transition: 0.2s;
+}
+
+.dischargeCard__date {
+    font-size: 16px;
+    text-transform: uppercase;
+    text-align: left;
+    align-self: flex-start;
+    margin: 0px;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.dischargeCard__more {
+    background: var(--black);
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    border-radius: 20px 0px 20px 0px;
+    height: 55px;
+    width: 60px;
+    border: 0px;
+    outline-width: 0px;
+    color: #fff;
+    font-size: 30px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s;
+}
+
+.dischargeCard__more ion-icon {
+    transition: 0.2s ease-out;
+}
+
+.dischargeCard:hover .dischargeCard__h2 {
+    color: var(--green);
+    text-decoration: underline;
+}
+
+.dischargeCard:hover .dischargeCard__p {
+    color: var(--green);
+}
+
+.dischargeCard:hover .dischargeCard__more {
+    background: var(--green);
+}
+
+.dischargeCard:hover .dischargeCard__more ion-icon {
+    margin-left: 12px;
+}
+
+@media only screen and (max-width: 500px) {
+    .dischargeCard {
+        width: 90%;
+    }
+    .dischargeCard__h2 {
+        font-size: 20px;
+    }
+    .dischargeCard__p {
+        font-size: 16px;
+    }
+    .dischargeCard__p__icon {
+        font-size: 22px;
+        margin-right: 5px;
+    }
+    .dischargeCard__description {
+        margin: 15px 0px;
+        font-size: 16px;
+        width: 100%;
+    }
+    .dischargeCard__quanty {
+        font-size: 16px;
+    }
+    .dischargeCard__date {
+        font-size: 16px;
+    }
+    .dischargeCard__more {
+        height: 50px;
+        width: 55px;
+    }
+    .dischargeCard__service {
+        font-size: 16px;
+    }
+}

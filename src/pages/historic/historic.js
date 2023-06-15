@@ -47,26 +47,54 @@ function loadRequests() {
         querySnapshot.forEach((doc) => {
             let historicSection = document.getElementById("historicSection")
             let article = document.createElement("article")
-            historicSection.insertAdjacentElement("afterbegin", article)
-            article.classList.add("historicCard")
+            historicSection.insertAdjacentElement("beforeend", article)
+            article.style.order = `-${doc.data().timestamp.seconds}`
+            article.classList.add("NewTransferCard")
             article.innerHTML = `
-                <div class="historicCard__div--1">
-                    <p class="historicCard__name">${doc.data().senderName}</p>
-                    <ion-icon class="historicCard__icon" name="send-outline"></ion-icon>
-                    <p class="historicCard__name">${doc.data().reciverName}</p>
+                <div class="NewTransferCard__div">
+                    <h2 class="NewTransferCard__h2">Transferência</h2>
+                    <p class="NewTransferCard__status" style="color: ${returnColor(doc.data().status)};">${doc.data().status}</p>
                 </div>
-                <div class="historicCard__div--2">
-                    <img class="historicCard__itemImg" src="${doc.data().itemImg}" alt="">
-                    <div class="historicCard__div--3">
-                        <p class="historicCard__itemName">${doc.data().itemName}</p>
-                        <p class="historicCard__measure">Transferido: ${doc.data().quanty} ${doc.data().measure}</p>
+                <p class="NewTransferCard__p"><ion-icon name="person-remove-outline"
+                        class="NewTransferCard__p__icon md hydrated" role="img"></ion-icon>Remetente: ${doc.data().senderName}</p>
+                <p class="NewTransferCard__p"><ion-icon name="person-add-outline"
+                        class="NewTransferCard__p__icon md hydrated" role="img"></ion-icon>receptor: ${doc.data().reciverName}</p>
+                <div class="NewTransferCard__div--2">
+                    <img class="NewTransferCard__img"
+                        src="${doc.data().itemImg}" alt="">
+                    <div class="NewTransferCard__div--3">
+                        <p class="NewTransferCard__itemName">${doc.data().itemName}</p>
+                        <span class="NewTransferCard__quanty">Transferido: 1 Unidades</span>
                     </div>
                 </div>
-                <div class="historicCard__div--4">
-                    <p class="historicCard__status" style="color: ${returnColor(doc.data().status)};">${doc.data().status}</p>
-                    <p class="historicCard__motive">${doc.data().motive}</p>
-                    <p class="historicCard__date">${doc.data().date}</p>
-                </div>`
+                <span class="NewTransferCard__date">${doc.data().hours}<br>${doc.data().date}</span>
+                <button class="NewTransferCard__more"><ion-icon name="arrow-forward-outline" role="img" class="md hydrated"></ion-icon></button>`
+                article.onclick = function () {
+                    window.location = "view-transfer.html?id=" + doc.id;
+                }
+        })
+    })
+    let e = query(collection(db, "discharges"), where("itemsUsed", "!=", {}));
+    let unsubscri = onSnapshot(e, (querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            let historicSection = document.getElementById("historicSection")
+            let article = document.createElement("article")
+            historicSection.insertAdjacentElement("beforeend", article)
+            article.classList.add("dischargeCard")
+            article.style.order = `-${doc.data().timestamp.seconds}`
+            article.innerHTML = `
+                <div class="dischargeCard__div">
+                    <h2 class="dischargeCard__h2">Relatório de baixa</h2>
+                    <p class="dischargeCard__service">${doc.data().service}</p>
+                </div>
+                <p class="dischargeCard__p"><i class="bi bi-car-front-fill dischargeCard__p__icon"></i>técnico: ${doc.data().tecnicName}</p>
+                <p class="dischargeCard__p"><ion-icon name="person-outline" class="dischargeCard__p__icon"></ion-icon>Cliente: ${doc.data().clientName}</p>
+                <p class="dischargeCard__description">${doc.data().description}.</p>
+                <span class="dischargeCard__date">${doc.data().hours}<br>${doc.data().date}</span>
+                <button class="dischargeCard__more"><ion-icon name="arrow-forward-outline"></ion-icon></button>`
+            article.onclick = function () {
+                window.location = "?id=" + doc.id;
+            }
         })
     })
 }
