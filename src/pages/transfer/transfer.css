@@ -62,35 +62,6 @@
     margin-left: 100px;
 }
 
-#sendSection {
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    padding: 40px;
-    background: var(--white);
-    width: 100vw;
-    height: 100vh;
-    position: fixed;
-    z-index: 10;
-    overflow: auto;
-}
-
-#closeSendSection {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: transparent;
-    border: 0px;
-    outline-width: 0px;
-    color: var(--black);
-    font-size: 40px;
-    position: absolute;
-    top: 0;
-    right: 0;
-    margin: 40px 40px 0px 0px;
-    padding: 0px;
-}
-
 .section__search--div {
     background: #fff;
     border-radius: 20px;
@@ -108,90 +79,214 @@
     margin-right: 10px;
 }
 
-#searchInput {
+.section__search--div input {
     background: transparent;
     outline-width: 0px;
     border: 0px;
     width: 100%;
 }
 
-#itemSelectSection {
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    width: 100%;
-    margin-top: 40px;
-}
 
-.sendSection__h2 {
-    margin: 0px 0px 40px 0px;
-}
 
-#finalizeSend {
+
+
+/*-----------------------*/
+
+
+
+#sendSection {
     width: 100vw;
     height: 100vh;
-    background: var(--white);
+    background-color: var(--white);
+    position: fixed;
+    z-index: 2;
     display: none;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    z-index: 1;
-    position: fixed;
-    top: 0;
+    padding: 40px 0px;
+    overflow: auto;
 }
 
-#itemSelectedIMG {
-    margin-bottom: 20px;
-    height: 200px;
+.discharge__h2 {
+    text-transform: capitalize;
+    font-size: 25px;
+    margin-bottom: 40px;
 }
 
-#itemSelectedName {
-    font-size: 20px;
-    font-weight: 500;
-    text-align: center;
-    margin: 0px 40px 20px 40px;
-}
-
-#closeFinalizeSend {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: transparent;
-    border: 0px;
-    outline-width: 0px;
-    color: var(--black);
-    font-size: 40px;
-    position: absolute;
-    top: 0;
-    right: 0;
-    margin: 40px 40px 0px 0px;
-    padding: 0px;
-}
-
-#sendRequest {
+#addSendItems {
+    background: var(--orange);
     color: var(--white);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    background: var(--green);
-    border-radius: 20px;
-    padding: 5px 25px;
+    padding: 10px 40px;
+    border: 0px;
+    border-radius: 100px;
     cursor: pointer;
-    outline-width: 0px;
-    border: solid 1px var(--white);
-    font-size: 20px;
-    font-weight: 500;
-    transition: 0.2s;
     margin-top: 20px;
 }
 
-#sendRequestAlert {
-    color: #f00;
-    font-size: 20px;
-    margin: 5px 0px 0px 0px;
-    visibility: hidden;
+#SendItems {
+    background: var(--green);
+    color: var(--white);
+    padding: 10px 40px;
+    border: 0px;
+    border-radius: 100px;
+    cursor: pointer;
+    font-weight: 500;
+    text-transform: uppercase;
 }
+
+#SendItems.loading {
+    background: transparent;
+    cursor: progress;   
+    padding: 0px;
+}
+
+#sectionSelectSend {
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--white);
+    position: fixed;
+    z-index: 2;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 0px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    top: 0;
+}
+
+#SectionItemsCardsSend {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100vw;
+    margin-top: 40px;
+    padding: 0px 20px;
+}
+
+#centralizeSend {
+    background: #00000063;
+    backdrop-filter: blur(6px);
+    width: 100vw;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    z-index: 2;
+    display: none;
+}
+
+.editUsedQuanty {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--white);
+    padding: 40px 0px;
+    width: 50%;
+    height: 50%;
+    border-radius: 20px;
+}
+
+.editUsedQuanty__h2 {
+    font-size: 25px;
+    color: var(--black);
+}
+
+.discharge__h2.subtitle {
+    font-size: 22px;
+    margin: 40px 0px 20px 0px;
+}
+
+#confirmSendQuantyBtn {
+    background: var(--green);
+    color: var(--white);
+    padding: 10px 40px;
+    border: 0px;
+    border-radius: 100px;
+    cursor: pointer;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+#closeEditSendQuanty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    background: transparent;
+    border: 0px;
+    outline-width: 0px;
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 20px 20px 0px 0px;
+}
+
+#usedQuantyInput {
+    width: 90%;
+}
+
+#closeSectionSelectSend {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    background: transparent;
+    border: 0px;
+    outline-width: 0px;
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 20px 20px 0px 0px;
+}
+
+#closeSendSection {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    background: transparent;
+    border: 0px;
+    outline-width: 0px;
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 20px 20px 0px 0px;
+}
+
+#sendSelectedSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+#editSendQuantyAlert {
+    color: #f00;
+    margin: 0px;
+    font-size: 19px;
+}
+#sendItemsAlert {
+    color: #f00;
+    margin: 20px 0px;
+    font-size: 19px;
+}
+
+
+
+
+
+/*-----------------------*/
+
+
+
+
 
 @media only screen and (max-width: 500px) {
     .main__transfer {

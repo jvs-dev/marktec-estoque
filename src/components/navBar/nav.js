@@ -14,6 +14,7 @@ const db = getFirestore(app);
 const auth = getAuth();
 let acceptUser = document.getElementById("acceptUser")
 let transfer = document.getElementById("transfer")
+let tecnics = document.getElementById("tecnics")
 const q = query(collection(db, "users"), where("permission", "==", false));
 
 
@@ -44,6 +45,9 @@ function loadData() {
                         transfer.style.display = "flex"
                         acceptUser.style.display = "none"
                         addItem.style.display = "none"
+                        tecnics.style.display = "none"
+                        tecnics.innerHTML = ""
+                        tecnics.href = "#"
                         loadRequests(user.email)
                     }
                 }

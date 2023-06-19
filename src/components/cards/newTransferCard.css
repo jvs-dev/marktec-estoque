@@ -94,6 +94,26 @@
     transition: 0.2s;
 }
 
+.NewTransferCard__motive {
+    font-size: 18px;
+    font-weight: 500;
+    margin: 10px 0px;
+    text-align: left;
+    align-self: flex-start;
+    width: 100%;
+    text-transform: capitalize;
+}
+
+.NewTransferCard__description {
+    font-size: 18px;
+    font-weight: 500;
+    margin: 0px 0px 10px 0px;
+    text-align: left;
+    align-self: flex-start;
+    width: 100%;
+    text-transform: capitalize;
+}
+
 .NewTransferCard__quanty {
     font-size: 18px;
     font-weight: 600;

@@ -29,14 +29,14 @@
     <link rel="stylesheet" href="src/components/scroll/scroll.css">
     <link rel="stylesheet" href="src/components/navMobile/navMobile.css">
     <link rel="stylesheet" href="src/components/cards/historicDischargeCard.css">
-    <link rel="stylesheet" href="src/pages/historic/viewDischarge.css">
     <link rel="stylesheet" href="src/components/cards/newTransferCard.css">
+    <link rel="stylesheet" href="src/pages/viewTransfer/viewTransfer.css">
 </head>
 
 <body>
     <main id="main">
         <section id="viewDischargeSection">
-
+           
         </section>
         <section id="main__offline">
             <div id="wifi-loader">
@@ -56,58 +56,9 @@
                 <div class="text" data-text="Conectando..."></div>
             </div>
         </section>
-        <section class="main__historic">
-            <nav id="navMobile">
-                <span id="timeLeftMobile"></span>
-                <ion-icon class="openCloseNav" id="openCloseNav" name="add-outline"></ion-icon>
-                <a href="transfer.html" class="navMobile__a" id="transferMobile"><ion-icon
-                        name="swap-horizontal-outline" class="navMobile__icon"></ion-icon></a>
-                <a href="historic.html" class="navMobile__a active"><i
-                        class="bi bi-clock-history navMobile__icon active"></i></a>
-                <a href="tecnics.html" class="navMobile__a" id="tecnicsMobile"><i class="bi bi-car-front-fill navMobile__icon"></i></a>
-                <a href="stock.html" class="navMobile__a"><i class="bi bi-box-seam navMobile__icon"></i></a>
-                <a href="index.html" class="navMobile__a"><ion-icon name="home-outline"
-                        class="navMobile__icon"></ion-icon></a>
-            </nav>
-            <nav class="home__nav navBar">
-                <ul class="nav__ul">
-                    <a href="index.html" class="nav__a">
-                        <li class="nav__li"><ion-icon name="home-outline" class="nav__icon"></ion-icon></li>
-                    </a>
-                    <a href="stock.html" class="nav__a">
-                        <li class="nav__li"><i class="bi bi-box-seam nav__icon"></i></li>
-                    </a>
-                    <a id="tecnics" href="tecnics.html" class="nav__a">
-                        <li class="nav__li"><i class="bi bi-car-front-fill nav__icon"></i></li>
-                    </a>
-                    <a href="historic.html" class="nav__a active">
-                        <li class="nav__li"><i class="bi bi-clock-history nav__icon active"></i></li>
-                    </a>
-                    <a id="transfer" href="transfer.html" class="nav__a">
-                        <li class="nav__li"><ion-icon name="swap-horizontal-outline" class="nav__icon"></ion-icon></li>
-                    </a>
-                    <a href="add-item.html" id="addItem" class="nav__a">
-                        <li class="nav__li"><i class="bi bi-plus-circle nav__icon"></i></li>
-                    </a>
-                    <a href="accept-user.html" id="acceptUser" class="nav__a">
-                        <li class="nav__li"><i class="bi bi-person-vcard nav__icon"></i></li>
-                    </a>
-                    <p class="nav__p"><span id="timeLeft"></span></p>
-                </ul>
-                <div class="nav__line"></div>
-            </nav>
-            <section class="main__section">
-                <div class="section__search--div">
-                    <ion-icon name="search-outline" class="section__search--icon"></ion-icon>
-                    <input type="search" placeholder="Pesquisar" id="searchInput">
-                </div>
-                <section id="historicSection">
-
-                </section>
-            </section>
-
-        </section>
     </main>
+
+
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"
         integrity="sha384-zYPOMqeu1DAVkHiLqWBUTcbYfZ8osu1Nd6Z89ify25QV9guujx43ITvfi12/QExE"
@@ -118,12 +69,8 @@
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <script src="src/components/offline/offline-loading.js"></script>
-    <script type="module" src="src/components/timeLeft/timeLeft.js"></script>
     <script type="module" src="src/components/verifyPermission/verifyPermission.js"></script>
-    <script type="module" src="src/pages/historic/historic.js"></script>
-    <script type="module" src="src/components/navBar/nav.js"></script>
-    <script type="module" src="src/components/navMobile/navMobile.js"></script>
-    <script type="module" src="src/pages/historic/viewDischarge.js"></script>
+    <script type="module" src="src/pages/viewTransfer/viewTransfer.js"></script>
 </body>
 
 </html>

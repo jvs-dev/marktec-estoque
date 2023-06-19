@@ -99,39 +99,60 @@
 
 
         <section id="sendSection">
-            <section id="finalizeSend">
-                <button id="closeFinalizeSend"><ion-icon name="close-outline"></ion-icon></button>
-                <img id="itemSelectedIMG" src="" alt="">
-                <p id="itemSelectedName"></p>
-                <div class="section__div">
-                    <ion-icon name="person-outline" class="section__icon"></ion-icon>
-                    <select name="" id="person" class="section__select">
-                    </select>
+            <section id="sectionSelectSend">
+
+                <div id="centralizeSend">
+                    <article class="editUsedQuanty">
+                        <button id="closeEditSendQuanty"><ion-icon name="close-outline"></ion-icon></button>
+                        <h2 class="editUsedQuanty__h2">Quantia transferida</h2>
+                        <div class="section__div">
+                            <ion-icon name="stats-chart-outline" class="section__icon"></ion-icon>
+                            <input type="number" placeholder="Quantia a ser transferida" class="section__input" id="sendQuantyInput">
+                        </div>
+                        <p id="editSendQuantyAlert"></p>
+                        <button id="confirmSendQuantyBtn">Confirmar</button>
+                    </article>
                 </div>
-                <div class="section__div">
-                    <ion-icon name="help-circle-outline" class="section__icon"></ion-icon>
-                    <select name="" id="motive" class="section__select">
-                        <option value="Para uso do Recebedor">Para uso do Recebedor</option>
-                        <option value="Devolução de items não usados">Devolução de items não usados</option>
-                    </select>
+                <button id="closeSectionSelectSend"><ion-icon name="close-outline"></ion-icon></button>
+                <h2 class="discharge__h2">Adicionar items para transferir</h2>
+                <div class="section__search--div">
+                    <ion-icon name="search-outline" class="section__search--icon"></ion-icon>
+                    <input type="search" placeholder="Pesquisar" id="SendSearchInput">
                 </div>
-                <div class="section__div">
-                    <ion-icon name="stats-chart-outline" class="section__icon"></ion-icon>
-                    <input type="number" placeholder="quantidade" class="section__input" id="quanty">
-                </div>
-                <p id="sendRequestAlert">Por favor insira uma quantidade</p>
-                <button id="sendRequest">Enviar Solicitação</button>
+                <section id="SectionItemsCardsSend">
+                </section>
             </section>
+
             <button id="closeSendSection"><ion-icon name="close-outline"></ion-icon></button>
-            <h2 class="sendSection__h2">Selecione o Item que deseja transferir</h2>
-            <div class="section__search--div">
-                <ion-icon name="search-outline" class="section__search--icon"></ion-icon>
-                <input type="search" placeholder="Pesquisar" id="searchInput">
+            <h2 class="discharge__h2">Relatório de transferência</h2>
+            <div class="section__div">
+                <ion-icon name="person-outline" class="section__icon"></ion-icon>
+                <select name="" id="ReciverInput" class="section__select">
+                </select>
             </div>
-            <section id="itemSelectSection">
+            <div class="section__div">
+                <ion-icon name="warning-outline" class="section__icon"></ion-icon>
+                <select name="" id="motive" class="section__select">
+                    <option value="Devolução de items não usados">Devolução de items não usados</option>
+                    <option value="Solicitado pelo técnico">Solicitado pelo técnico</option>
+                    <option value="Reposição de items">Reposição de items</option>
+                </select>
+            </div>
+            <div class="section__div">
+                <ion-icon name="document-text-outline" class="section__icon"></ion-icon>
+                <input type="text" placeholder="Descrição da Transferência" class="section__input" id="Senddescription">
+            </div>
+            <h2 class="discharge__h2 subtitle">Items a transferir</h2>
+            <section id="sendSelectedSection">
                 
             </section>
+            <button id="addSendItems">Adicionar a transferir</button>
+            <p id="sendItemsAlert"></p>
+            <button id="SendItems">Transferir</button>
         </section>
+
+
+
         <section id="main__offline">
             <div id="wifi-loader">
                 <svg class="circle-outer" viewBox="0 0 86 86">
@@ -156,7 +177,7 @@
                 <ion-icon class="openCloseNav" id="openCloseNav" name="add-outline"></ion-icon>
                 <a href="transfer.html" class="navMobile__a active" id="transferMobile"><ion-icon name="swap-horizontal-outline" class="navMobile__icon active"></ion-icon></a>
                 <a href="historic.html" class="navMobile__a"><i class="bi bi-clock-history navMobile__icon"></i></a>
-                <a href="tecnics.html" class="navMobile__a"><i class="bi bi-car-front-fill navMobile__icon"></i></a>
+                <a href="tecnics.html" class="navMobile__a" id="tecnicsMobile"><i class="bi bi-car-front-fill navMobile__icon"></i></a>
                 <a href="stock.html" class="navMobile__a"><i class="bi bi-box-seam navMobile__icon"></i></a>
                 <a href="index.html" class="navMobile__a"><ion-icon name="home-outline" class="navMobile__icon"></ion-icon></a>
             </nav>
@@ -164,7 +185,7 @@
                 <ul class="nav__ul">
                     <a href="index.html" class="nav__a"><li class="nav__li"><ion-icon name="home-outline" class="nav__icon"></ion-icon></li></a>
                     <a href="stock.html" class="nav__a"><li class="nav__li"><i class="bi bi-box-seam nav__icon"></i></li></a>
-                    <a href="tecnics.html" class="nav__a"><li class="nav__li"><i class="bi bi-car-front-fill nav__icon"></i></li></a>
+                    <a id="tecnics" href="tecnics.html" class="nav__a"><li class="nav__li"><i class="bi bi-car-front-fill nav__icon"></i></li></a>
                     <a href="historic.html" class="nav__a"><li class="nav__li"><i class="bi bi-clock-history nav__icon"></i></li></a>
                     <a id="transfer" href="transfer.html" class="nav__a active"><li class="nav__li"><ion-icon name="swap-horizontal-outline" class="nav__icon active"></ion-icon></li></a>
                     <a href="add-item.html" id="addItem" class="nav__a"><li class="nav__li"><i class="bi bi-plus-circle nav__icon"></i></li></a>

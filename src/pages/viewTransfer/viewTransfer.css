@@ -114,14 +114,15 @@
     text-transform: uppercase;
 }
 
-.viewDischargeSection__tecnic {
+.viewTransferSection__tecnic {
     text-align: center;
     font-size: 14px;
     text-transform: uppercase;
     margin: 0px;
     font-weight: 500;
-    width: 225px;
+    width: 260px;
     line-height: 16px;
+    margin-bottom: 10px;
 }
 
 .viewDischargeSection__div--1 {
@@ -133,7 +134,7 @@
 }
 
 .viewDischargeSection__date {
-    text-align: center;
+    text-align: left;
     font-size: 14px;
     text-transform: uppercase;
     margin: 0px;
@@ -265,80 +266,5 @@
 
 .viewDischargeSection__logo {
     height: 60px;
-    margin-top: 30px;
-}
-
-@media only screen and (max-width: 500px) {
-    .squares {
-        display: none;
-    }
-    .content {
-        width: 100%;
-        padding: 0px 10px;
-    }
-    .viewDischargeSection__local {
-        font-size: 14px;
-        text-align: center;
-    }
-    .viewDischargeSection__descriprion {
-        font-size: 14px;
-        text-align: center;
-    }
-    .viewDischargeSection__div--3 {
-        width: 100%;
-    }
-    .viewDischargeSection__logo {
-        display: none;
-    }
-    .viewDischargeSection__div--2 {
-        margin-top: 5px;
-        width: 100%;
-        display: flex;
-        align-items: center;
-        flex-direction: column-reverse;
-    }
-    .viewDischargeSection__date {
-        text-align: left;
-    }
-    .viewDischargeSection__div--1 {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        margin: 20px 0px 15px 0px;
-        flex-direction: column;
-    }
-    .viewDischargeSection__tecnic {
-        margin-bottom: 10px;
-    }
-    .viewDischargeSection__header__span.span--1 {
-        width: auto;
-        margin-right: 0px;
-    }
-    .viewDischargeSection__header__span.span--2 {
-        width: auto;
-        margin-right: 0px;
-    }
-    .viewDischargeSection__header__span.span--3 {
-        width: auto;
-        margin-right: 0px;
-    }
-    .viewDischargeSection__header__span.span--4 {
-        width: auto;
-        margin-right: 0px;
-    }
-    .viewDischargeSection__header {
-        justify-content: space-between;
-    }
-    .viewDischargeSection__itemQuanty {
-        text-align: center;
-    }
-    .viewDischargeSection__itemName {
-        text-align: center;
-    }
-    .viewDischargeSection__itemPrice {
-        text-align: left;
-    }
-    .viewDischargeSection__itemTotalPrice {
-        text-align: left;
-    }
+    margin-top: 20px;
 }

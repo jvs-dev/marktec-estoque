@@ -59,14 +59,8 @@ function loadRequests() {
                         class="NewTransferCard__p__icon md hydrated" role="img"></ion-icon>Remetente: ${doc.data().senderName}</p>
                 <p class="NewTransferCard__p"><ion-icon name="person-add-outline"
                         class="NewTransferCard__p__icon md hydrated" role="img"></ion-icon>receptor: ${doc.data().reciverName}</p>
-                <div class="NewTransferCard__div--2">
-                    <img class="NewTransferCard__img"
-                        src="${doc.data().itemImg}" alt="">
-                    <div class="NewTransferCard__div--3">
-                        <p class="NewTransferCard__itemName">${doc.data().itemName}</p>
-                        <span class="NewTransferCard__quanty">Transferido: 1 Unidades</span>
-                    </div>
-                </div>
+                    <p class="NewTransferCard__motive">Motivo: ${doc.data().motive}.</p>
+                    <span class="NewTransferCard__description">Descrição: ${doc.data().description}.</span>
                 <span class="NewTransferCard__date">${doc.data().hours}<br>${doc.data().date}</span>
                 <button class="NewTransferCard__more"><ion-icon name="arrow-forward-outline" role="img" class="md hydrated"></ion-icon></button>`
                 article.onclick = function () {
@@ -101,13 +95,13 @@ function loadRequests() {
 
 function returnColor(status) {
     switch (status) {
-        case "pendente":
+        case "Pendente":
             return "var(--orange)"
             break;
-        case "aceito":
+        case "Pceito":
             return "var(--green)"
             break;
-        case "recusado":
+        case "Recusado":
             return "#f00"
             break;
     }

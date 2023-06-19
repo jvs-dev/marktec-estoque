@@ -17,6 +17,7 @@ let navMobile = document.getElementById("navMobile")
 let addItemsBtn = document.createElement("a")
 let acceptUserBtn = document.createElement("a")
 let transferMobile = document.getElementById("transferMobile")
+let tecnicsMobile = document.getElementById("tecnicsMobile")
 const q = query(collection(db, "users"), where("permission", "==", false));
 const unsubscribe = onSnapshot(q, (querySnapshot) => {
     acceptUserBtn.classList.remove("awaiting")
@@ -43,6 +44,8 @@ function loadData() {
                     addItemsBtn.href = "add-item.html"
                     navMobile.classList.add("userAdmin")
                     transferMobile.style.display = "none"
+                    transferMobile.innerHTML = ""
+                    transferMobile.href = ""
                     if (window.location.href.indexOf("accept-user") !== -1) {
                         acceptUserBtn.classList.add("active")
                     }
@@ -60,6 +63,9 @@ function loadData() {
                         loadRequests(user.email)
                     } else {
                         transferMobile.style.display = "flex"
+                        tecnicsMobile.style.display = "none"
+                        tecnicsMobile.innerHTML=""
+                        tecnicsMobile.href = ""
                         loadRequests(user.email)
                     }
                 }

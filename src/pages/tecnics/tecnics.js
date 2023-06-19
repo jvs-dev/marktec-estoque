@@ -34,9 +34,15 @@ function loadData() {
                     acceptUser.style.display = "flex"
                     addItem.style.display = "flex"
                 } else {
-                    transfer.style.display = "flex"
-                    acceptUser.style.display = "none"
-                    addItem.style.display = "none"
+                    if (doc.data().work == "Técnico") {
+                        let body = document.querySelector("body")
+                        body.innerHTML = "Você não pode acessar esta pagina"
+                        window.location.href = "index.html"
+                    } else {
+                        transfer.style.display = "flex"
+                        acceptUser.style.display = "none"
+                        addItem.style.display = "none"
+                    }
                 }
             });
         }
