@@ -60,11 +60,15 @@ function verifyUrl() {
                 </div>
                 <img src="assets/logo.png" alt="" class="viewDischargeSection__logo">
             </div>
-            <a href="historic.html" class="viewDischargeSection__back"><ion-icon
+            <a href="#" class="viewDischargeSection__back"><ion-icon
                     name="arrow-back-outline"></ion-icon>Voltar</a>
             <p class="viewDischargeSection__copyright">©Marktec telecom</p>`
             let i = 1
             let total = 0
+            let viewDischargeSection__back = document.querySelector(".viewDischargeSection__back")
+            viewDischargeSection__back.onclick = function () {
+                window.history.back()
+            }
             Object.keys(doc.data().itemsUsed).forEach(element => {
                 let viewCardSection = document.getElementById("viewCardSection")
                 let article = document.createElement("article")

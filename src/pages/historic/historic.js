@@ -63,9 +63,9 @@ function loadRequests() {
                     <span class="NewTransferCard__description">Descrição: ${doc.data().description}.</span>
                 <span class="NewTransferCard__date">${doc.data().hours}<br>${doc.data().date}</span>
                 <button class="NewTransferCard__more"><ion-icon name="arrow-forward-outline" role="img" class="md hydrated"></ion-icon></button>`
-                article.onclick = function () {
-                    window.location = "view-transfer.html?id=" + doc.id;
-                }
+            article.onclick = function () {
+                window.location = "view-transfer.html?id=" + doc.id;
+            }
         })
     })
     let e = query(collection(db, "discharges"), where("itemsUsed", "!=", {}));
@@ -102,6 +102,9 @@ function returnColor(status) {
             return "var(--green)"
             break;
         case "Recusado":
+            return "#f00"
+            break;
+        case "expirado":
             return "#f00"
             break;
     }

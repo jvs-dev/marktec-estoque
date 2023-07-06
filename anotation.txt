@@ -1,4 +1,4 @@
-deixar tela de view para transferencias e baixas responsivas..........( )
+deixar tela de view para transferencias e baixas responsivas..........(X)
 criar tela de view para transferencias................................(X)
 consertar card de transferencias do historico.........................(X)
 automatizar numeros de "com tecnicos" no bcdds de items...............( )

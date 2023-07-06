@@ -312,33 +312,48 @@
     }
     .viewDischargeSection__header__span.span--1 {
         width: auto;
-        margin-right: 0px;
     }
     .viewDischargeSection__header__span.span--2 {
         width: auto;
-        margin-right: 0px;
     }
     .viewDischargeSection__header__span.span--3 {
-        width: auto;
-        margin-right: 0px;
+        display: none;
     }
     .viewDischargeSection__header__span.span--4 {
-        width: auto;
-        margin-right: 0px;
+        display: none;
     }
     .viewDischargeSection__header {
+        justify-content: left;
+    }
+    .viewDischargeSection__item {
         justify-content: space-between;
     }
     .viewDischargeSection__itemQuanty {
-        text-align: center;
+        min-width: 79.59px;
+        white-space: nowrap;
     }
     .viewDischargeSection__itemName {
-        text-align: center;
+        text-align: left;
+        margin: 0px;
+        width: auto;
     }
     .viewDischargeSection__itemPrice {
-        text-align: left;
+        display: none;
     }
     .viewDischargeSection__itemTotalPrice {
-        text-align: left;
+        display: none;
+    }
+    .viewDischargeSection__back {
+        color: var(--black);
+    }
+    .viewDischargeSection__section {
+        max-height: 200px;
+    }
+    .viewDischargeSection__copyright {
+        color: var(--black);
+        margin: 0px 0px 10px 0px;
+        right: 50%;
+        left: auto;
+        transform: translateX(50%);
     }
 }

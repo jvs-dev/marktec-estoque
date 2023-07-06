@@ -122,7 +122,6 @@
     font-weight: 500;
     width: 260px;
     line-height: 16px;
-    margin-bottom: 10px;
 }
 
 .viewDischargeSection__div--1 {
@@ -134,7 +133,7 @@
 }
 
 .viewDischargeSection__date {
-    text-align: left;
+    text-align: center;
     font-size: 14px;
     text-transform: uppercase;
     margin: 0px;
@@ -266,5 +265,98 @@
 
 .viewDischargeSection__logo {
     height: 60px;
-    margin-top: 20px;
+    margin-top: 30px;
+}
+
+@media only screen and (max-width: 500px) {
+    .squares {
+        display: none;
+    }
+    .content {
+        width: 100%;
+        padding: 20px 10px 0px 10px;
+    }
+    .viewDischargeSection__local {
+        font-size: 14px;
+        text-align: center;
+    }
+    .viewDischargeSection__descriprion {
+        font-size: 14px;
+        text-align: center;
+    }
+    .viewDischargeSection__div--3 {
+        width: 100%;
+    }
+    .viewDischargeSection__logo {
+        display: none;
+    }
+    .viewDischargeSection__div--2 {
+        margin-top: 5px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        flex-direction: column-reverse;
+    }
+    .viewDischargeSection__date {
+        text-align: left;
+    }
+    .viewDischargeSection__div--1 {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        margin: 10px 0px 5px 0px;
+        flex-direction: column-reverse;
+    }
+    .viewTransferSection__tecnic {
+        margin-bottom: 10px;
+        text-align: center;
+        max-width: 80%;
+    }
+    .viewDischargeSection__header__span.span--1 {
+        width: auto;
+    }
+    .viewDischargeSection__header__span.span--2 {
+        width: auto;
+    }
+    .viewDischargeSection__header__span.span--3 {
+        display: none;
+    }
+    .viewDischargeSection__header__span.span--4 {
+        display: none;
+    }
+    .viewDischargeSection__header {
+        justify-content: left;
+        margin-bottom: 10px;
+    }
+    .viewDischargeSection__item {
+        justify-content: space-between;
+    }
+    .viewDischargeSection__itemQuanty {
+        min-width: 79.59px;
+        white-space: nowrap;
+    }
+    .viewDischargeSection__itemName {
+        text-align: left;
+        margin: 0px;
+        width: auto;
+    }
+    .viewDischargeSection__itemPrice {
+        display: none;
+    }
+    .viewDischargeSection__itemTotalPrice {
+        display: none;
+    }
+    .viewDischargeSection__back {
+        color: var(--black);
+    }
+    .viewDischargeSection__section {
+        max-height: 200px;
+    }
+    .viewDischargeSection__copyright {
+        color: var(--black);
+        margin: 0px 0px 10px 0px;
+        right: 50%;
+        left: auto;
+        transform: translateX(50%);
+    }
 }

@@ -78,7 +78,7 @@ function loadRequests(actualUser) {
     let q = query(collection(db, "transfers"), where("reciverEmail", "==", `${actualUser}`));
     let unsubscribe = onSnapshot(q, (querySnapshot) => {
         querySnapshot.forEach((doc) => {
-            if (doc.data().status == "pendente") {
+            if (doc.data().status == "Pendente") {
                 transferMobile.classList.add("awaiting")
             }
         })

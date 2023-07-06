@@ -309,11 +309,9 @@ async function setUsedItems() {
 
 
 function clearInputs() {
-    let motive = document.getElementById("motive")
     let SectionItemsCards = document.getElementById("SectionItemsCardsSend")
     let dischargeSelectedSection = document.getElementById("sendSelectedSection")
     let dischargeItemsAlert = document.getElementById("sendItemsAlert")
-    motive.value = ""
     dischargeSelectedSection.innerHTML = ""
     SectionItemsCards.innerHTML = ""
     loadData()

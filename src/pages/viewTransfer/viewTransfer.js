@@ -38,10 +38,10 @@ function verifyUrl() {
             </div>
             <div class="content">
                 <h2 class="viewDischargeSection__h2">transferência</h2>
-                <p class="viewTransferSection__tecnic">de: ${doc.data().senderName} para ${doc.data().reciverName}.</p>
+                <p class="viewTransferSection__tecnic">de ${doc.data().senderName} para ${doc.data().reciverName}.</p>
                 <div class="viewDischargeSection__div--1">
                     <span class="viewDischargeSection__date">solicitado: ${doc.data().date} ás ${doc.data().hours}${doc.data().acceptHours != undefined ? `<br>aceito ás: ${doc.data().acceptHours} do mesmo dia` : ""}</span>
-                    <span class="viewDischargeSection__client" style="color: ${retutnCLR(doc.data().status)};">${doc.data().status}</span>
+                    <span class="viewDischargeSection__client" style="color: ${returnCLR(doc.data().status)};">${doc.data().status}</span>
                 </div>
                 <header class="viewDischargeSection__header">
                     <span class="viewDischargeSection__header__span span--1">Quantia</span>
@@ -60,11 +60,15 @@ function verifyUrl() {
                 </div>
                 <img src="assets/logo.png" alt="" class="viewDischargeSection__logo">
             </div>
-            <a href="historic.html" class="viewDischargeSection__back"><ion-icon
+            <a href="#" class="viewDischargeSection__back"><ion-icon
                     name="arrow-back-outline"></ion-icon>Voltar</a>
             <p class="viewDischargeSection__copyright">©Marktec telecom</p>`
             let i = 1
             let total = 0
+            let viewDischargeSection__back = document.querySelector(".viewDischargeSection__back")
+            viewDischargeSection__back.onclick = function () {
+                window.history.back()
+            }
             Object.keys(doc.data().itemsToTransfer).forEach(element => {
                 let viewCardSection = document.getElementById("viewCardSection")
                 let article = document.createElement("article")
@@ -93,21 +97,19 @@ function verifyUrl() {
     }
 }
 
-function retutnCLR(status) {
+function returnCLR(status) {
     switch (status) {
         case "Pendente":
             return "var(--orange)"
             break;
-
+        case "Pceito":
+            return "var(--green)"
+            break;
         case "Recusado":
             return "#f00"
             break;
-
-        case "Aceito":
-        return "#0f0"
-            break;
-
-        default:
+        case "expirado":
+            return "#f00"
             break;
     }
 }
