@@ -89,17 +89,25 @@ function loadItems() {
 loadItems()
 
 function addTecnicItem(email) {
-    let items = []
+    let items = {}
     let a = query(collection(db, "items"), where("active", "==", true));
     let unsubscribeItems = onSnapshot(a, (querySnapshot) => {
         querySnapshot.forEach((doc) => {
-            items.push({ itemName: doc.data().itemName, itemImg: doc.data().itemImg, tecnicStock: 0, measure: doc.data().measure, itemValue: doc.data().itemValue})
+            items[doc.data().itemName] = { itemName: doc.data().itemName, itemImg: doc.data().itemImg, tecnicStock: 0, measure: doc.data().measure, itemValue: doc.data().itemValue }
         });
-        setDoc(doc(db, "tecnics", `${email}`), {
-            items: items,
-            permission: true
-        });
-        verifyData(email)
+        Object.keys(items).forEach(element => {
+            setDoc(doc(db, "tecnics", `${email}`), {
+                permission: true
+            });
+            setDoc(doc(db, "tecnics", `${email}`, "stock", `${items[element].itemName}`), {
+                itemName: items[element].itemName,
+                itemImg: items[element].itemImg,
+                itemValue: items[element].itemValue,
+                measure: items[element].measure,
+                tecnicStock: 0
+            });
+            verifyData(email)
+        })
     });
 }
 

@@ -9,7 +9,7 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, onAuthStateChanged, sendPasswordResetEmail, signOut } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, doc, setDoc, onSnapshot, query, where } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, doc, setDoc, onSnapshot, query, where, getDocs } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
 const db = getFirestore(app);
 const auth = getAuth();
 let transfer = document.getElementById("transfer")
@@ -58,6 +58,7 @@ function loadTecnics() {
             if (doc.data().permission == true) {
                 let tecnicsSection = document.getElementById("tecnicsSection")
                 let article = document.createElement("article")
+                let refreshItems = document.getElementById("refreshItems")
                 tecnicsSection.insertAdjacentElement("beforeend", article)
                 article.classList.add("article__tecnic--card")
                 article.innerHTML = `
@@ -71,33 +72,43 @@ function loadTecnics() {
                     TecnicImg.src = doc.data().photo
                     loadTecnicItems(doc.data().email)
                 }
+                refreshItems.onclick = function () {
+                    refreshItems.style.transition = "0.5s"
+                    refreshItems.style.rotate = "360deg"
+                    let TecnicImg = document.getElementById("TecnicImg")
+                    let TecnicName = document.getElementById("TecnicName")
+                    TecnicName.textContent = doc.data().fullName
+                    tecnicItemsSection.style.display = "flex"
+                    TecnicImg.src = doc.data().photo
+                    loadTecnicItems(doc.data().email)
+                    setTimeout(() => {
+                        refreshItems.style.transition = "0s"
+                        refreshItems.style.rotate = "0deg"
+                    }, 500);
+                }
             }
         });
     });
 
 }
 
+
 loadTecnics()
 
-function loadTecnicItems(email) {
+async function loadTecnicItems(email) {
     let tecnicItems = document.getElementById("tecnicItems")
     tecnicItems.innerHTML = ""
-    let unsub = onSnapshot(doc(db, "tecnics", `${email}`), (doc) => {
-        doc.data().items.forEach(Element => {
-            let article = document.createElement("article")
-            tecnicItems.insertAdjacentElement("beforeend", article)
-            article.classList.add("tecnicItensCard")
-            article.innerHTML = `
-            <img class="tecnicItensCard__img" src="${Element.itemImg}" alt="Imagem do ${Element.itemName}">
+    let querySnapshot = await getDocs(collection(db, "tecnics", `${email}`, "stock"));
+    querySnapshot.forEach((doc) => {
+        let article = document.createElement("article")
+        tecnicItems.insertAdjacentElement("beforeend", article)
+        article.classList.add("tecnicItensCard")
+        article.innerHTML = `
+            <img class="tecnicItensCard__img" src="${doc.data().itemImg}" alt="Imagem do ${doc.data().itemName}">
             <div class="tecnicItensCard__div">
-                <p class="tecnicItensCard__p">${Element.itemName}</p>
-                <span class="tecnicItensCard__span">Possui: ${Element.tecnicStock} ${Element.measure}</span>
+                <p class="tecnicItensCard__p">${doc.data().itemName}</p>
+                <span class="tecnicItensCard__span">Possui: ${doc.data().tecnicStock} ${doc.data().measure}</span>
             </div>`
-            if (Element.tecnicStock > 0) {
-                article.style.order = "-1"
-            }
-        })
-    });
-
-
+        article.style.order = `-${Math.round(doc.data().tecnicStock)}`
+    })
 }

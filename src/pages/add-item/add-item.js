@@ -83,9 +83,9 @@ async function sucessAddItem(itemName, measure, quantyMin, inStock, itemImg, ite
     await setDoc(doc(db, "items", `${itemName}`), {
         itemName: `${itemName}`,
         itemImg: `${itemImg}`,
-        inStock: `${inStock}`,
+        inStock: inStock,
         measure: `${measure}`,
-        quantyMin: `${quantyMin}`,
+        quantyMin: quantyMin,
         itemValue: `${itemValue}`,
         withTecnics: 0,
         active: true
@@ -123,9 +123,12 @@ async function returnTecnicEmail(itemName, measure, quantyMin, inStock, itemImg,
 
 async function addTecnicItem(itemName, measure, quantyMin, inStock, itemImg, itemValue, tecnicsName) {
     tecnicsName.forEach(name => {
-        let tecnicRef = doc(db, "tecnics", `${name}`);
-        updateDoc(tecnicRef, {
-            items: arrayUnion({ itemName: itemName, itemImg: itemImg, tecnicStock: 0, measure: measure, itemValue: itemValue })
+        setDoc(doc(db, "tecnics", `${name}`, "stock", `${itemName}`), {
+            itemName: itemName,
+            itemImg: itemImg,
+            itemValue: itemValue,
+            measure: measure,
+            tecnicStock: 0
         });
     });
 }

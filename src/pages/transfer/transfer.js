@@ -9,7 +9,7 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, onAuthStateChanged, sendPasswordResetEmail, signOut } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, doc, setDoc, onSnapshot, query, where, updateDoc, arrayUnion, arrayRemove, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, doc, setDoc, onSnapshot, query, where, updateDoc, arrayUnion, arrayRemove, getDoc, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
 const db = getFirestore(app);
 const auth = getAuth();
 let sendButton = document.getElementById("sendButton")
@@ -19,6 +19,7 @@ let closeSectionSelectSend = document.getElementById("closeSectionSelectSend")
 let SendItems = document.getElementById("SendItems")
 let actualUserEmail = ""
 let itemsSelecteds = {}
+let userWork = ""
 let actualUserName = ""
 
 function loadData() {
@@ -39,112 +40,215 @@ function loadData() {
                     transfer.style.display = "flex"
                     acceptUser.style.display = "none"
                     addItem.style.display = "none"
+                    userWork = doc.data().work
                 }
+                loadStock(user.email, doc.data().work)
             });
-            let unsub = onSnapshot(doc(db, "tecnics", `${user.email}`), (doc) => {
-                let SectionItemsCardsSend = document.getElementById("SectionItemsCardsSend")
-                SectionItemsCardsSend.innerHTML = ""
-                doc.data().items.forEach(element => {
-                    if (element.tecnicStock > 0) {
-                        let article = document.createElement("article")
-                        SectionItemsCardsSend.insertAdjacentElement("beforeend", article)
-                        article.classList.add("discharge__article")
-                        if (itemsSelecteds[element.itemName] != undefined && itemsSelecteds[element.itemName].used != 0) {
-                            article.classList.add("used")
-                        }
-                        article.innerHTML = `
-                            <img src="${element.itemImg}" alt="" class="discharge__img">
-                            <div class="discharge__div">
-                                <p class="discharge__name">${element.itemName}</p>
-                                <p class="discharge__used">Usou: ${itemsSelecteds[element.itemName] == undefined ? "0" : itemsSelecteds[element.itemName].used} ${element.measure}</p>
-                            </div>`
-                        article.onclick = function () {
-                            let editQuanty = document.getElementById("centralizeSend")
-                            editQuanty.style.display = "flex"
-                            let closeEditUsedQuanty = document.getElementById("closeEditSendQuanty")
-                            closeEditSendQuanty.onclick = function () {
+        }
+    })
+}
+
+async function loadStock(email, work) {
+    if (work == "Técnico") {
+        let querySnapshot = await getDocs(collection(db, "tecnics", `${email}`, "stock"));
+        querySnapshot.forEach((doc) => {
+            let SectionItemsCardsSend = document.getElementById("SectionItemsCardsSend")
+            let article = document.createElement("article")
+            SectionItemsCardsSend.insertAdjacentElement("beforeend", article)
+            article.classList.add("discharge__article")
+            if (itemsSelecteds[doc.data().itemName] != undefined && itemsSelecteds[doc.data().itemName].used != 0) {
+                article.classList.add("used")
+            }
+            article.innerHTML = `
+                <img src="${doc.data().itemImg}" alt="" class="discharge__img">
+                <div class="discharge__div">
+                    <p class="discharge__name">${doc.data().itemName}</p>
+                    <p class="discharge__used">Usou: ${itemsSelecteds[doc.data().itemName] == undefined ? "0" : itemsSelecteds[doc.data().itemName].used} ${doc.data().measure}</p>
+                </div>`
+            article.onclick = function () {
+                let editQuanty = document.getElementById("centralizeSend")
+                editQuanty.style.display = "flex"
+                let closeEditSendQuanty = document.getElementById("closeEditSendQuanty")
+                closeEditSendQuanty.onclick = function () {
+                    editQuanty.style.display = "none"
+                    let clearInput = document.getElementById("sendQuantyInput")
+                    clearInput.value = ""
+                    editQuanty.style.display = "none"
+                }
+                let confirmUsedQuantyBtn = document.getElementById("confirmSendQuantyBtn")
+                confirmUsedQuantyBtn.onclick = function () {
+                    let usedQuantyInput = document.getElementById("sendQuantyInput").value
+                    if (usedQuantyInput != "" && usedQuantyInput != 0) {
+                        if (doc.data().measure == "Unidades" && parseInt(usedQuantyInput) == parseFloat(usedQuantyInput)) {
+                            if (usedQuantyInput <= doc.data().tecnicStock) {
+                                let name = doc.data().itemName;
+                                itemsSelecteds[name] = { used: usedQuantyInput, name: doc.data().itemName, measure: doc.data().measure, img: doc.data().itemImg, value: doc.data().itemValue };
+                                let clearInput = document.getElementById("sendQuantyInput")
+                                clearInput.value = ""
                                 editQuanty.style.display = "none"
+                                article.innerHTML = `
+                                    <img src="${doc.data().itemImg}" alt="" class="discharge__img">
+                                    <div class="discharge__div">
+                                        <p class="discharge__name">${doc.data().itemName}</p>
+                                        <p class="discharge__used">Usou: ${itemsSelecteds[doc.data().itemName] == undefined ? "0" : itemsSelecteds[doc.data().itemName].used} ${doc.data().measure}</p>
+                                    </div>`
+                                if (itemsSelecteds[doc.data().itemName].used != 0) {
+                                    article.classList.add("used")
+                                    addToForm(email, itemsSelecteds)
+                                }
+                                console.log(itemsSelecteds);
+                            } else {
+                                let editUsedQuantyAlert = document.getElementById("editSendQuantyAlert")
+                                editUsedQuantyAlert.textContent = "Quantia em estoque insuficiente"
+                                setTimeout(() => {
+                                    editUsedQuantyAlert.textContent = ""
+                                }, 5000);
                             }
-                            let confirmUsedQuantyBtn = document.getElementById("confirmSendQuantyBtn")
-                            confirmUsedQuantyBtn.onclick = function () {
-                                let usedQuantyInput = document.getElementById("sendQuantyInput").value
-                                if (usedQuantyInput != "" && usedQuantyInput != 0) {
-                                    if (element.measure == "Unidades" && parseInt(usedQuantyInput) == parseFloat(usedQuantyInput)) {
-                                        if (usedQuantyInput <= element.tecnicStock) {
-                                            let name = element.itemName;
-                                            itemsSelecteds[name] = { used: usedQuantyInput, name: element.itemName, measure: element.measure, img: element.itemImg, value: element.itemValue };
+                        } else {
+                            let editUsedQuantyAlert = document.getElementById("editSendQuantyAlert")
+                            editUsedQuantyAlert.textContent = "Digite um valor inteiro para unidades"
+                            setTimeout(() => {
+                                editUsedQuantyAlert.textContent = ""
+                            }, 5000);
+                        }
+                        if (doc.data().measure != "Unidades") {
+                            if (usedQuantyInput <= doc.data().tecnicStock) {
+                                let name = doc.data().itemName;
+                                itemsSelecteds[name] = { used: usedQuantyInput, name: doc.data().itemName, measure: doc.data().measure, img: doc.data().itemImg, value: doc.data().itemValue };
 
-                                            let clearInput = document.getElementById("sendQuantyInput")
-                                            clearInput.value = ""
-                                            editQuanty.style.display = "none"
+                                let clearInput = document.getElementById("sendQuantyInput")
+                                clearInput.value = ""
+                                editQuanty.style.display = "none"
 
-                                            article.innerHTML = `
-                                                <img src="${element.itemImg}" alt="" class="discharge__img">
-                                                <div class="discharge__div">
-                                                    <p class="discharge__name">${element.itemName}</p>
-                                                    <p class="discharge__used">Usou: ${itemsSelecteds[element.itemName] == undefined ? "0" : itemsSelecteds[element.itemName].used} ${element.measure}</p>
-                                                </div>`
-                                            if (itemsSelecteds[element.itemName].used != 0) {
-                                                article.classList.add("used")
-                                                addToForm(user.email, itemsSelecteds)
-                                            }
-                                        } else {
-                                            let editUsedQuantyAlert = document.getElementById("editSendQuantyAlert")
-                                            editUsedQuantyAlert.textContent = "Quantia em estoque insuficiente"
-                                            setTimeout(() => {
-                                                editUsedQuantyAlert.textContent = ""
-                                            }, 5000);
-                                        }
-                                    } else {
-                                        if (element.measure != "Unidades") {
-                                            if (usedQuantyInput <= element.tecnicStock) {
-                                                let name = element.itemName;
-                                                itemsSelecteds[name] = { used: usedQuantyInput, name: element.itemName, measure: element.measure, img: element.itemImg, value: element.itemValue };
-
-                                                let clearInput = document.getElementById("sendQuantyInput")
-                                                clearInput.value = ""
-                                                editQuanty.style.display = "none"
-
-                                                article.innerHTML = `
-                                                    <img src="${element.itemImg}" alt="" class="discharge__img">
-                                                    <div class="discharge__div">
-                                                        <p class="discharge__name">${element.itemName}</p>
-                                                        <p class="discharge__used">Usou: ${itemsSelecteds[element.itemName] == undefined ? "0" : itemsSelecteds[element.itemName].used} ${element.measure}</p>
-                                                    </div>`
-                                                if (itemsSelecteds[element.itemName].used != 0) {
-                                                    article.classList.add("used")
-                                                    addToForm(user.email, itemsSelecteds)
-                                                }
-                                            } else {
-                                                let editUsedQuantyAlert = document.getElementById("editSendQuantyAlert")
-                                                editUsedQuantyAlert.textContent = "Quantia em estoque insuficiente"
-                                                setTimeout(() => {
-                                                    editUsedQuantyAlert.textContent = ""
-                                                }, 5000);
-                                            }
-                                        } else {
-                                            let editUsedQuantyAlert = document.getElementById("editSendQuantyAlert")
-                                            editUsedQuantyAlert.textContent = "Digite um valor inteiro para unidades"
-                                            setTimeout(() => {
-                                                editUsedQuantyAlert.textContent = ""
-                                            }, 5000);
-                                        }
+                                article.innerHTML = `
+                                    <img src="${doc.data().itemImg}" alt="" class="discharge__img">
+                                    <div class="discharge__div">
+                                        <p class="discharge__name">${doc.data().itemName}</p>
+                                        <p class="discharge__used">Usou: ${itemsSelecteds[doc.data().itemName] == undefined ? "0" : itemsSelecteds[doc.data().itemName].used} ${doc.data().measure}</p>
+                                    </div>`
+                                if (itemsSelecteds[doc.data().itemName].used != 0) {
+                                    article.classList.add("used")
+                                    addToForm(email, itemsSelecteds)
+                                }
+                            } else {
+                                let editUsedQuantyAlert = document.getElementById("editSendQuantyAlert")
+                                editUsedQuantyAlert.textContent = "Quantia em estoque insuficiente"
+                                setTimeout(() => {
+                                    editUsedQuantyAlert.textContent = ""
+                                }, 5000);
+                            }
+                        }
+                    } else {
+                        let editUsedQuantyAlert = document.getElementById("editSendQuantyAlert")
+                        editUsedQuantyAlert.textContent = "Digite um valor diferente de 0"
+                        setTimeout(() => {
+                            editUsedQuantyAlert.textContent = ""
+                        }, 5000);
+                    }
+                }
+            }
+        });
+    } else {
+        let q = query(collection(db, "items"), where("active", "==", true));
+        let unsubscribe = onSnapshot(q, (querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                let SectionItemsCardsSend = document.getElementById("SectionItemsCardsSend")
+                let article = document.createElement("article")
+                SectionItemsCardsSend.insertAdjacentElement("beforeend", article)
+                article.classList.add("discharge__article")
+                if (itemsSelecteds[doc.data().itemName] != undefined && itemsSelecteds[doc.data().itemName].used != 0) {
+                    article.classList.add("used")
+                }
+                article.innerHTML = `
+                    <img src="${doc.data().itemImg}" alt="" class="discharge__img">
+                    <div class="discharge__div">
+                        <p class="discharge__name">${doc.data().itemName}</p>
+                        <p class="discharge__used">Usou: ${itemsSelecteds[doc.data().itemName] == undefined ? "0" : itemsSelecteds[doc.data().itemName].used} ${doc.data().measure}</p>
+                    </div>`
+                article.onclick = function () {
+                    let editQuanty = document.getElementById("centralizeSend")
+                    editQuanty.style.display = "flex"
+                    let closeEditSendQuanty = document.getElementById("closeEditSendQuanty")
+                    closeEditSendQuanty.onclick = function () {
+                        editQuanty.style.display = "none"
+                        let clearInput = document.getElementById("sendQuantyInput")
+                        clearInput.value = ""
+                        editQuanty.style.display = "none"
+                    }
+                    let confirmUsedQuantyBtn = document.getElementById("confirmSendQuantyBtn")
+                    confirmUsedQuantyBtn.onclick = function () {
+                        let usedQuantyInput = document.getElementById("sendQuantyInput").value
+                        if (usedQuantyInput != "" && usedQuantyInput != 0) {
+                            if (doc.data().measure == "Unidades" && parseInt(usedQuantyInput) == parseFloat(usedQuantyInput)) {
+                                if (usedQuantyInput <= doc.data().inStock) {
+                                    let name = doc.data().itemName;
+                                    itemsSelecteds[name] = { used: usedQuantyInput, name: doc.data().itemName, measure: doc.data().measure, img: doc.data().itemImg, value: doc.data().itemValue };
+                                    let clearInput = document.getElementById("sendQuantyInput")
+                                    clearInput.value = ""
+                                    editQuanty.style.display = "none"
+                                    article.innerHTML = `
+                                        <img src="${doc.data().itemImg}" alt="" class="discharge__img">
+                                        <div class="discharge__div">
+                                            <p class="discharge__name">${doc.data().itemName}</p>
+                                            <p class="discharge__used">Usou: ${itemsSelecteds[doc.data().itemName] == undefined ? "0" : itemsSelecteds[doc.data().itemName].used} ${doc.data().measure}</p>
+                                        </div>`
+                                    if (itemsSelecteds[doc.data().itemName].used != 0) {
+                                        article.classList.add("used")
+                                        addToForm(email, itemsSelecteds, doc.data().itemName, work)
                                     }
                                 } else {
                                     let editUsedQuantyAlert = document.getElementById("editSendQuantyAlert")
-                                    editUsedQuantyAlert.textContent = "Digite um valor diferente de 0"
+                                    editUsedQuantyAlert.textContent = "Quantia em estoque insuficiente"
+                                    setTimeout(() => {
+                                        editUsedQuantyAlert.textContent = ""
+                                    }, 5000);
+                                }
+                            } else {
+                                let editUsedQuantyAlert = document.getElementById("editSendQuantyAlert")
+                                editUsedQuantyAlert.textContent = "Digite um valor inteiro para unidades"
+                                setTimeout(() => {
+                                    editUsedQuantyAlert.textContent = ""
+                                }, 5000);
+                            }
+                            if (doc.data().measure != "Unidades") {
+                                if (usedQuantyInput <= doc.data().inStock) {
+                                    let name = doc.data().itemName;
+                                    itemsSelecteds[name] = { used: usedQuantyInput, name: doc.data().itemName, measure: doc.data().measure, img: doc.data().itemImg, value: doc.data().itemValue };
+
+                                    let clearInput = document.getElementById("sendQuantyInput")
+                                    clearInput.value = ""
+                                    editQuanty.style.display = "none"
+
+                                    article.innerHTML = `
+                                        <img src="${doc.data().itemImg}" alt="" class="discharge__img">
+                                        <div class="discharge__div">
+                                            <p class="discharge__name">${doc.data().itemName}</p>
+                                            <p class="discharge__used">Usou: ${itemsSelecteds[doc.data().itemName] == undefined ? "0" : itemsSelecteds[doc.data().itemName].used} ${doc.data().measure}</p>
+                                        </div>`
+                                    if (itemsSelecteds[doc.data().itemName].used != 0) {
+                                        article.classList.add("used")
+                                        addToForm(email, itemsSelecteds, doc.data().itemName, work)
+                                    }
+                                } else {
+                                    let editUsedQuantyAlert = document.getElementById("editSendQuantyAlert")
+                                    editUsedQuantyAlert.textContent = "Quantia em estoque insuficiente"
                                     setTimeout(() => {
                                         editUsedQuantyAlert.textContent = ""
                                     }, 5000);
                                 }
                             }
+                        } else {
+                            let editUsedQuantyAlert = document.getElementById("editSendQuantyAlert")
+                            editUsedQuantyAlert.textContent = "Digite um valor diferente de 0"
+                            setTimeout(() => {
+                                editUsedQuantyAlert.textContent = ""
+                            }, 5000);
                         }
                     }
-                });
-
+                }
             });
-        }
-    })
+        });
+    }
 }
 
 
@@ -185,28 +289,28 @@ closeSectionSelectSend.onclick = function () {
 }
 
 
-function addToForm(email, object) {
-    let dischargeSelectedSection = document.getElementById("sendSelectedSection")
-    dischargeSelectedSection.innerHTML = ""
-    let unsub = onSnapshot(doc(db, "tecnics", `${email}`), (doc) => {
-        doc.data().items.forEach(element => {
-            if (object[element.itemName] != undefined && object[element.itemName].used != 0) {
+async function addToForm(email, object, nameItem, work) {
+    if (work == "Técnico") {
+        let dischargeSelectedSection = document.getElementById("sendSelectedSection")
+        dischargeSelectedSection.innerHTML = ""
+        let querySnapshot = await getDocs(collection(db, "tecnics", `${email}`, "stock"));
+        querySnapshot.forEach((doc) => {
+            if (object[doc.data().itemName] != undefined && object[doc.data().itemName].used != 0) {
                 let article = document.createElement("article")
                 dischargeSelectedSection.insertAdjacentElement("beforeend", article)
                 article.classList.add("discharge__article")
                 article.innerHTML = `
-                    <img src="${object[element.itemName].img}" alt="" class="discharge__img">
-                    <div class="discharge__div">
-                        <p class="discharge__name">${object[element.itemName].name}</p>
-                        <p class="discharge__used">Usou: ${object[element.itemName].used} ${element.measure}</p>
-                    </div>`
+                        <img src="${object[doc.data().itemName].img}" alt="" class="discharge__img">
+                        <div class="discharge__div">
+                            <p class="discharge__name">${object[doc.data().itemName].name}</p>
+                            <p class="discharge__used">Usou: ${object[doc.data().itemName].used} ${doc.data().measure}</p>
+                        </div>`
                 let removeItem = document.createElement("button")
                 article.insertAdjacentElement("afterbegin", removeItem)
                 removeItem.innerHTML = `<ion-icon name="close-circle-outline"></ion-icon>`
                 removeItem.classList.add("unselectItem")
                 removeItem.onclick = function () {
-
-                    delete itemsSelecteds[object[element.itemName].name]
+                    delete itemsSelecteds[object[doc.data().itemName].name]
                     addToForm(email, itemsSelecteds)
                     let SectionItemsCards = document.getElementById("SectionItemsCardsSend")
                     SectionItemsCards.innerHTML = ""
@@ -214,7 +318,37 @@ function addToForm(email, object) {
                 }
             }
         })
-    })
+    } else {
+        let dischargeSelectedSection = document.getElementById("sendSelectedSection")
+        dischargeSelectedSection.innerHTML = ""
+        let q = query(collection(db, "items"), where("active", "==", true));
+        let unsubscribe = onSnapshot(q, (querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                if (object[doc.data().itemName] != undefined && object[doc.data().itemName].used != 0) {
+                    let article = document.createElement("article")
+                    dischargeSelectedSection.insertAdjacentElement("beforeend", article)
+                    article.classList.add("discharge__article")
+                    article.innerHTML = `
+                            <img src="${object[doc.data().itemName].img}" alt="" class="discharge__img">
+                            <div class="discharge__div">
+                                <p class="discharge__name">${object[doc.data().itemName].name}</p>
+                                <p class="discharge__used">Usou: ${object[doc.data().itemName].used} ${doc.data().measure}</p>
+                            </div>`
+                    let removeItem = document.createElement("button")
+                    article.insertAdjacentElement("afterbegin", removeItem)
+                    removeItem.innerHTML = `<ion-icon name="close-circle-outline"></ion-icon>`
+                    removeItem.classList.add("unselectItem")
+                    removeItem.onclick = function () {
+                        delete itemsSelecteds[object[doc.data().itemName].name]
+                        addToForm(email, itemsSelecteds)
+                        let SectionItemsCards = document.getElementById("SectionItemsCardsSend")
+                        SectionItemsCards.innerHTML = ""
+                        loadData()
+                    }
+                }
+            });
+        });
+    }
 }
 
 
@@ -291,18 +425,25 @@ async function setUsedItems() {
             hours: hours,
             timestamp: serverTimestamp()
         });
-        Object.keys(itemsSelecteds).forEach(element => {
-            SectionItemsCards.innerHTML = ""
-            let unsub = onSnapshot(doc(db, "tecnics", `${actualUserEmail}`), (doc) => {
-                doc.data().items.forEach(dataArray => {
+        if (userWork == "Técnico") {
+            Object.keys(itemsSelecteds).forEach(element => {
+                async function verify() {
                     SectionItemsCards.innerHTML = ""
-                    if (element == dataArray.itemName) {
-                        clearInputs()
+                    let querySnapshot = await getDocs(collection(db, "tecnics", `${actualUserEmail}`, "stock"));
+                    querySnapshot.forEach((doc) => {
                         SectionItemsCards.innerHTML = ""
-                    }
-                });
+                        if (element == doc.data().itemName) {
+                            clearInputs()
+                            SectionItemsCards.innerHTML = ""
+                        }
+                    });
+                }
+                verify()
             });
-        });   
+        } else {
+            SectionItemsCards.innerHTML = ""
+            clearInputs()
+        }
     }
     loadReciverName()
 }

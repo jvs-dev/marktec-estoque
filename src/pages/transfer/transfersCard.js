@@ -9,12 +9,12 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, onAuthStateChanged, sendPasswordResetEmail, signOut } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, doc, setDoc, onSnapshot, query, where, updateDoc, arrayUnion, arrayRemove, getDoc, serverTimestamp, deleteField } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, doc, setDoc, onSnapshot, query, where, updateDoc, arrayUnion, arrayRemove, getDoc, getDocs, serverTimestamp, deleteField, increment } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
 const db = getFirestore(app);
 const auth = getAuth();
 let requestSection = document.getElementById("requestSection")
-let removeIndex = 0
-
+let closeSucessUpdate = document.getElementById("closeSucessUpdate")
+let closeErrorUpdate = document.getElementById("closeErrorUpdate")
 
 
 
@@ -51,23 +51,39 @@ function loadRequests(actualUserEmail) {
                                 class="NewTransferCard__p__icon md hydrated" role="img"></ion-icon>Remetente: ${doc.data().senderName}</p>
                         <p class="NewTransferCard__p"><ion-icon name="person-add-outline"
                                 class="NewTransferCard__p__icon md hydrated" role="img"></ion-icon>receptor: ${doc.data().reciverName}</p>
-                            <p class="NewTransferCard__motive">Motivo: ${doc.data().motive}.</p>
-                            <span class="NewTransferCard__description">Descrição: ${doc.data().description}.</span>
-                        <div class="NewTransferCard__div--2">
-                            <span class="NewTransferCard__date">${doc.data().hours}<br>${doc.data().date}</span>
-                            <div class="NewTransferCard__div--3">
-                                <button class="NewTransferCard__acptRcs" id="recuseTransfer"><ion-icon name="close-outline" role="img" class="md hydrated"></ion-icon></button>
-                                <button class="NewTransferCard__acptRcs" id="acceptTransfer"><ion-icon name="checkmark-outline" role="img" class="md hydrated"></ion-icon></button>
-                            </div>
-                        </div>`
-                    let acceptTransfer = document.getElementById("acceptTransfer")
-                    let recuseTransfer = document.getElementById("recuseTransfer")
+                        <p class="NewTransferCard__motive">Motivo: ${doc.data().motive}.</p>
+                        <span class="NewTransferCard__description">Descrição: ${doc.data().description}.</span>`
+                    let div2 = document.createElement("div")
+                    let div3 = document.createElement("div")
+                    let span = document.createElement("span")
+                    let acceptTransfer = document.createElement("button")
+                    let recuseTransfer = document.createElement("button")
+                    article.insertAdjacentElement("beforeend", div2)
+                    div2.classList.add('NewTransferCard__div--2')
+                    div2.insertAdjacentElement("beforeend", span)
+                    span.classList.add('NewTransferCard__date')
+                    span.innerHTML = `${doc.data().hours}<br>${doc.data().date}`
+                    div2.insertAdjacentElement("beforeend", div3)
+                    div3.classList.add("NewTransferCard__div--3")
+                    div3.insertAdjacentElement("beforeend", recuseTransfer)
+                    div3.insertAdjacentElement("beforeend", acceptTransfer)
+                    recuseTransfer.classList.add("NewTransferCard__acptRcs")
+                    acceptTransfer.classList.add("NewTransferCard__acptRcs")
+                    acceptTransfer.id = "acceptTransfer"
+                    recuseTransfer.id = "recuseTransfer"
+                    recuseTransfer.innerHTML = `<ion-icon name="close-outline" role="img" class="md hydrated"></ion-icon>`
+                    acceptTransfer.innerHTML = `<ion-icon name="checkmark-outline" role="img" class="md hydrated"></ion-icon>`
                     article.addEventListener("click", (event) => {
                         window.location = "view-transfer.html?id=" + doc.id;
                     })
                     acceptTransfer.addEventListener("click", (event) => {
                         event.stopPropagation()
                         acceptItems(doc.id, doc.data().reciverEmail, doc.data().senderEmail, doc.data().itemsToTransfer)
+                        let updateSection = document.getElementById("updateSection")
+                        updateSection.style.display = "flex"
+                        setTimeout(() => {
+                            updateSection.classList.add("active")
+                        }, 1);
                     })
                     recuseTransfer.addEventListener("click", (event) => {
                         event.stopPropagation()
@@ -104,157 +120,121 @@ function returnColor(status) {
 }
 
 async function acceptItems(id, reciverEmail, senderEmail, itemsSelecteds) {
-    let dataAtual = new Date();
-    let hora = dataAtual.getHours();
-    let minutos = dataAtual.getMinutes();
-    let horaFormatada = hora < 10 ? '0' + hora : hora;
-    let minutosFormatados = minutos < 10 ? '0' + minutos : minutos;
-    let hours = horaFormatada + ":" + minutosFormatados
+    let unsub = onSnapshot(doc(db, "users", `${senderEmail}`), (doc) => {
+        returnReciverWork(senderEmail, id, reciverEmail, itemsSelecteds, doc.data().work)
+    });
     requestSection.innerHTML = ""
-    let docRef = doc(db, "transfers", `${id}`);
-    await updateDoc(docRef, {
-        status: "Aceito",
-        acceptHour: hours
-    });
-    let used
-    let vrlItemName
-    let unsub = onSnapshot(doc(db, "transfers", `${id}`), (doc) => {
-        Object.keys(doc.data().itemsToTransfer).forEach(element => {
-            vrlItemName = doc.data().itemsToTransfer[element].name
-            used = doc.data().itemsToTransfer[element].used
-        });
-        compare(vrlItemName, used, senderEmail, id, reciverEmail, itemsSelecteds)
-    });
 }
 
+async function returnReciverWork(senderEmail, id, reciverEmail, itemsSelecteds, senderWork) {
+    let unsub = onSnapshot(doc(db, "users", `${reciverEmail}`), (doc) => {
+        compare(senderEmail, id, reciverEmail, itemsSelecteds, senderWork, doc.data().work)
+    });
 
-async function compare(vrlItemName, used, senderEmail, id, reciverEmail, itemsSelecteds) {
-    let i = 0
-    let o = 0
-    let unsub = onSnapshot(doc(db, "tecnics", `${senderEmail}`), (doc) => {
-        doc.data().items.forEach(element => {
-            if (element.itemName == vrlItemName) {
-                if (element.tecnicStock >= used) {
-                    i++
-                } else {
-                    console.log("no have items");
-                    notHave(id)
+}
+
+async function compare(senderEmail, id, reciverEmail, itemsSelecteds, senderWork, reciverWork) {
+    if (senderWork == "Técnico") {
+        let i = 0
+        let querySnapshot = await getDocs(collection(db, "tecnics", `${senderEmail}`, "stock"));
+        querySnapshot.forEach((doc) => {
+            Object.keys(itemsSelecteds).forEach(item => {
+                if (itemsSelecteds[item].name == doc.data().itemName) {
+                    if (itemsSelecteds[item].used <= doc.data().tecnicStock) {
+                        i++
+                    }
                 }
-            }
-        });
-        if (i == 1) {
-            brokeForEach(vrlItemName, used, senderEmail, id, reciverEmail, itemsSelecteds)
+            });
+        })
+        if (Object.keys(itemsSelecteds).length == i) {
+            let dataAtual = new Date();
+            let hora = dataAtual.getHours();
+            let minutos = dataAtual.getMinutes();
+            let horaFormatada = hora < 10 ? '0' + hora : hora;
+            let minutosFormatados = minutos < 10 ? '0' + minutos : minutos;
+            let hours = horaFormatada + ":" + minutosFormatados
+            let docRef = doc(db, "transfers", `${id}`);
+            await updateDoc(docRef, {
+                status: "Aceito",
+                acceptHour: hours
+            });
+            Object.keys(itemsSelecteds).forEach(item => {
+                remove(itemsSelecteds[item].name, itemsSelecteds[item].used, senderEmail)
+                addItems(itemsSelecteds[item].name, itemsSelecteds[item].used, reciverEmail)
+            })
+        } else {
+            notHave(id)
         }
-    });
-}
-
-async function notHave(id) {
-    let docRef = doc(db, "transfers", `${id}`);
-    await updateDoc(docRef, {
-        status: "Insuficiente",
-        acceptHour: deleteField()
-    });
-}
-
-function brokeForEach(vrlItemName, used, senderEmail, id, reciverEmail, itemsSelecteds) {
-    setUsedItems(id, reciverEmail, senderEmail, itemsSelecteds)
-    removeUsedItems(id, senderEmail)
-}
-
-
-async function removeUsedItems(id, senderEmail) {
-    let unsub = onSnapshot(doc(db, "transfers", `${id}`), (doc) => {
-        let itemsSelecteds = doc.data().itemsToTransfer
-        finalizeRemove(senderEmail, itemsSelecteds)
-    });
-}
-
-async function finalizeRemove(senderEmail, itemsSelecteds) {
-    console.log(`começo: ${removeIndex}`);
-    Object.keys(itemsSelecteds).forEach(element => {
-        let unsub = onSnapshot(doc(db, "tecnics", `${senderEmail}`), (doc) => {
-            doc.data().items.forEach(dataArray => {
-                if (element == dataArray.itemName && removeIndex == 0) {
-                    RmvTecnicItems(dataArray, itemsSelecteds[element].used, senderEmail, itemsSelecteds);
-                    console.log(removeIndex);
+    } else {
+        let i = 0
+        let querySnapshot = await getDocs(collection(db, "items"));
+        querySnapshot.forEach((doc) => {
+            Object.keys(itemsSelecteds).forEach(item => {
+                if (itemsSelecteds[item].name == doc.data().itemName) {
+                    if (itemsSelecteds[item].used <= doc.data().inStock) {
+                        i++
+                    }
                 }
             });
-        });
-    });
-}
-
-function RmvTecnicItems(object, used, senderEmail, itemsSelecteds) {
-    removeIndex = removeIndex + 1
-    let newTecnicStock = object.tecnicStock - Number(used)
-    console.log(newTecnicStock);
-    let newObject = {
-        itemName: object.itemName,
-        itemImg: object.itemImg,
-        tecnicStock: object.tecnicStock - Number(used),
-        measure: object.measure,
-        itemValue: object.itemValue
-    }
-    if (newObject.tecnicStock >= 0) {
-        let tecnicRef = doc(db, "tecnics", `${senderEmail}`);
-        updateDoc(tecnicRef, {
-            items: arrayRemove(object)
-        });
-        updateDoc(tecnicRef, {
-            items: arrayUnion(newObject)
-        });
-        let SectionItemsCards = document.getElementById("SectionItemsCards")
-        SectionItemsCards.innerHTML = ""
-    }
-    delete itemsSelecteds[object.itemName]
-    removeIndex = 0
-}
-
-
-
-
-
-
-async function setUsedItems(id, reciverEmail, senderEmail, itemsSelecteds) {
-    Object.keys(itemsSelecteds).forEach(element => {
-        let unsub = onSnapshot(doc(db, "tecnics", `${reciverEmail}`), (doc) => {
-            doc.data().items.forEach(dataArray => {
-                if (element == dataArray.itemName) {
-                    addTecnicItems(dataArray, itemsSelecteds[element].used, reciverEmail, itemsSelecteds)
-                }
+        })
+        if (Object.keys(itemsSelecteds).length == i) {
+            let dataAtual = new Date();
+            let hora = dataAtual.getHours();
+            let minutos = dataAtual.getMinutes();
+            let horaFormatada = hora < 10 ? '0' + hora : hora;
+            let minutosFormatados = minutos < 10 ? '0' + minutos : minutos;
+            let hours = horaFormatada + ":" + minutosFormatados
+            let docRef = doc(db, "transfers", `${id}`);
+            await updateDoc(docRef, {
+                status: "Aceito",
+                acceptHour: hours
             });
-        });
-    });
+            Object.keys(itemsSelecteds).forEach(item => {
+                remove(itemsSelecteds[item].name, itemsSelecteds[item].used, senderEmail, senderWork)
+                addItems(itemsSelecteds[item].name, itemsSelecteds[item].used, reciverEmail, reciverWork)
+            })
+        } else {
+            notHave(id)
+        }
+    }
 }
 
-function addTecnicItems(object, used, reciverEmail, itemsSelecteds) {
-    let newObject = {
-        itemName: object.itemName,
-        itemImg: object.itemImg,
-        tecnicStock: object.tecnicStock + Number(used),
-        measure: object.measure,
-        itemValue: object.itemValue
-    }
-    if (newObject.tecnicStock >= 0) {
-        let tecnicRef = doc(db, "tecnics", `${reciverEmail}`);
-        updateDoc(tecnicRef, {
-            items: arrayRemove(object)
+async function remove(name, used, senderEmail, senderWork) {
+    if (senderWork == "Técnico") {
+        let washingtonRef = doc(db, "tecnics", `${senderEmail}`, "stock", `${name}`);
+        await updateDoc(washingtonRef, {
+            tecnicStock: increment(-used)
         });
-        updateDoc(tecnicRef, {
-            items: arrayUnion(newObject)
+        let itemRef = doc(db, "items", `${name}`);
+        await updateDoc(itemRef, {
+            withTecnics: increment(-used)
         });
-        let SectionItemsCards = document.getElementById("SectionItemsCards")
-        SectionItemsCards.innerHTML = ""
+    } else {
+        let washingtonRef = doc(db, "items", `${name}`);
+        await updateDoc(washingtonRef, {
+            inStock: increment(-used)
+        });
     }
-    delete itemsSelecteds[object.itemName]
 }
 
-
-
-
-
-
-
-
+async function addItems(name, used, reciverEmail, reciverWork) {
+    if (reciverWork == "Técnico") {
+        let washingtonRef = doc(db, "tecnics", `${reciverEmail}`, "stock", `${name}`);
+        await updateDoc(washingtonRef, {
+            tecnicStock: increment(used)
+        });
+        let itemRef = doc(db, "items", `${name}`);
+        await updateDoc(itemRef, {
+            withTecnics: increment(used)
+        });
+    } else {
+        let washingtonRef = doc(db, "items", `${name}`);
+        await updateDoc(washingtonRef, {
+            inStock: increment(used)
+        });
+    }
+    sucess()
+}
 
 async function recuseItems(id) {
     requestSection.innerHTML = ""
@@ -270,6 +250,50 @@ async function recuseItems(id) {
         recuseHour: hours
     });
 }
+
+
+function sucess() {
+    let sucessUpdate = document.getElementById("sucessUpdate")
+    sucessUpdate.style.display = "flex"
+    setTimeout(() => {
+        sucessUpdate.style.transform = "scale(1.0)"
+    }, 100);
+}
+
+closeSucessUpdate.onclick = function () {
+    let updateSection = document.getElementById("updateSection")
+    updateSection.classList.remove("active")
+    setTimeout(() => {
+        updateSection.style.display = "none"
+        let sucessUpdate = document.getElementById("sucessUpdate")
+        sucessUpdate.style.display = "none"
+        sucessUpdate.style.transform = "scale(0.0)"
+    }, 500);
+}
+
+closeErrorUpdate.onclick = function () {
+    let updateSection = document.getElementById("updateSection")
+    updateSection.classList.remove("active")
+    setTimeout(() => {
+        updateSection.style.display = "none"
+        let errorUpdate = document.getElementById("errorUpdate")
+        errorUpdate.style.display = "none"
+        errorUpdate.style.transform = "scale(0.0)"
+    }, 500);
+}
+
+async function notHave(id) {
+    let docRef = doc(db, "transfers", `${id}`);
+    await updateDoc(docRef, {
+        status: "Insuficiente"
+    });
+    let errorUpdate = document.getElementById("errorUpdate")
+    errorUpdate.style.display = "flex"
+    setTimeout(() => {
+        errorUpdate.style.transform = "scale(1.0)"
+    }, 1);
+}
+
 
 async function timeExpired(id) {
     let docRef = doc(db, "transfers", `${id}`);

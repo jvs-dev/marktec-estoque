@@ -32,11 +32,36 @@
     <link rel="stylesheet" href="src/pages/transfer/discharge.css">
     <link rel="stylesheet" href="src/components/cards/dischargeCard.css">
     <link rel="stylesheet" href="src/pages/transfer/transfersCard.css">
+    <link rel="stylesheet" href="src/components/section/update-section.css">
 </head>
 
 <body>
     <main id="main">
+        <section class="main__updateSection" id="updateSection">
+            <div class="dot-spinner">
+                <div class="dot-spinner__dot"></div>
+                <div class="dot-spinner__dot"></div>
+                <div class="dot-spinner__dot"></div>
+                <div class="dot-spinner__dot"></div>
+                <div class="dot-spinner__dot"></div>
+                <div class="dot-spinner__dot"></div>
+                <div class="dot-spinner__dot"></div>
+                <div class="dot-spinner__dot"></div>
+            </div>
+            <article class="updateSection__article" id="sucessUpdate">
+                <img src="assets/checked.png" alt="" class="updateSection__img">
+                <h3 class="updateSection__title">Sucesso</h3>
+                <p class="updateSection__p">Transferência concluida com sucesso</p>
+                <button class="updateSection__btn" id="closeSucessUpdate">ok</button>
+            </article>
 
+            <article class="updateSection__article" id="errorUpdate">
+                <img src="assets/error.png" alt="" class="updateSection__img">
+                <h3 class="updateSection__title">Erro</h3>
+                <p class="updateSection__p">Algo deu errado na transferência.<br>Verifique os dados e tente novamente.</p>
+                <button class="updateSection__btn" id="closeErrorUpdate">ok</button>
+            </article>
+        </section>
 
 
         <section id="dischargeSection">
@@ -50,7 +75,8 @@
                         <h2 class="editUsedQuanty__h2">Quantia usada</h2>
                         <div class="section__div">
                             <ion-icon name="stats-chart-outline" class="section__icon"></ion-icon>
-                            <input type="number" placeholder="Digite a quantia usada" class="section__input" id="usedQuantyInput">
+                            <input type="number" placeholder="Digite a quantia usada" class="section__input"
+                                id="usedQuantyInput">
                         </div>
                         <p id="editUsedQuantyAlert"></p>
                         <button id="confirmUsedQuantyBtn">Confirmar</button>
@@ -89,7 +115,7 @@
             </div>
             <h2 class="discharge__h2 subtitle">Items usados</h2>
             <section id="dischargeSelectedSection">
-                
+
             </section>
             <button id="addUsedItems">Adicionar items usados</button>
             <p id="dischargeItemsAlert"></p>
@@ -108,7 +134,8 @@
                         <h2 class="editUsedQuanty__h2">Quantia transferida</h2>
                         <div class="section__div">
                             <ion-icon name="stats-chart-outline" class="section__icon"></ion-icon>
-                            <input type="number" placeholder="Quantia a ser transferida" class="section__input" id="sendQuantyInput">
+                            <input type="number" placeholder="Quantia a ser transferida" class="section__input"
+                                id="sendQuantyInput">
                         </div>
                         <p id="editSendQuantyAlert"></p>
                         <button id="confirmSendQuantyBtn">Confirmar</button>
@@ -125,7 +152,7 @@
             </section>
 
             <button id="closeSendSection"><ion-icon name="close-outline"></ion-icon></button>
-            <h2 class="discharge__h2">Relatório de transferência</h2>
+            <h2 class="discharge__h2">Fazer transferência</h2>
             <div class="section__div">
                 <ion-icon name="person-outline" class="section__icon"></ion-icon>
                 <select name="" id="ReciverInput" class="section__select">
@@ -145,9 +172,9 @@
             </div>
             <h2 class="discharge__h2 subtitle">Items a transferir</h2>
             <section id="sendSelectedSection">
-                
+
             </section>
-            <button id="addSendItems">Adicionar a transferir</button>
+            <button id="addSendItems">Adicionar item</button>
             <p id="sendItemsAlert"></p>
             <button id="SendItems">Transferir</button>
         </section>
@@ -176,21 +203,39 @@
             <nav id="navMobile">
                 <span id="timeLeftMobile"></span>
                 <ion-icon class="openCloseNav" id="openCloseNav" name="add-outline"></ion-icon>
-                <a href="transfer.html" class="navMobile__a active" id="transferMobile"><ion-icon name="swap-horizontal-outline" class="navMobile__icon active"></ion-icon></a>
+                <a href="transfer.html" class="navMobile__a active" id="transferMobile"><ion-icon
+                        name="swap-horizontal-outline" class="navMobile__icon active"></ion-icon></a>
                 <a href="historic.html" class="navMobile__a"><i class="bi bi-clock-history navMobile__icon"></i></a>
-                <a href="tecnics.html" class="navMobile__a" id="tecnicsMobile"><i class="bi bi-car-front-fill navMobile__icon"></i></a>
+                <a href="tecnics.html" class="navMobile__a" id="tecnicsMobile"><i
+                        class="bi bi-car-front-fill navMobile__icon"></i></a>
                 <a href="stock.html" class="navMobile__a"><i class="bi bi-box-seam navMobile__icon"></i></a>
-                <a href="index.html" class="navMobile__a"><ion-icon name="home-outline" class="navMobile__icon"></ion-icon></a>
+                <a href="index.html" class="navMobile__a"><ion-icon name="home-outline"
+                        class="navMobile__icon"></ion-icon></a>
             </nav>
             <nav class="home__nav navBar">
                 <ul class="nav__ul">
-                    <a href="index.html" class="nav__a"><li class="nav__li"><ion-icon name="home-outline" class="nav__icon"></ion-icon></li></a>
-                    <a href="stock.html" class="nav__a"><li class="nav__li"><i class="bi bi-box-seam nav__icon"></i></li></a>
-                    <a id="tecnics" href="tecnics.html" class="nav__a"><li class="nav__li"><i class="bi bi-car-front-fill nav__icon"></i></li></a>
-                    <a href="historic.html" class="nav__a"><li class="nav__li"><i class="bi bi-clock-history nav__icon"></i></li></a>
-                    <a id="transfer" href="transfer.html" class="nav__a active"><li class="nav__li"><ion-icon name="swap-horizontal-outline" class="nav__icon active"></ion-icon></li></a>
-                    <a href="add-item.html" id="addItem" class="nav__a"><li class="nav__li"><i class="bi bi-plus-circle nav__icon"></i></li></a>
-                    <a href="accept-user.html" id="acceptUser" class="nav__a"><li class="nav__li"><i class="bi bi-person-vcard nav__icon"></i></li></a>
+                    <a href="index.html" class="nav__a">
+                        <li class="nav__li"><ion-icon name="home-outline" class="nav__icon"></ion-icon></li>
+                    </a>
+                    <a href="stock.html" class="nav__a">
+                        <li class="nav__li"><i class="bi bi-box-seam nav__icon"></i></li>
+                    </a>
+                    <a id="tecnics" href="tecnics.html" class="nav__a">
+                        <li class="nav__li"><i class="bi bi-car-front-fill nav__icon"></i></li>
+                    </a>
+                    <a href="historic.html" class="nav__a">
+                        <li class="nav__li"><i class="bi bi-clock-history nav__icon"></i></li>
+                    </a>
+                    <a id="transfer" href="transfer.html" class="nav__a active">
+                        <li class="nav__li"><ion-icon name="swap-horizontal-outline"
+                                class="nav__icon active"></ion-icon></li>
+                    </a>
+                    <a href="add-item.html" id="addItem" class="nav__a">
+                        <li class="nav__li"><i class="bi bi-plus-circle nav__icon"></i></li>
+                    </a>
+                    <a href="accept-user.html" id="acceptUser" class="nav__a">
+                        <li class="nav__li"><i class="bi bi-person-vcard nav__icon"></i></li>
+                    </a>
                     <p class="nav__p"><span id="timeLeft"></span></p>
                 </ul>
                 <div class="nav__line"></div>
@@ -204,7 +249,7 @@
                 <button class="main__button" id="usedButton"><i class="bi bi-clipboard-minus"></i></button>
                 <button class="main__button" id="sendButton"><ion-icon name="send-outline"></ion-icon></button>
             </section>
-                
+
         </section>
     </main>
 
@@ -220,10 +265,10 @@
     <script type="module" src="src/components/timeLeft/timeLeft.js"></script>
     <script type="module" src="src/components/verifyPermission/verifyPermission.js"></script>
     <script type="module" src="src/pages/transfer/transfer.js"></script>
-    <script type="module" src="src/components/navBar/nav.js"></script>
-    <script type="module" src="src/components/navMobile/navMobile.js"></script>
     <script type="module" src="src/pages/transfer/discharge.js"></script>
     <script type="module" src="src/pages/transfer/transfersCard.js"></script>
+    <script type="module" src="src/components/navBar/nav.js"></script>
+    <script type="module" src="src/components/navMobile/navMobile.js"></script>
 </body>
 
 </html>

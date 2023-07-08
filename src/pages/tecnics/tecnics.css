@@ -82,6 +82,24 @@ body {
     top: 0;
     right: 0;
 }
+#refreshItems {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0px;
+    margin: 20px 70px 0px 0px;
+    position: absolute;
+    font-size: 30px;
+    height: 40px;
+    width: 40px;
+    background: transparent;
+    border: 0px;
+    outline-width: 0px;
+    cursor: pointer;
+    top: 0;
+    right: 0;
+    transition: 0.5s;
+}
 
 #TecnicImg {
     width: 200px;
