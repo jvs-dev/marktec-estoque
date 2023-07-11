@@ -57,6 +57,9 @@ function loadData() {
                         navMobile.insertAdjacentElement("afterbegin", addItemsBtn)
                         addItemsBtn.innerHTML = `<i class="bi bi-plus-circle navMobile__icon">`
                         addItemsBtn.classList.add("navMobile__a")
+                        if (window.location.href.indexOf("add-item") !== -1) {
+                            addItemsBtn.classList.add("active")
+                        }
                         addItemsBtn.href = "add-item.html"
                         navMobile.classList.add("userStock")
                         transferMobile.style.display = "flex"

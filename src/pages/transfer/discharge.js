@@ -266,6 +266,10 @@ async function removeTecnicItems(name, used) {
     await updateDoc(washingtonRef, {
         tecnicStock: increment(-used)
     });
+    let itemRef = doc(db, "items", `${name}`);
+    await updateDoc(itemRef, {
+        withTecnics: increment(-used)
+    });
     clearInputs()
 }
 

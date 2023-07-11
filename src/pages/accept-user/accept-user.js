@@ -28,6 +28,7 @@ function loadData() {
                     transfer.style.display = "none"
                     acceptUser.style.display = "flex"
                     addItem.style.display = "flex"
+                    loadUsers()
                 } else {
                     let body = document.querySelector("body")
                     body.innerHTML = ""
@@ -38,8 +39,6 @@ function loadData() {
     });
 }
 
-loadData()
-
 
 async function acptPermission(email) {
     awaitSection.innerHTML = ""
@@ -49,44 +48,42 @@ async function acptPermission(email) {
     });
 }
 
-const q = query(collection(db, "users"), where("permission", "==", false));
-const unsubscribe = onSnapshot(q, (querySnapshot) => {
-    awaitSection.innerHTML = ""
-    querySnapshot.forEach((doc) => {
-        let newArticle = document.createElement("article");
-        awaitSection.insertAdjacentElement("beforeend", newArticle)
-        newArticle.classList.add("awaitSection__article")
-        newArticle.innerHTML = `
-            <div class="awaitSection__div">
-                <p class="awaitSection__fullName">${doc.data().fullName}</p>
-                <p class="awaitSection__email">${doc.data().email}</p>
-                <p class="awaitSection__work">${doc.data().work}</p>
-            </div>
-            `
-        let div = document.createElement("div")
-        let rejectPermission = document.createElement("button")
-        let acceptPermission = document.createElement("button")
-        newArticle.insertAdjacentElement("beforeend", div)
-        div.style.display = "flex"
-        div.classList.add("acceptRejectDiv")
-        div.insertAdjacentElement("beforeend", rejectPermission)
-        div.insertAdjacentElement("beforeend", acceptPermission)
-        rejectPermission.classList.add("awaitSection__reject")
-        acceptPermission.classList.add("awaitSection__accept")
-        rejectPermission.innerHTML = `<ion-icon name="close-outline"></ion-icon>`
-        acceptPermission.innerHTML = `<ion-icon name="checkmark-outline"></ion-icon>`
-        acceptPermission.onclick = function () {
-            acptPermission(doc.data().email)
-            if (doc.data().work == "Técnico") {
-                addTecnicItem(doc.data().email)
+function loadUsers() {
+    const q = query(collection(db, "users"), where("permission", "==", false));
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        awaitSection.innerHTML = ""
+        querySnapshot.forEach((doc) => {
+            let newArticle = document.createElement("article");
+            awaitSection.insertAdjacentElement("beforeend", newArticle)
+            newArticle.classList.add("awaitSection__article")
+            newArticle.innerHTML = `
+                <div class="awaitSection__div">
+                    <p class="awaitSection__fullName">${doc.data().fullName}</p>
+                    <p class="awaitSection__email">${doc.data().email}</p>
+                    <p class="awaitSection__work">${doc.data().work}</p>
+                </div>
+                `
+            let div = document.createElement("div")
+            let rejectPermission = document.createElement("button")
+            let acceptPermission = document.createElement("button")
+            newArticle.insertAdjacentElement("beforeend", div)
+            div.style.display = "flex"
+            div.classList.add("acceptRejectDiv")
+            div.insertAdjacentElement("beforeend", rejectPermission)
+            div.insertAdjacentElement("beforeend", acceptPermission)
+            rejectPermission.classList.add("awaitSection__reject")
+            acceptPermission.classList.add("awaitSection__accept")
+            rejectPermission.innerHTML = `<ion-icon name="close-outline"></ion-icon>`
+            acceptPermission.innerHTML = `<ion-icon name="checkmark-outline"></ion-icon>`
+            acceptPermission.onclick = function () {
+                acptPermission(doc.data().email)
+                if (doc.data().work == "Técnico") {
+                    addTecnicItem(doc.data().email)
+                }
             }
-        }
-    });
-});
-
-function loadItems() {
+        });
+    });   
 }
-loadItems()
 
 function addTecnicItem(email) {
     let items = {}
@@ -116,3 +113,18 @@ function verifyData(email) {
         console.log("Current data: ", doc.data());
     });
 }
+
+
+let e = query(collection(db, "users"), where("permission", "==", false));
+let unsubscribi = onSnapshot(e, (snapshot) => {
+    snapshot.docChanges().forEach((change) => {
+        if (change.type === "modified") {
+            loadData()
+        }
+        if (change.type === "added") {
+            loadData()
+        }
+    });
+});
+
+loadData()

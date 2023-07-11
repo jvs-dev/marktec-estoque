@@ -14,7 +14,8 @@ body.displayCenter {
 .main__home {
     width: 100vw;
     min-height: 100vh;
-    background: linear-gradient(246.26deg, #0AD4B5 -17.89%, rgba(255, 255, 255, 0) 100%);
+    background: linear-gradient(135deg, #0AD4B5 30.72%, rgba(255, 255, 255, 0.00) 30.73%), linear-gradient(45deg, #FF9700 23.23%, rgba(255, 255, 255, 0.00) 23.31%), linear-gradient(110deg, #F1F1F1 32.51%, #FFF 32.56%);
+    background-attachment: fixed;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -31,11 +32,12 @@ body.displayCenter {
     width: 200px;
     height: 200px;
     border-radius: 100%;
+    padding: 4px;
     border: solid 2px var(--black);
 }
 
 #changePhotoBtn {
-    background: var(--green);
+    background: var(--black);
     border-radius: 100%;
     display: flex;
     align-items: center;
@@ -57,26 +59,27 @@ body.displayCenter {
     right: 0;
     top: 0;
     margin: 40px 40px 0px 0px;
-    background: var(--white);
-    border-radius: 100px;
-    padding: 5px 20px;
+    background: transparent;
     border: none;
+    border-bottom: solid 2px transparent;
     cursor: pointer;
     color: var(--orange);
     font-size: 25px;
     display: flex;
     align-items: center;
+    justify-content: center;
+    gap: 0px;
     transition: 0.5s;
 }
 
 #signOut ion-icon {
     margin-left: 5px;
-    font-size: 30px;
+    font-size: 25px;
 }
 
 #signOut:hover {
-    background: var(--orange);
-    color: var(--white);
+    border-bottom: solid 2px var(--orange);
+    gap: 2px;
 }
 
 #userFullName {
@@ -124,7 +127,8 @@ body.displayCenter {
 }
 
 .home__dataChange {
-    background: #fff;
+    background: transparent;
+    
     border-radius: 20px;
     width: 60%;
     padding: 40px;
@@ -156,6 +160,7 @@ body.displayCenter {
 @media only screen and (max-width: 500px) {
     .main__home {
         padding: 60px 20px 20px 20px;
+        background: #fff;
     }
 
     #userFullName {

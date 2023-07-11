@@ -17,6 +17,7 @@ let acceptUser = document.getElementById("acceptUser")
 let addItem = document.getElementById("addItem")
 let closeTecnicItems = document.getElementById("closeTecnicItems")
 let tecnicItemsSection = document.getElementById("tecnicItemsSection")
+let tecnicFocus = ""
 
 
 closeTecnicItems.onclick = function () {
@@ -33,6 +34,9 @@ function loadData() {
                     transfer.style.display = "none"
                     acceptUser.style.display = "flex"
                     addItem.style.display = "flex"
+                    let tecnicsSection = document.getElementById("tecnicsSection")
+                    tecnicsSection.innerHTML = ""
+                    loadTecnics()
                 } else {
                     if (doc.data().work == "Técnico") {
                         let body = document.querySelector("body")
@@ -42,14 +46,15 @@ function loadData() {
                         transfer.style.display = "flex"
                         acceptUser.style.display = "none"
                         addItem.style.display = "none"
+                        let tecnicsSection = document.getElementById("tecnicsSection")
+                        tecnicsSection.innerHTML = ""
+                        loadTecnics()
                     }
                 }
             });
         }
     });
 }
-
-loadData()
 
 function loadTecnics() {
     let q = query(collection(db, "users"), where("work", "==", "Técnico"));
@@ -58,7 +63,6 @@ function loadTecnics() {
             if (doc.data().permission == true) {
                 let tecnicsSection = document.getElementById("tecnicsSection")
                 let article = document.createElement("article")
-                let refreshItems = document.getElementById("refreshItems")
                 tecnicsSection.insertAdjacentElement("beforeend", article)
                 article.classList.add("article__tecnic--card")
                 article.innerHTML = `
@@ -72,30 +76,14 @@ function loadTecnics() {
                     TecnicImg.src = doc.data().photo
                     loadTecnicItems(doc.data().email)
                 }
-                refreshItems.onclick = function () {
-                    refreshItems.style.transition = "0.5s"
-                    refreshItems.style.rotate = "360deg"
-                    let TecnicImg = document.getElementById("TecnicImg")
-                    let TecnicName = document.getElementById("TecnicName")
-                    TecnicName.textContent = doc.data().fullName
-                    tecnicItemsSection.style.display = "flex"
-                    TecnicImg.src = doc.data().photo
-                    loadTecnicItems(doc.data().email)
-                    setTimeout(() => {
-                        refreshItems.style.transition = "0s"
-                        refreshItems.style.rotate = "0deg"
-                    }, 500);
-                }
             }
         });
     });
 
 }
 
-
-loadTecnics()
-
 async function loadTecnicItems(email) {
+    let i = 0
     let tecnicItems = document.getElementById("tecnicItems")
     tecnicItems.innerHTML = ""
     let querySnapshot = await getDocs(collection(db, "tecnics", `${email}`, "stock"));
@@ -103,6 +91,7 @@ async function loadTecnicItems(email) {
         let article = document.createElement("article")
         tecnicItems.insertAdjacentElement("beforeend", article)
         article.classList.add("tecnicItensCard")
+        article.style.background = `var(--background-${i})`
         article.innerHTML = `
             <img class="tecnicItensCard__img" src="${doc.data().itemImg}" alt="Imagem do ${doc.data().itemName}">
             <div class="tecnicItensCard__div">
@@ -110,5 +99,38 @@ async function loadTecnicItems(email) {
                 <span class="tecnicItensCard__span">Possui: ${doc.data().tecnicStock} ${doc.data().measure}</span>
             </div>`
         article.style.order = `-${Math.round(doc.data().tecnicStock)}`
+        switch (i) {
+            case 0:
+                i = 1
+                break;
+            default:
+                i = 0
+                break;
+        }
     })
 }
+
+
+let e = query(collection(db, "users"), where("work", "==", "Técnico"));
+let unsubscribed = onSnapshot(e, (snapshot) => {
+    snapshot.docChanges().forEach((change) => {
+        if (change.type === "modified") {
+            loadData()
+        }
+    });
+});
+
+let q = query(collection(db, "items"), where("active", "==", true));
+let unsubscribe = onSnapshot(q, (snapshot) => {
+    snapshot.docChanges().forEach((change) => {
+        if (change.type === "modified") {
+            console.log("oi");
+            if (tecnicFocus != "") {
+                loadTecnicItems(tecnicFocus)
+                console.log(tecnicFocus);
+            }
+        }
+    });
+});
+
+loadData()

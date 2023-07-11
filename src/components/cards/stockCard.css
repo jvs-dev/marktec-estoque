@@ -1,14 +1,21 @@
 .card__stock {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0px 6px 20px #00000042;
+    margin: 8px 0px;
     display: flex;
     align-items: center;
     width: 90%;
     padding: 20px;
-    background: var(--white);
-    border-radius: 20px;
-    border: solid 1px var(--black);
-    margin: 20px 0px;
     cursor: pointer;
+    transition: 0.5s;
 }
+
+.card__stock:hover {
+    box-shadow: 0px 8px 20px #00000096;
+    z-index: 2;
+}
+
 .card__stock .card__img {
     height: 70px;
     margin: 0px 40px 0px 0px;

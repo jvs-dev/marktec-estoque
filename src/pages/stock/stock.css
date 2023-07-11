@@ -7,7 +7,8 @@
 .main__stock {
     width: 100vw;
     height: 100vh;
-    background: linear-gradient(246.26deg, #0AD4B5 -17.89%, rgba(255, 255, 255, 0) 100%);
+    background: linear-gradient(135deg, #0AD4B5 30.72%, rgba(255, 255, 255, 0.00) 30.73%), linear-gradient(45deg, #FF9700 23.23%, rgba(255, 255, 255, 0.00) 23.31%), linear-gradient(110deg, #F1F1F1 32.51%, #FFF 32.56%);
+    background-attachment: fixed;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -18,8 +19,9 @@
 }
 
 .section__search--div {
-    background: var(--white);
+    background: #fff;
     border-radius: 20px;
+    border: solid 1px var(--black);
     width: 50vw;
     padding: 8px 10px;
     display: flex;
@@ -50,6 +52,7 @@
 @media only screen and (max-width: 500px) {
     .main__stock {
         padding: 40px 0px;
+        background: #fff;
     }
     .section__search--div {
         width: 80vw;

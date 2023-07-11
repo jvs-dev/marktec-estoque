@@ -38,6 +38,7 @@ function loadData() {
 loadData()
 
 async function loadItems() {
+    let i = 0
     let q = query(collection(db, "items"), where("active", "==", true));
     let unsubscribe = onSnapshot(q, (querySnapshot) => {
         querySnapshot.forEach((doc) => {
@@ -58,10 +59,28 @@ async function loadItems() {
                     <span class="card__span">Total: ${Number(doc.data().inStock) + doc.data().withTecnics}</span>
                 </div>
             </div>`
+            switch (i) {
+                case 1:
+                    i = 0
+                    break;
+                default:
+                    i = 1
+                    break;
+            }
         });
     });
 
 }
+
+let q = query(collection(db, "items"), where("active", "==", true));
+let unsubscribe = onSnapshot(q, (snapshot) => {
+    snapshot.docChanges().forEach((change) => {
+        if (change.type === "modified") {
+            loadData()
+        }
+    });
+});
+
 
 loadItems()
 

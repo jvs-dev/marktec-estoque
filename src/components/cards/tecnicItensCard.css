@@ -6,17 +6,40 @@
 }
 
 .tecnicItensCard {
+    --background-0: rgba(231, 231, 231, 0.6);
+    --background-1: #fff;
     width: 80%;
     max-width: 850px;
     height: 145px;
-    background: #fff;
-    border: solid 2px var(--black);
     padding: 20px;
     display: flex;
     align-items: center;
     justify-content: left;
-    border-radius: 20px;
+    border-left: solid 1px var(--black);
+    border-right: solid 1px var(--black);
+    cursor: pointer;
+    transition: 0.1s;
+    transition-delay: 0s;
+}
+
+.tecnicItensCard:first-child {
+    border-top: solid 1px var(--black);
+    border-radius: 8px 8px 0px 0px;
+}
+
+.tecnicItensCard:last-child {
+    border-bottom: solid 1px var(--black);
+    border-radius: 0px 0px 8px 8px;
+}
+
+.tecnicItensCard:hover {
+    transform: scale(1.02);
+    box-shadow: 0px 8px 20px #00000046;
     margin: 20px 0px;
+    border-top: solid 1px var(--black);
+    border-bottom: solid 1px var(--black);
+    border-radius: 8px;
+    transition-delay: 0.5s;
 }
 
 .tecnicItensCard.itemAlert {
@@ -78,7 +101,6 @@
     .tecnicItensCard {
         width: 100%;
         padding: 10px 20px;
-        margin: 10px 0px;
     }
 
     .tecnicItensCard__img {

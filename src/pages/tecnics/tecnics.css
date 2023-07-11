@@ -4,13 +4,13 @@ body {
 
 .main__h2 {
     text-align: center;
-    margin-bottom: 40px;
+    margin-bottom: 90px;
 }
 
 .main__tecnics {
     width: 100vw;
     height: 100vh;
-    background: linear-gradient(246.26deg, #0AD4B5 -17.89%, rgba(255, 255, 255, 0) 100%);
+    background: linear-gradient(135deg, #0AD4B5 30.72%, rgba(255, 255, 255, 0.00) 30.73%), linear-gradient(45deg, #FF9700 23.23%, rgba(255, 255, 255, 0.00) 23.31%), linear-gradient(110deg, #F1F1F1 32.51%, #FFF 32.56%);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -28,20 +28,35 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    background: var(--white);
-    padding: 20px;
+    justify-content: end;
+    background: linear-gradient(235deg, var(--gray), var(--white));
+    padding: 55px 20px 20px 20px;
     margin: 20px;
     border-radius: 20px;
     cursor: pointer;
     box-shadow: 0px 4px 10px #00000042;
+    position: relative;
+    height: auto;
+    transition: 0.5s;
 }
 
+.article__tecnic--card:hover {
+    box-shadow: 0px 8px 20px #00000073;
+    transform: scale(1.02);
+}
+.article__tecnic--card:hover .tecnic__img {
+    box-shadow: 0px 2px 10px #1e1e1e4b;
+}
 .tecnic__img {
     height: 150px;
     aspect-ratio: 1/1;
     border-radius: 100%;
-    border: solid 1px var(--black);
+    padding: 2px;
+    border: solid 2px var(--black);
+    position: absolute;
+    top: 0;
+    transform: translateY(-85px);
+    transition: 0.5s;
 }
 
 .tecnic__p {
@@ -105,7 +120,8 @@ body {
     width: 200px;
     aspect-ratio: 1/1;
     border-radius: 100%;
-    border: solid 1px var(--black);
+    border: solid 2px var(--black);
+    padding: 2px;
 }
 
 #TecnicName {
@@ -120,7 +136,7 @@ body {
     text-align: center;
     font-size: 35px;
     font-weight: 600;
-    margin: 30px 0px 0px 0px;
+    margin: 30px 0px 20px 0px;
 }
 
 #tecnicItems {
@@ -133,7 +149,7 @@ body {
 @media only screen and (max-width: 500px) {
     .main__tecnics {
         padding: 40px 0px;
-
+        background: #fff;
     }
 
     .main__h2 {

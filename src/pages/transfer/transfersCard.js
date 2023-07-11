@@ -159,8 +159,8 @@ async function compare(senderEmail, id, reciverEmail, itemsSelecteds, senderWork
                 acceptHour: hours
             });
             Object.keys(itemsSelecteds).forEach(item => {
-                remove(itemsSelecteds[item].name, itemsSelecteds[item].used, senderEmail)
-                addItems(itemsSelecteds[item].name, itemsSelecteds[item].used, reciverEmail)
+                remove(itemsSelecteds[item].name, itemsSelecteds[item].used, senderEmail, senderWork)
+                addItems(itemsSelecteds[item].name, itemsSelecteds[item].used, reciverEmail, reciverWork)
             })
         } else {
             notHave(id)

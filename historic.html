@@ -64,7 +64,8 @@
                         name="swap-horizontal-outline" class="navMobile__icon"></ion-icon></a>
                 <a href="historic.html" class="navMobile__a active"><i
                         class="bi bi-clock-history navMobile__icon active"></i></a>
-                <a href="tecnics.html" class="navMobile__a" id="tecnicsMobile"><i class="bi bi-car-front-fill navMobile__icon"></i></a>
+                <a href="tecnics.html" class="navMobile__a" id="tecnicsMobile"><i
+                        class="bi bi-car-front-fill navMobile__icon"></i></a>
                 <a href="stock.html" class="navMobile__a"><i class="bi bi-box-seam navMobile__icon"></i></a>
                 <a href="index.html" class="navMobile__a"><ion-icon name="home-outline"
                         class="navMobile__icon"></ion-icon></a>
@@ -99,8 +100,22 @@
             <section class="main__section">
                 <div class="section__search--div">
                     <ion-icon name="search-outline" class="section__search--icon"></ion-icon>
-                    <input type="search" placeholder="Pesquisar" id="searchInput">
+                    <input type="search" placeholder="Pesquisar" id="searchInput" list="searchOption">
+                    <ion-icon name="filter-outline" id="searchFilter"></ion-icon>
+                    <ul id="filterList">
+                        <li class="filterList__li active">Receptor</li>
+                        <li class="filterList__li">Remetente</li>
+                        <li class="filterList__li">Data</li>
+                        <li class="filterList__li">Hora</li>
+                        <li class="filterList__li">Descrição</li>
+                        <li class="filterList__li">Motivo</li>
+                        <li class="filterList__li">Items</li>
+                        <li class="filterList__li">Baixas</li>
+                    </ul>
                 </div>
+                <datalist id="searchOption">
+                    
+                </datalist>
                 <section id="historicSection">
 
                 </section>

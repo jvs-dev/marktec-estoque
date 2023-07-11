@@ -79,7 +79,7 @@ function verifyUrl() {
                 <span class="viewDischargeSection__itemQuanty">${doc.data().itemsToTransfer[element].used} ${doc.data().itemsToTransfer[element].measure}</span>
                 <p class="viewDischargeSection__itemName">${doc.data().itemsToTransfer[element].name}</p>
                 <span class="viewDischargeSection__itemPrice">$${doc.data().itemsToTransfer[element].value}</span>
-                <span class="viewDischargeSection__itemTotalPrice">$${doc.data().itemsToTransfer[element].value.replace(',', '.') * doc.data().itemsToTransfer[element].used.replace(',', '.')}</span>`
+                <span class="viewDischargeSection__itemTotalPrice">$${(doc.data().itemsToTransfer[element].value.replace(',', '.') * doc.data().itemsToTransfer[element].used.replace(',', '.')).toFixed(2)}</span>`
                 total = total + (doc.data().itemsToTransfer[element].value.replace(',', '.') * doc.data().itemsToTransfer[element].used.replace(',', '.'))
                 let allTotalSpan = document.getElementById("allTotalSpan")
                 allTotalSpan.textContent = `$${total.toFixed(2)}`
