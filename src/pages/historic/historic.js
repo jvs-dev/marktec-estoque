@@ -49,6 +49,41 @@ filterOption.forEach((btn) =>
             element.classList.remove("active")
         });
         event.currentTarget.classList.add("active")
+        let historicSection = document.getElementById("historicSection")
+        switch (event.currentTarget.textContent.toLocaleLowerCase()) {
+            case "baixas":
+                historicSection.classList.add("searching")
+                historicSection.innerHTML = `
+                    <div class="dot-spinner">
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                    </div>`
+                searchDischarges()
+                break;
+            case "transferências":
+                historicSection.classList.add("searching")
+                historicSection.innerHTML = `
+                    <div class="dot-spinner">
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                    </div>`
+                searchTransfers()
+                break;
+            default:
+                break;
+        }
     })
 );
 
@@ -509,6 +544,67 @@ function searchMotive(text) {
 } */
 
 
+function searchDischarges() {
+    let historicSection = document.getElementById("historicSection")
+    historicSection.classList.remove("searching")
+    historicSection.innerHTML = ""
+    let e = query(collection(db, "discharges"), where("itemsUsed", "!=", {}));
+    let unsubscri = onSnapshot(e, (querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            let historicSection = document.getElementById("historicSection")
+            let article = document.createElement("article")
+            historicSection.insertAdjacentElement("beforeend", article)
+            article.classList.add("dischargeCard")
+            article.style.order = `-${doc.data().timestamp.seconds}`
+            article.innerHTML = `
+                <div class="dischargeCard__div">
+                    <h2 class="dischargeCard__h2">Relatório de baixa</h2>
+                    <p class="dischargeCard__service">${doc.data().service}</p>
+                </div>
+                <p class="dischargeCard__p"><i class="bi bi-car-front-fill dischargeCard__p__icon"></i>técnico: ${doc.data().tecnicName}</p>
+                <p class="dischargeCard__p"><ion-icon name="person-outline" class="dischargeCard__p__icon"></ion-icon>Cliente: ${doc.data().clientName}</p>
+                <p class="dischargeCard__description">${doc.data().description}.</p>
+                <span class="dischargeCard__date">${doc.data().hours}<br>${doc.data().date}</span>
+                <button class="dischargeCard__more"><ion-icon name="arrow-forward-outline"></ion-icon></button>`
+            article.onclick = function () {
+                window.location = "?id=" + doc.id;
+            }
+        })
+    })
+}
+
+
+function searchTransfers() {
+    let historicSection = document.getElementById("historicSection")
+    historicSection.classList.remove("searching")
+    historicSection.innerHTML = ""
+    let q = query(collection(db, "transfers"), where("status", "!=", ``));
+    let unsubscribe = onSnapshot(q, (querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            let historicSection = document.getElementById("historicSection")
+            let article = document.createElement("article")
+            historicSection.insertAdjacentElement("beforeend", article)
+            article.style.order = `-${doc.data().timestamp.seconds}`
+            article.classList.add("NewTransferCard")
+            article.innerHTML = `
+                            <div class="NewTransferCard__div">
+                                <h2 class="NewTransferCard__h2">Transferência</h2>
+                                <p class="NewTransferCard__status" style="color: ${returnColor(doc.data().status)};">${doc.data().status}</p>
+                            </div>
+                            <p class="NewTransferCard__p"><ion-icon name="person-remove-outline"
+                                    class="NewTransferCard__p__icon md hydrated" role="img"></ion-icon>Remetente: ${doc.data().senderName}</p>
+                            <p class="NewTransferCard__p"><ion-icon name="person-add-outline"
+                                    class="NewTransferCard__p__icon md hydrated" role="img"></ion-icon>receptor: ${doc.data().reciverName}</p>
+                                <p class="NewTransferCard__motive">Motivo: ${doc.data().motive}.</p>
+                                <span class="NewTransferCard__description">Descrição: ${doc.data().description}.</span>
+                            <span class="NewTransferCard__date">${doc.data().hours}<br>${doc.data().date}</span>
+                            <button class="NewTransferCard__more"><ion-icon name="arrow-forward-outline" role="img" class="md hydrated"></ion-icon></button>`
+            article.onclick = function () {
+                window.location = "view-transfer.html?id=" + doc.id;
+            }
+        })
+    })
+}
 
 
 

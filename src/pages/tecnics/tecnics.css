@@ -44,9 +44,11 @@ body {
     box-shadow: 0px 8px 20px #00000073;
     transform: scale(1.02);
 }
+
 .article__tecnic--card:hover .tecnic__img {
     box-shadow: 0px 2px 10px #1e1e1e4b;
 }
+
 .tecnic__img {
     height: 150px;
     aspect-ratio: 1/1;
@@ -97,6 +99,7 @@ body {
     top: 0;
     right: 0;
 }
+
 #refreshItems {
     display: flex;
     align-items: center;
@@ -154,7 +157,7 @@ body {
 
     .main__h2 {
         font-size: 28px;
-        margin-bottom: 20px;
+        margin-bottom: 50px;
     }
 
     #tecnicsSection {
@@ -162,6 +165,7 @@ body {
         flex-direction: column;
         align-items: center;
     }
+
     #TecnicName {
         text-align: center;
         font-size: 22px;
@@ -171,16 +175,24 @@ body {
         padding: 0px 20px;
         box-sizing: border-box;
     }
+
     #tecnicItemsSection {
         z-index: 3;
         padding: 20px;
     }
+
     .TecnicNameSection__h2 {
         font-size: 30px;
         font-weight: 600;
         margin: 10px 0px 10px 0px;
     }
+
     #TecnicImg {
         width: 150px;
     }
+
+    .article__tecnic--card {
+        margin: 60px 0px;
+    }
+
 }
