@@ -450,6 +450,9 @@ async function setUsedItems() {
 
 
 function clearInputs() {
+    itemsSelecteds = {}
+    let Senddescription = document.getElementById("Senddescription")
+    Senddescription.value = ""
     let SectionItemsCards = document.getElementById("SectionItemsCardsSend")
     let dischargeSelectedSection = document.getElementById("sendSelectedSection")
     let dischargeItemsAlert = document.getElementById("sendItemsAlert")

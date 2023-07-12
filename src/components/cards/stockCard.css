@@ -5,7 +5,8 @@
     margin: 8px 0px;
     display: flex;
     align-items: center;
-    width: 90%;
+    width: 100%;
+    max-width: 720px;
     padding: 20px;
     cursor: pointer;
     transition: 0.5s;

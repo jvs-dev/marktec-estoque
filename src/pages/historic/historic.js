@@ -18,6 +18,16 @@ let addItem = document.getElementById("addItem")
 let searchInput = document.getElementById("searchInput")
 let searchFilter = document.getElementById("searchFilter")
 let filterOption = document.querySelectorAll('.filterList__li');
+let closeErrorPopUp = document.getElementById("closeErrorPopUp")
+
+closeErrorPopUp.onclick = function () {
+    let errorPopUp = document.getElementById("errorPopUp")
+    errorPopUp.classList.remove("active")
+    setTimeout(() => {
+        errorPopUp.style.display = "none"
+    }, 200);
+}
+
 
 searchFilter.onclick = function (event) {
     event.stopPropagation()
@@ -50,6 +60,9 @@ filterOption.forEach((btn) =>
         });
         event.currentTarget.classList.add("active")
         let historicSection = document.getElementById("historicSection")
+        if (searchInput.value != "") {
+            search(searchInput.value)
+        }
         switch (event.currentTarget.textContent.toLocaleLowerCase()) {
             case "baixas":
                 historicSection.classList.add("searching")
@@ -81,6 +94,36 @@ filterOption.forEach((btn) =>
                     </div>`
                 searchTransfers()
                 break;
+            case "todos":
+                historicSection.classList.add("searching")
+                historicSection.innerHTML = `
+                    <div class="dot-spinner">
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                    </div>`
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        const uid = user.uid;
+                        let unsub = onSnapshot(doc(db, `users`, `${user.email}`), (doc) => {
+                            if (doc.data().admin == true) {
+                                loadRequests()
+                            } else {
+                                if (doc.data().work == "Técnico") {
+                                    loadTecnicRequests(user.email, doc.data().fullName)
+                                } else {
+                                    loadRequests()
+                                }
+                            }
+                        });
+                    }
+                });
+                break;
             default:
                 break;
         }
@@ -109,6 +152,11 @@ function loadData() {
                             historicSection.classList.remove("searching")
                             historicSection.innerHTML = ""
                             loadRequests()
+                            let errorPopUp = document.getElementById("errorPopUp")
+                            errorPopUp.classList.remove("active")
+                            setTimeout(() => {
+                                errorPopUp.style.display = "none"
+                            }, 200);
                         }
                     })
                 } else {
@@ -131,6 +179,11 @@ function loadData() {
                                 historicSection.classList.remove("searching")
                                 historicSection.innerHTML = ""
                                 loadRequests()
+                                let errorPopUp = document.getElementById("errorPopUp")
+                                errorPopUp.classList.remove("active")
+                                setTimeout(() => {
+                                    errorPopUp.style.display = "none"
+                                }, 200);
                             }
                         })
                     }
@@ -181,14 +234,22 @@ function search(text) {
                 case "items":
                     searchItem(text.toLocaleLowerCase())
                     break;
+                case "todos":
+                    let errorPopUp = document.getElementById("errorPopUp")
+                    errorPopUp.style.display = "flex"
+                    setTimeout(() => {
+                        errorPopUp.classList.add("active")
+                    }, 1);
+                    let historicSection = document.getElementById("historicSection")
+                    historicSection.classList.remove("searching")
+                    historicSection.innerHTML = ""
+                    break;
                 default:
                     break;
             }
         }
     });
 }
-
-
 
 
 
@@ -481,20 +542,23 @@ function searchMotive(text) {
 }
 
 function searchItem(text) {
+    console.log("oi");
     let historicSection = document.getElementById("historicSection")
     historicSection.classList.remove("searching")
     historicSection.innerHTML = ""
     let q = query(collection(db, "transfers"), where("status", "!=", ``));
     let unsubscribe = onSnapshot(q, (querySnapshot) => {
         querySnapshot.forEach((doc) => {
-            console.log(Object.keys(doc.data().itemsToTransfer));
-            /* if (doc.data().motive.toLocaleLowerCase().includes(`${text}`)) {
-                let historicSection = document.getElementById("historicSection")
-                let article = document.createElement("article")
-                historicSection.insertAdjacentElement("beforeend", article)
-                article.style.order = `-${doc.data().timestamp.seconds}`
-                article.classList.add("NewTransferCard")
-                article.innerHTML = `
+            let i = 0
+            while (Object.keys(doc.data().itemsToTransfer).length > i) {
+                console.log(`${Object.keys(doc.data().itemsToTransfer).length} => ${i + 1}`);
+                if (Object.keys(doc.data().itemsToTransfer)[i].toLocaleLowerCase().includes(`${text}`)) {
+                    let historicSection = document.getElementById("historicSection")
+                    let article = document.createElement("article")
+                    historicSection.insertAdjacentElement("beforeend", article)
+                    article.style.order = `-${doc.data().timestamp.seconds}`
+                    article.classList.add("NewTransferCard")
+                    article.innerHTML = `
                     <div class="NewTransferCard__div">
                         <h2 class="NewTransferCard__h2">Transferência</h2>
                         <p class="NewTransferCard__status" style="color: ${returnColor(doc.data().status)};">${doc.data().status}</p>
@@ -507,10 +571,13 @@ function searchItem(text) {
                         <span class="NewTransferCard__description">Descrição: ${doc.data().description}.</span>
                     <span class="NewTransferCard__date">${doc.data().hours}<br>${doc.data().date}</span>
                     <button class="NewTransferCard__more"><ion-icon name="arrow-forward-outline" role="img" class="md hydrated"></ion-icon></button>`
-                article.onclick = function () {
-                    window.location = "view-transfer.html?id=" + doc.id;
+                    article.onclick = function () {
+                        window.location = "view-transfer.html?id=" + doc.id;
+                    }
+                    i = Object.keys(doc.data().itemsToTransfer).length + i
                 }
-            } */
+                i++
+            }
         })
     })
     /* let e = query(collection(db, "discharges"), where("itemsUsed", "!=", {}));
@@ -635,6 +702,7 @@ function searchTransfers() {
 function loadTecnicRequests(email, name) {
     let historicSection = document.getElementById("historicSection")
     historicSection.innerHTML = ""
+    historicSection.classList.remove("searching")
     let q = query(collection(db, "transfers"), where("status", "!=", ``));
     let unsubscribe = onSnapshot(q, (querySnapshot) => {
         querySnapshot.forEach((doc) => {
@@ -694,6 +762,7 @@ function loadTecnicRequests(email, name) {
 function loadRequests() {
     let historicSection = document.getElementById("historicSection")
     historicSection.innerHTML = ""
+    historicSection.classList.remove("searching")
     let q = query(collection(db, "transfers"), where("status", "!=", ``));
     let unsubscribe = onSnapshot(q, (querySnapshot) => {
         querySnapshot.forEach((doc) => {

@@ -1,6 +1,6 @@
 .navBar {
     background: var(--white);
-    width: 90px;
+    width: 75px;
     height: 100vh;
     display: flex;
     justify-content: space-between;
@@ -28,7 +28,7 @@
 .navBar .nav__a {
     width: 100%;
     margin: 10px 0px;
-    padding: 10px 0px;
+    padding: 5px 0px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -50,7 +50,7 @@
 
 .navBar .nav__icon {
     color: var(--black);
-    font-size: 32px;
+    font-size: 30px;
 }
 
 .navBar .nav__a.active {
