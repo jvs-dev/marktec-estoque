@@ -179,7 +179,7 @@ function search(text) {
                     searchMotive(text.toLocaleLowerCase())
                     break;
                 case "items":
-                    /* searchItem(text.toLocaleLowerCase()) */
+                    searchItem(text.toLocaleLowerCase())
                     break;
                 default:
                     break;
@@ -480,42 +480,40 @@ function searchMotive(text) {
     })
 }
 
-/* function searchItem(text) {
+function searchItem(text) {
     let historicSection = document.getElementById("historicSection")
     historicSection.classList.remove("searching")
     historicSection.innerHTML = ""
     let q = query(collection(db, "transfers"), where("status", "!=", ``));
     let unsubscribe = onSnapshot(q, (querySnapshot) => {
         querySnapshot.forEach((doc) => {
-            Object.keys(doc.data().itemsToTransfer).forEach(element => {
-                console.log(element);
-                if (element.toLocaleLowerCase().includes(`${text}`)) {
-                    let historicSection = document.getElementById("historicSection")
-                    let article = document.createElement("article")
-                    historicSection.insertAdjacentElement("beforeend", article)
-                    article.style.order = `-${doc.data().timestamp.seconds}`
-                    article.classList.add("NewTransferCard")
-                    article.innerHTML = `
-                            <div class="NewTransferCard__div">
-                                <h2 class="NewTransferCard__h2">Transferência</h2>
-                                <p class="NewTransferCard__status" style="color: ${returnColor(doc.data().status)};">${doc.data().status}</p>
-                            </div>
-                            <p class="NewTransferCard__p"><ion-icon name="person-remove-outline"
-                                    class="NewTransferCard__p__icon md hydrated" role="img"></ion-icon>Remetente: ${doc.data().senderName}</p>
-                            <p class="NewTransferCard__p"><ion-icon name="person-add-outline"
-                                    class="NewTransferCard__p__icon md hydrated" role="img"></ion-icon>receptor: ${doc.data().reciverName}</p>
-                                <p class="NewTransferCard__motive">Motivo: ${doc.data().motive}.</p>
-                                <span class="NewTransferCard__description">Descrição: ${doc.data().description}.</span>
-                            <span class="NewTransferCard__date">${doc.data().hours}<br>${doc.data().date}</span>
-                            <button class="NewTransferCard__more"><ion-icon name="arrow-forward-outline" role="img" class="md hydrated"></ion-icon></button>`
-                    article.onclick = function () {
-                        window.location = "view-transfer.html?id=" + doc.id;
-                    }
+            console.log(Object.keys(doc.data().itemsToTransfer));
+            /* if (doc.data().motive.toLocaleLowerCase().includes(`${text}`)) {
+                let historicSection = document.getElementById("historicSection")
+                let article = document.createElement("article")
+                historicSection.insertAdjacentElement("beforeend", article)
+                article.style.order = `-${doc.data().timestamp.seconds}`
+                article.classList.add("NewTransferCard")
+                article.innerHTML = `
+                    <div class="NewTransferCard__div">
+                        <h2 class="NewTransferCard__h2">Transferência</h2>
+                        <p class="NewTransferCard__status" style="color: ${returnColor(doc.data().status)};">${doc.data().status}</p>
+                    </div>
+                    <p class="NewTransferCard__p"><ion-icon name="person-remove-outline"
+                            class="NewTransferCard__p__icon md hydrated" role="img"></ion-icon>Remetente: ${doc.data().senderName}</p>
+                    <p class="NewTransferCard__p"><ion-icon name="person-add-outline"
+                            class="NewTransferCard__p__icon md hydrated" role="img"></ion-icon>receptor: ${doc.data().reciverName}</p>
+                        <p class="NewTransferCard__motive">Motivo: ${doc.data().motive}.</p>
+                        <span class="NewTransferCard__description">Descrição: ${doc.data().description}.</span>
+                    <span class="NewTransferCard__date">${doc.data().hours}<br>${doc.data().date}</span>
+                    <button class="NewTransferCard__more"><ion-icon name="arrow-forward-outline" role="img" class="md hydrated"></ion-icon></button>`
+                article.onclick = function () {
+                    window.location = "view-transfer.html?id=" + doc.id;
                 }
-            });
+            } */
         })
     })
-    let e = query(collection(db, "discharges"), where("itemsUsed", "!=", {}));
+    /* let e = query(collection(db, "discharges"), where("itemsUsed", "!=", {}));
     let unsubscri = onSnapshot(e, (querySnapshot) => {
         querySnapshot.forEach((doc) => {
             if (doc.data().date.includes(`${text}`)) {
@@ -540,8 +538,8 @@ function searchMotive(text) {
             }
         })
 
-    })
-} */
+    }) */
+}
 
 
 function searchDischarges() {

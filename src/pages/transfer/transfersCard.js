@@ -91,7 +91,9 @@ function loadRequests(actualUserEmail) {
                     })
                 }
             } else {
-                timeExpired(doc.id)
+                if (doc.data().status == "Pendente") {
+                    timeExpired(doc.id)
+                }
             }
         });
     });
