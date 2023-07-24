@@ -142,7 +142,7 @@ async function compare(senderEmail, id, reciverEmail, itemsSelecteds, senderWork
         querySnapshot.forEach((doc) => {
             Object.keys(itemsSelecteds).forEach(item => {
                 if (itemsSelecteds[item].name == doc.data().itemName) {
-                    if (itemsSelecteds[item].used <= doc.data().tecnicStock) {
+                    if (Number(itemsSelecteds[item].used) <= Number(doc.data().tecnicStock)) {
                         i++
                     }
                 }
@@ -173,7 +173,7 @@ async function compare(senderEmail, id, reciverEmail, itemsSelecteds, senderWork
         querySnapshot.forEach((doc) => {
             Object.keys(itemsSelecteds).forEach(item => {
                 if (itemsSelecteds[item].name == doc.data().itemName) {
-                    if (itemsSelecteds[item].used <= doc.data().inStock) {
+                    if (Number(itemsSelecteds[item].used) <= Number(doc.data().inStock)) {
                         i++
                     }
                 }
@@ -205,16 +205,16 @@ async function remove(name, used, senderEmail, senderWork) {
     if (senderWork == "Técnico") {
         let washingtonRef = doc(db, "tecnics", `${senderEmail}`, "stock", `${name}`);
         await updateDoc(washingtonRef, {
-            tecnicStock: increment(-used)
+            tecnicStock: increment(-Number(used))
         });
         let itemRef = doc(db, "items", `${name}`);
         await updateDoc(itemRef, {
-            withTecnics: increment(-used)
+            withTecnics: increment(-Number(used))
         });
     } else {
         let washingtonRef = doc(db, "items", `${name}`);
         await updateDoc(washingtonRef, {
-            inStock: increment(-used)
+            inStock: increment(-Number(used))
         });
     }
 }
@@ -223,16 +223,16 @@ async function addItems(name, used, reciverEmail, reciverWork) {
     if (reciverWork == "Técnico") {
         let washingtonRef = doc(db, "tecnics", `${reciverEmail}`, "stock", `${name}`);
         await updateDoc(washingtonRef, {
-            tecnicStock: increment(used)
+            tecnicStock: increment(Number(used))
         });
         let itemRef = doc(db, "items", `${name}`);
         await updateDoc(itemRef, {
-            withTecnics: increment(used)
+            withTecnics: increment(Number(used))
         });
     } else {
         let washingtonRef = doc(db, "items", `${name}`);
         await updateDoc(washingtonRef, {
-            inStock: increment(used)
+            inStock: increment(Number(used))
         });
     }
     sucess()

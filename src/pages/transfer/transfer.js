@@ -63,7 +63,7 @@ async function loadStock(email, work) {
                 <img src="${doc.data().itemImg}" alt="" class="discharge__img">
                 <div class="discharge__div">
                     <p class="discharge__name">${doc.data().itemName}</p>
-                    <p class="discharge__used">Usou: ${itemsSelecteds[doc.data().itemName] == undefined ? "0" : itemsSelecteds[doc.data().itemName].used} ${doc.data().measure}</p>
+                    <p class="discharge__used">Transferir: ${itemsSelecteds[doc.data().itemName] == undefined ? "0" : itemsSelecteds[doc.data().itemName].used} ${doc.data().measure}</p>
                 </div>`
             article.onclick = function () {
                 let editQuanty = document.getElementById("centralizeSend")
@@ -80,7 +80,7 @@ async function loadStock(email, work) {
                     let usedQuantyInput = document.getElementById("sendQuantyInput").value
                     if (usedQuantyInput != "" && usedQuantyInput != 0) {
                         if (doc.data().measure == "Unidades" && parseInt(usedQuantyInput) == parseFloat(usedQuantyInput)) {
-                            if (usedQuantyInput <= doc.data().tecnicStock) {
+                            if (Number(usedQuantyInput) <= Number(doc.data().tecnicStock)) {
                                 let name = doc.data().itemName;
                                 itemsSelecteds[name] = { used: usedQuantyInput, name: doc.data().itemName, measure: doc.data().measure, img: doc.data().itemImg, value: doc.data().itemValue };
                                 let clearInput = document.getElementById("sendQuantyInput")
@@ -90,7 +90,7 @@ async function loadStock(email, work) {
                                     <img src="${doc.data().itemImg}" alt="" class="discharge__img">
                                     <div class="discharge__div">
                                         <p class="discharge__name">${doc.data().itemName}</p>
-                                        <p class="discharge__used">Usou: ${itemsSelecteds[doc.data().itemName] == undefined ? "0" : itemsSelecteds[doc.data().itemName].used} ${doc.data().measure}</p>
+                                        <p class="discharge__used">Transferir: ${itemsSelecteds[doc.data().itemName] == undefined ? "0" : itemsSelecteds[doc.data().itemName].used} ${doc.data().measure}</p>
                                     </div>`
                                 if (itemsSelecteds[doc.data().itemName].used != 0) {
                                     article.classList.add("used")
@@ -112,7 +112,7 @@ async function loadStock(email, work) {
                             }, 5000);
                         }
                         if (doc.data().measure != "Unidades") {
-                            if (usedQuantyInput <= doc.data().tecnicStock) {
+                            if (Number(usedQuantyInput) <= Number(doc.data().tecnicStock)) {
                                 let name = doc.data().itemName;
                                 itemsSelecteds[name] = { used: usedQuantyInput, name: doc.data().itemName, measure: doc.data().measure, img: doc.data().itemImg, value: doc.data().itemValue };
 
@@ -124,7 +124,7 @@ async function loadStock(email, work) {
                                     <img src="${doc.data().itemImg}" alt="" class="discharge__img">
                                     <div class="discharge__div">
                                         <p class="discharge__name">${doc.data().itemName}</p>
-                                        <p class="discharge__used">Usou: ${itemsSelecteds[doc.data().itemName] == undefined ? "0" : itemsSelecteds[doc.data().itemName].used} ${doc.data().measure}</p>
+                                        <p class="discharge__used">Transferir: ${itemsSelecteds[doc.data().itemName] == undefined ? "0" : itemsSelecteds[doc.data().itemName].used} ${doc.data().measure}</p>
                                     </div>`
                                 if (itemsSelecteds[doc.data().itemName].used != 0) {
                                     article.classList.add("used")
@@ -163,7 +163,7 @@ async function loadStock(email, work) {
                     <img src="${doc.data().itemImg}" alt="" class="discharge__img">
                     <div class="discharge__div">
                         <p class="discharge__name">${doc.data().itemName}</p>
-                        <p class="discharge__used">Usou: ${itemsSelecteds[doc.data().itemName] == undefined ? "0" : itemsSelecteds[doc.data().itemName].used} ${doc.data().measure}</p>
+                        <p class="discharge__used">Transferir: ${itemsSelecteds[doc.data().itemName] == undefined ? "0" : itemsSelecteds[doc.data().itemName].used} ${doc.data().measure}</p>
                     </div>`
                 article.onclick = function () {
                     let editQuanty = document.getElementById("centralizeSend")
@@ -179,41 +179,43 @@ async function loadStock(email, work) {
                     confirmUsedQuantyBtn.onclick = function () {
                         let usedQuantyInput = document.getElementById("sendQuantyInput").value
                         if (usedQuantyInput != "" && usedQuantyInput != 0) {
-                            if (doc.data().measure == "Unidades" && parseInt(usedQuantyInput) == parseFloat(usedQuantyInput)) {
-                                if (usedQuantyInput <= doc.data().inStock) {
-                                    let name = doc.data().itemName;
-                                    itemsSelecteds[name] = { used: usedQuantyInput, name: doc.data().itemName, measure: doc.data().measure, img: doc.data().itemImg, value: doc.data().itemValue };
-                                    let clearInput = document.getElementById("sendQuantyInput")
-                                    clearInput.value = ""
-                                    editQuanty.style.display = "none"
-                                    article.innerHTML = `
-                                        <img src="${doc.data().itemImg}" alt="" class="discharge__img">
-                                        <div class="discharge__div">
-                                            <p class="discharge__name">${doc.data().itemName}</p>
-                                            <p class="discharge__used">Usou: ${itemsSelecteds[doc.data().itemName] == undefined ? "0" : itemsSelecteds[doc.data().itemName].used} ${doc.data().measure}</p>
-                                        </div>`
-                                    if (itemsSelecteds[doc.data().itemName].used != 0) {
-                                        article.classList.add("used")
-                                        addToForm(email, itemsSelecteds, doc.data().itemName, work)
+                            if (doc.data().measure == "Unidades") {
+                                if (parseInt(usedQuantyInput) == parseFloat(usedQuantyInput)) {
+                                    if (Number(usedQuantyInput) <= Number(doc.data().inStock)) {
+                                        let name = doc.data().itemName;
+                                        itemsSelecteds[name] = { used: Number(usedQuantyInput), name: doc.data().itemName, measure: doc.data().measure, img: doc.data().itemImg, value: doc.data().itemValue };
+                                        let clearInput = document.getElementById("sendQuantyInput")
+                                        clearInput.value = ""
+                                        editQuanty.style.display = "none"
+                                        article.innerHTML = `
+                                            <img src="${doc.data().itemImg}" alt="" class="discharge__img">
+                                            <div class="discharge__div">
+                                                <p class="discharge__name">${doc.data().itemName}</p>
+                                                <p class="discharge__used">Transferir: ${itemsSelecteds[doc.data().itemName] == undefined ? "0" : itemsSelecteds[doc.data().itemName].used} ${doc.data().measure}</p>
+                                            </div>`
+                                        if (itemsSelecteds[doc.data().itemName].used != 0) {
+                                            article.classList.add("used")
+                                            addToForm(email, itemsSelecteds, doc.data().itemName, work)
+                                        }
+                                    } else {
+                                        let editUsedQuantyAlert = document.getElementById("editSendQuantyAlert")
+                                        editUsedQuantyAlert.textContent = "Quantia em estoque insuficiente"
+                                        setTimeout(() => {
+                                            editUsedQuantyAlert.textContent = ""
+                                        }, 5000);
                                     }
                                 } else {
                                     let editUsedQuantyAlert = document.getElementById("editSendQuantyAlert")
-                                    editUsedQuantyAlert.textContent = "Quantia em estoque insuficiente"
+                                    editUsedQuantyAlert.textContent = "Digite um valor inteiro para unidades"
                                     setTimeout(() => {
                                         editUsedQuantyAlert.textContent = ""
                                     }, 5000);
                                 }
-                            } else {
-                                let editUsedQuantyAlert = document.getElementById("editSendQuantyAlert")
-                                editUsedQuantyAlert.textContent = "Digite um valor inteiro para unidades"
-                                setTimeout(() => {
-                                    editUsedQuantyAlert.textContent = ""
-                                }, 5000);
                             }
                             if (doc.data().measure != "Unidades") {
-                                if (usedQuantyInput <= doc.data().inStock) {
+                                if (Number(usedQuantyInput) <= Number(doc.data().inStock)) {
                                     let name = doc.data().itemName;
-                                    itemsSelecteds[name] = { used: usedQuantyInput, name: doc.data().itemName, measure: doc.data().measure, img: doc.data().itemImg, value: doc.data().itemValue };
+                                    itemsSelecteds[name] = { used: Number(usedQuantyInput), name: doc.data().itemName, measure: doc.data().measure, img: doc.data().itemImg, value: doc.data().itemValue };
 
                                     let clearInput = document.getElementById("sendQuantyInput")
                                     clearInput.value = ""
@@ -223,7 +225,7 @@ async function loadStock(email, work) {
                                         <img src="${doc.data().itemImg}" alt="" class="discharge__img">
                                         <div class="discharge__div">
                                             <p class="discharge__name">${doc.data().itemName}</p>
-                                            <p class="discharge__used">Usou: ${itemsSelecteds[doc.data().itemName] == undefined ? "0" : itemsSelecteds[doc.data().itemName].used} ${doc.data().measure}</p>
+                                            <p class="discharge__used">Transferir: ${itemsSelecteds[doc.data().itemName] == undefined ? "0" : itemsSelecteds[doc.data().itemName].used} ${doc.data().measure}</p>
                                         </div>`
                                     if (itemsSelecteds[doc.data().itemName].used != 0) {
                                         article.classList.add("used")
@@ -303,7 +305,7 @@ async function addToForm(email, object, nameItem, work) {
                         <img src="${object[doc.data().itemName].img}" alt="" class="discharge__img">
                         <div class="discharge__div">
                             <p class="discharge__name">${object[doc.data().itemName].name}</p>
-                            <p class="discharge__used">Usou: ${object[doc.data().itemName].used} ${doc.data().measure}</p>
+                            <p class="discharge__used">Transferir: ${object[doc.data().itemName].used} ${doc.data().measure}</p>
                         </div>`
                 let removeItem = document.createElement("button")
                 article.insertAdjacentElement("afterbegin", removeItem)
@@ -332,7 +334,7 @@ async function addToForm(email, object, nameItem, work) {
                             <img src="${object[doc.data().itemName].img}" alt="" class="discharge__img">
                             <div class="discharge__div">
                                 <p class="discharge__name">${object[doc.data().itemName].name}</p>
-                                <p class="discharge__used">Usou: ${object[doc.data().itemName].used} ${doc.data().measure}</p>
+                                <p class="discharge__used">Transferir: ${object[doc.data().itemName].used} ${doc.data().measure}</p>
                             </div>`
                     let removeItem = document.createElement("button")
                     article.insertAdjacentElement("afterbegin", removeItem)

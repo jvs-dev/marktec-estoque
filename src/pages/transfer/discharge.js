@@ -78,9 +78,9 @@ async function loadStock(email) {
                 let usedQuantyInput = document.getElementById("usedQuantyInput").value
                 if (usedQuantyInput != "" && usedQuantyInput != 0) {
                     if (doc.data().measure == "Unidades" && parseInt(usedQuantyInput) == parseFloat(usedQuantyInput)) {
-                        if (usedQuantyInput <= doc.data().tecnicStock) {
+                        if (Number(usedQuantyInput) <= Number(doc.data().tecnicStock)) {
                             let name = doc.data().itemName;
-                            itemsSelecteds[name] = { used: usedQuantyInput, name: doc.data().itemName, measure: doc.data().measure, img: doc.data().itemImg, value: doc.data().itemValue };
+                            itemsSelecteds[name] = { used: Number(usedQuantyInput), name: doc.data().itemName, measure: doc.data().measure, img: doc.data().itemImg, value: doc.data().itemValue };
                             let clearInput = document.getElementById("usedQuantyInput")
                             clearInput.value = ""
                             editQuanty.style.display = "none"
@@ -109,9 +109,9 @@ async function loadStock(email) {
                         }, 5000);
                     }
                     if (doc.data().measure != "Unidades") {
-                        if (usedQuantyInput <= doc.data().tecnicStock) {
+                        if (Number(usedQuantyInput) <= Number(doc.data().tecnicStock)) {
                             let name = doc.data().itemName;
-                            itemsSelecteds[name] = { used: usedQuantyInput, name: doc.data().itemName, measure: doc.data().measure, img: doc.data().itemImg, value: doc.data().itemValue };
+                            itemsSelecteds[name] = { used: Number(usedQuantyInput), name: doc.data().itemName, measure: doc.data().measure, img: doc.data().itemImg, value: doc.data().itemValue };
 
                             let clearInput = document.getElementById("usedQuantyInput")
                             clearInput.value = ""

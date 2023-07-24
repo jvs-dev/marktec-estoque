@@ -102,7 +102,7 @@ function returnCLR(status) {
         case "Pendente":
             return "var(--orange)"
             break;
-        case "Pceito":
+        case "Aceito":
             return "var(--green)"
             break;
         case "Recusado":
