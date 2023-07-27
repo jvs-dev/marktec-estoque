@@ -11,6 +11,7 @@
     transition: 0.2s;
     cursor: pointer;
     margin: 15px 0px;
+    box-shadow: 0px 2px 10px var(--gray);
 }
 
 .dischargeCard__div {

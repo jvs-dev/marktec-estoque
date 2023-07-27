@@ -48,6 +48,7 @@ function loadData() {
 
 
 async function loadStock(email) {
+    let backI = 1
     let querySnapshot = await getDocs(collection(db, "tecnics", `${email}`, "stock"));
     querySnapshot.forEach((doc) => {
         let SectionItemsCardsSend = document.getElementById("SectionItemsCards")
@@ -56,6 +57,12 @@ async function loadStock(email) {
         article.classList.add("discharge__article")
         if (itemsSelecteds[doc.data().itemName] != undefined && itemsSelecteds[doc.data().itemName].used != 0) {
             article.classList.add("used")
+        }
+        article.classList.add(`background--${backI}`)
+        if (backI == 2) {
+            backI = 1
+        } else {
+            backI = 2
         }
         article.innerHTML = `
             <img src="${doc.data().itemImg}" alt="" class="discharge__img">
@@ -84,6 +91,12 @@ async function loadStock(email) {
                             let clearInput = document.getElementById("usedQuantyInput")
                             clearInput.value = ""
                             editQuanty.style.display = "none"
+                            article.classList.add(`background--${backI}`)
+                            if (backI == 2) {
+                                backI = 1
+                            } else {
+                                backI = 2
+                            }
                             article.innerHTML = `
                                 <img src="${doc.data().itemImg}" alt="" class="discharge__img">
                                 <div class="discharge__div">
@@ -116,7 +129,12 @@ async function loadStock(email) {
                             let clearInput = document.getElementById("usedQuantyInput")
                             clearInput.value = ""
                             editQuanty.style.display = "none"
-
+                            article.classList.add(`background--${backI}`)
+                            if (backI == 2) {
+                                backI = 1
+                            } else {
+                                backI = 2
+                            }
                             article.innerHTML = `
                                 <img src="${doc.data().itemImg}" alt="" class="discharge__img">
                                 <div class="discharge__div">
@@ -167,12 +185,19 @@ usedButton.onclick = function () {
 async function addToForm(email, object) {
     let dischargeSelectedSection = document.getElementById("dischargeSelectedSection")
     dischargeSelectedSection.innerHTML = ""
+    let backI = 1
     let querySnapshot = await getDocs(collection(db, "tecnics", `${email}`, "stock"));
     querySnapshot.forEach((doc) => {
         if (object[doc.data().itemName] != undefined && object[doc.data().itemName].used != 0) {
             let article = document.createElement("article")
             dischargeSelectedSection.insertAdjacentElement("beforeend", article)
             article.classList.add("discharge__article")
+            article.classList.add(`background--${backI}`)
+            if (backI == 2) {
+                backI = 1
+            } else {
+                backI = 2
+            }
             article.innerHTML = `
                     <img src="${object[doc.data().itemName].img}" alt="" class="discharge__img">
                     <div class="discharge__div">

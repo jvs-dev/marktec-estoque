@@ -26,6 +26,7 @@
     <link rel="stylesheet" href="src/components/loader/ball-spinner.css">
     <link rel="stylesheet" href="src/components/scroll/scroll.css">
     <link rel="stylesheet" href="src/components/navMobile/navMobile.css">
+    <link rel="stylesheet" href="src/components/button/addImgBtn/addImg.css">
 </head>
 
 <body>
@@ -71,12 +72,64 @@
                 </ul>
                 <div class="nav__line"></div>
             </nav>
+            <div class="addImgBackground">
+                <article class="addImg__article">
+                    <h2 class="addImg__h2">Link da imagem</h2>
+                    <input type="url" class="addImg__input" id="itemImg" placeholder="link da imagem">
+                    <button type="button" class="addImg__btn" id="closeAddImg">Confirmar</button>
+                </article>
+            </div>
             <form action="" class="main__form">
-                <h2 class="form__h2">Adicione um Novo Item</h2>
+                <h2 class="form__h2">Adicionar novo item</h2>
+
+                <div class="form__div div--img">
+                    <img id="previewImg" src="" alt="">
+                    <button type="button" class="div--img__button" id="addImgBtn"><i class="bi bi-pencil"></i></button>
+                </div>
+
+                <label for="" class="form__label">
+                    Nome do produto
+                    <input type="text" class="label__input" id="itemName">
+                </label>
+
+                <div class="flex-betwen">
+                    <label for="" class="form__label">
+                        Valor do produto
+                        <input type="number" class="label__input" id="itemValue">
+                    </label>
+                    <label for="" class="form__label">
+                        Unidades/medida
+                        <select name="" id="measure" class="label__input">
+                            <option value="Unidades">Unidades</option>
+                            <option value="Métros">Métros</option>
+                            <option value="Rôlos">Rôlos</option>
+                            <option value="Quilômetros">Quilômetros</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="flex-betwen">
+                    <label for="" class="form__label">
+                        Em estoque
+                        <input type="number" class="label__input" id="inStock">
+                    </label>
+                    <label for="" class="form__label">
+                        Quantia mínima
+                        <input type="number" class="label__input" id="quantyMin">
+                    </label>
+                </div>
+                <div class="flex-betwen">
+                    <label for="" class="form__label">
+                        Grupo do Produto
+                        <input type="text" class="label__input" id="itemGroup">
+                    </label>
+                    <label for="" class="form__label">
+                        Marca do Produto
+                        <input type="text" class="label__input" id="itemBrand">
+                    </label>
+                </div>
 
 
-
-                <div class="form__div">
+                <!-- <div class="form__div">
                     <ion-icon name="image-outline" class="form__icon"></ion-icon>
                     <input type="url" placeholder="Link da imagem" class="form__input" id="itemImg">
                 </div>
@@ -105,7 +158,7 @@
                     <ion-icon name="cash-outline" class="form__icon"></ion-icon>
                     <input type="number" placeholder="Valor do produto" class="form__input" id="itemValue">
                 </div>
-                <button id="addField" type="button"><ion-icon name="add-circle-outline"></ion-icon><span>Adicionar campo</span></button>
+                <button id="addField" type="button"><ion-icon name="add-circle-outline"></ion-icon><span>Adicionar campo</span></button> -->
                 <p class="form__help" id="helpAdd"></p>
                 <button type="button" class="form__button" id="createItem">Adicionar</button>
 
@@ -131,6 +184,7 @@
     <script type="module" src="src/pages/add-item/add-item.js"></script>
     <script type="module" src="src/components/navBar/nav.js"></script>
     <script type="module" src="src/components/navMobile/navMobile.js"></script>
+    <script src="src/components/button/addImgBtn/addImg.js"></script>
 </body>
 
 </html>

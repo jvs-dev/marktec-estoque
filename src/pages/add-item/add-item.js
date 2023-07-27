@@ -20,6 +20,11 @@ let createItem = document.getElementById("createItem")
 let helpAdd = document.getElementById("helpAdd")
 let addField = document.getElementById("addField")
 
+setInterval(() => {
+    let itemImg = document.getElementById("itemImg").value
+    let previewImg = document.getElementById("previewImg")
+    previewImg.src = itemImg
+}, 1000);
 
 function loadData() {
     onAuthStateChanged(auth, (user) => {
@@ -67,7 +72,7 @@ createItem.onclick = function () {
     let itemImg = document.getElementById("itemImg").value
     let itemValue = document.getElementById("itemValue").value
     if (quantyMin != "" && measure != "" && inStock != "" && itemName != "" && itemImg != "" && itemValue != "") {
-        sucessAddItem(itemName, measure, quantyMin, inStock, itemImg, itemValue)
+        sucessAddItem(itemName, measure, quantyMin, Number(inStock), itemImg, itemValue)
     } else {
         helpAdd.style.color = "red"
         helpAdd.textContent = "Por favor, preencha todos os campos."

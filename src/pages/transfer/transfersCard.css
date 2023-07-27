@@ -11,6 +11,7 @@
     transition: 0.2s;
     cursor: pointer;
     margin: 15px 0px;
+    box-shadow: 0px 2px 10px var(--gray);
 }
 
 .NewTransferCard__div {
@@ -145,17 +146,33 @@
     justify-content: center;
     cursor: pointer;
     color: #fff;
+    border: solid 2px transparent;
     transition: 0.2s;
 }
+
 .NewTransferCard__acptRcs:hover {
     transform: scale(1.1);
     box-shadow: 0px 2px 8px #00000063;
 }
+
+#recuseTransfer:hover {
+    background: transparent;
+    color: #f00;
+    border: solid 2px #f00;
+}
+
+#acceptTransfer:hover {
+    background: transparent;
+    color: var(--green);
+    border: solid 2px var(--green);
+}
+
 .NewTransferCard__div--2 {
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
+
 .NewTransferCard__div--3 {
     display: flex;
     align-items: center;
@@ -166,6 +183,7 @@
 #acceptTransfer {
     background: var(--green);
 }
+
 #recuseTransfer {
     background: red;
     margin-right: 20px;
@@ -196,32 +214,41 @@
     .NewTransferCard {
         width: 90%;
     }
+
     .NewTransferCard__h2 {
         font-size: 20px;
     }
+
     .NewTransferCard__p {
         font-size: 16px;
     }
+
     .NewTransferCard__p__icon {
         font-size: 22px;
         margin-right: 5px;
     }
+
     .NewTransferCard__itemName {
         font-size: 15px;
     }
+
     .NewTransferCard__quanty {
         font-size: 16px;
     }
+
     .NewTransferCard__date {
         font-size: 16px;
     }
+
     .NewTransferCard__more {
         height: 50px;
         width: 55px;
     }
+
     .NewTransferCard__status {
         font-size: 16px;
     }
+
     .NewTransferCard__img {
         width: 60px;
         margin-right: 10px;

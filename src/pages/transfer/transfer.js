@@ -50,6 +50,7 @@ function loadData() {
 
 async function loadStock(email, work) {
     if (work == "Técnico") {
+        let backI = 1
         let querySnapshot = await getDocs(collection(db, "tecnics", `${email}`, "stock"));
         querySnapshot.forEach((doc) => {
             let SectionItemsCardsSend = document.getElementById("SectionItemsCardsSend")
@@ -58,6 +59,12 @@ async function loadStock(email, work) {
             article.classList.add("discharge__article")
             if (itemsSelecteds[doc.data().itemName] != undefined && itemsSelecteds[doc.data().itemName].used != 0) {
                 article.classList.add("used")
+            }
+            article.classList.add(`background--${backI}`)
+            if (backI == 2) {
+                backI = 1
+            } else {
+                backI = 2
             }
             article.innerHTML = `
                 <img src="${doc.data().itemImg}" alt="" class="discharge__img">
@@ -86,6 +93,12 @@ async function loadStock(email, work) {
                                 let clearInput = document.getElementById("sendQuantyInput")
                                 clearInput.value = ""
                                 editQuanty.style.display = "none"
+                                article.classList.add(`background--${backI}`)
+                                if (backI == 2) {
+                                    backI = 1
+                                } else {
+                                    backI = 2
+                                }
                                 article.innerHTML = `
                                     <img src="${doc.data().itemImg}" alt="" class="discharge__img">
                                     <div class="discharge__div">
@@ -119,7 +132,12 @@ async function loadStock(email, work) {
                                 let clearInput = document.getElementById("sendQuantyInput")
                                 clearInput.value = ""
                                 editQuanty.style.display = "none"
-
+                                article.classList.add(`background--${backI}`)
+                                if (backI == 2) {
+                                    backI = 1
+                                } else {
+                                    backI = 2
+                                }
                                 article.innerHTML = `
                                     <img src="${doc.data().itemImg}" alt="" class="discharge__img">
                                     <div class="discharge__div">
@@ -149,6 +167,7 @@ async function loadStock(email, work) {
             }
         });
     } else {
+        let backI = 1
         let q = query(collection(db, "items"), where("active", "==", true));
         let unsubscribe = onSnapshot(q, (querySnapshot) => {
             querySnapshot.forEach((doc) => {
@@ -158,6 +177,12 @@ async function loadStock(email, work) {
                 article.classList.add("discharge__article")
                 if (itemsSelecteds[doc.data().itemName] != undefined && itemsSelecteds[doc.data().itemName].used != 0) {
                     article.classList.add("used")
+                }
+                article.classList.add(`background--${backI}`)
+                if (backI == 2) {
+                    backI = 1
+                } else {
+                    backI = 2
                 }
                 article.innerHTML = `
                     <img src="${doc.data().itemImg}" alt="" class="discharge__img">
@@ -187,6 +212,12 @@ async function loadStock(email, work) {
                                         let clearInput = document.getElementById("sendQuantyInput")
                                         clearInput.value = ""
                                         editQuanty.style.display = "none"
+                                        article.classList.add(`background--${backI}`)
+                                        if (backI == 2) {
+                                            backI = 1
+                                        } else {
+                                            backI = 2
+                                        }
                                         article.innerHTML = `
                                             <img src="${doc.data().itemImg}" alt="" class="discharge__img">
                                             <div class="discharge__div">
@@ -220,7 +251,12 @@ async function loadStock(email, work) {
                                     let clearInput = document.getElementById("sendQuantyInput")
                                     clearInput.value = ""
                                     editQuanty.style.display = "none"
-
+                                    article.classList.add(`background--${backI}`)
+                                    if (backI == 2) {
+                                        backI = 1
+                                    } else {
+                                        backI = 2
+                                    }
                                     article.innerHTML = `
                                         <img src="${doc.data().itemImg}" alt="" class="discharge__img">
                                         <div class="discharge__div">
@@ -295,12 +331,19 @@ async function addToForm(email, object, nameItem, work) {
     if (work == "Técnico") {
         let dischargeSelectedSection = document.getElementById("sendSelectedSection")
         dischargeSelectedSection.innerHTML = ""
+        let backI = 1
         let querySnapshot = await getDocs(collection(db, "tecnics", `${email}`, "stock"));
         querySnapshot.forEach((doc) => {
             if (object[doc.data().itemName] != undefined && object[doc.data().itemName].used != 0) {
                 let article = document.createElement("article")
                 dischargeSelectedSection.insertAdjacentElement("beforeend", article)
                 article.classList.add("discharge__article")
+                article.classList.add(`background--${backI}`)
+                if (backI == 2) {
+                    backI = 1
+                } else {
+                    backI = 2
+                }
                 article.innerHTML = `
                         <img src="${object[doc.data().itemName].img}" alt="" class="discharge__img">
                         <div class="discharge__div">
@@ -323,6 +366,7 @@ async function addToForm(email, object, nameItem, work) {
     } else {
         let dischargeSelectedSection = document.getElementById("sendSelectedSection")
         dischargeSelectedSection.innerHTML = ""
+        let backI = 1
         let q = query(collection(db, "items"), where("active", "==", true));
         let unsubscribe = onSnapshot(q, (querySnapshot) => {
             querySnapshot.forEach((doc) => {
@@ -330,6 +374,12 @@ async function addToForm(email, object, nameItem, work) {
                     let article = document.createElement("article")
                     dischargeSelectedSection.insertAdjacentElement("beforeend", article)
                     article.classList.add("discharge__article")
+                    article.classList.add(`background--${backI}`)
+                    if (backI == 2) {
+                        backI = 1
+                    } else {
+                        backI = 2
+                    }
                     article.innerHTML = `
                             <img src="${object[doc.data().itemName].img}" alt="" class="discharge__img">
                             <div class="discharge__div">

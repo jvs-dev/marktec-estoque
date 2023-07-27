@@ -4,7 +4,7 @@ body {
 
 .main__h2 {
     text-align: center;
-    margin-bottom: 90px;
+    margin-bottom: 20px;
 }
 
 .main__tecnics {
@@ -28,26 +28,25 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    background: linear-gradient(235deg, var(--gray), var(--white));
-    padding: 55px 20px 20px 20px;
-    margin: 20px 20px 110px 20px;
+    background: var(--white);
+    padding: 20px;
+    margin: 20px;
     border-radius: 20px;
     cursor: pointer;
     box-shadow: 0px 4px 10px #00000042;
-    position: relative;
-    height: auto;
     transition: 0.5s;
+    border-bottom: solid 4px transparent;
 }
 
 .article__tecnic--card:hover {
-    box-shadow: 0px 8px 20px #00000073;
-    transform: scale(1.02);
+    border-bottom: solid 4px var(--green);
+    box-shadow: 0px 4px 10px #00000075;
 }
 
 .article__tecnic--card:hover .tecnic__img {
-    box-shadow: 0px 2px 10px #1e1e1e4b;
+    border: solid 2px var(--green);
 }
+
 
 .tecnic__img {
     height: 150px;
@@ -55,9 +54,6 @@ body {
     border-radius: 100%;
     padding: 2px;
     border: solid 2px var(--black);
-    position: absolute;
-    top: 0;
-    transform: translateY(-85px);
     transition: 0.5s;
 }
 

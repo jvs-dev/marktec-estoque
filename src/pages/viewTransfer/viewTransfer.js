@@ -72,15 +72,26 @@ function verifyUrl() {
             Object.keys(doc.data().itemsToTransfer).forEach(element => {
                 let viewCardSection = document.getElementById("viewCardSection")
                 let article = document.createElement("article")
+                let itemTotal = Number(doc.data().itemsToTransfer[element].value)
                 viewCardSection.insertAdjacentElement("beforeend", article)
                 article.classList.add("viewDischargeSection__item")
                 article.style.background = `var(--background-${i})`
+                if (doc.data().itemsToTransfer[element].value.includes(",")) {
+                    if (doc.data().itemsToTransfer[element].value.includes(".") == false) {
+                        itemTotal = Number(doc.data().itemsToTransfer[element].value.replace(",", "."))
+                    }
+                }
+                if (doc.data().itemsToTransfer[element].value.includes(".")) {
+                    if (doc.data().itemsToTransfer[element].value.includes(",")) {
+                        itemTotal = Number(doc.data().itemsToTransfer[element].value.replace(".", "").replace(",", "."))
+                    }
+                }
                 article.innerHTML = `
                 <span class="viewDischargeSection__itemQuanty">${doc.data().itemsToTransfer[element].used} ${doc.data().itemsToTransfer[element].measure}</span>
                 <p class="viewDischargeSection__itemName">${doc.data().itemsToTransfer[element].name}</p>
                 <span class="viewDischargeSection__itemPrice">$${doc.data().itemsToTransfer[element].value}</span>
-                <span class="viewDischargeSection__itemTotalPrice">$${(doc.data().itemsToTransfer[element].value.replace(',', '.') * doc.data().itemsToTransfer[element].used.replace(',', '.')).toFixed(2)}</span>`
-                total = total + (doc.data().itemsToTransfer[element].value.replace(',', '.') * doc.data().itemsToTransfer[element].used.replace(',', '.'))
+                <span class="viewDischargeSection__itemTotalPrice">$${(itemTotal * doc.data().itemsToTransfer[element].used).toFixed(2)}</span>`
+                total = total + (itemTotal * doc.data().itemsToTransfer[element].used)
                 let allTotalSpan = document.getElementById("allTotalSpan")
                 allTotalSpan.textContent = `$${total.toFixed(2)}`
                 switch (i) {

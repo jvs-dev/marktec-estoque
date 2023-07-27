@@ -8,7 +8,7 @@
 .main__transfer {
     width: 100vw;
     height: 100vh;
-    background: linear-gradient(246.26deg, #0AD4B5 -17.89%, rgba(255, 255, 255, 0) 100%);
+    background: linear-gradient(135deg, #0AD4B5 30.72%, rgba(255, 255, 255, 0.00) 30.73%), linear-gradient(45deg, #FF9700 23.23%, rgba(255, 255, 255, 0.00) 23.31%), linear-gradient(110deg, #F1F1F1 32.51%, #FFF 32.56%);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -231,18 +231,24 @@
 }
 
 #closeSectionSelectSend {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 40px;
-    background: transparent;
-    border: 0px;
-    outline-width: 0px;
-    cursor: pointer;
+    background: var(--green);
+    color: #fff;
+    border-radius: 25px;
     position: absolute;
-    top: 0;
-    right: 0;
-    margin: 20px 20px 0px 0px;
+    bottom: 0;
+    margin: 0px 0px 20px 0px;
+    padding: 8px 25px;
+    font-size: 22px;
+    border: solid 2px transparent;
+    text-transform: uppercase;
+    transition: 0.2s;
+}
+
+#closeSectionSelectSend:hover {
+    border: solid 2px var(--green);
+    background: transparent;
+    color: var(--green);
+    box-shadow: 0px 0px 20px var(--green);
 }
 
 #closeSendSection {
@@ -337,5 +343,13 @@
     }
     #sendButton {
         margin-left: 80px;
+    }
+    .editUsedQuanty {
+        padding: 60px 0px 40px 0px;
+        width: calc(100vw - 40px);
+        height: 300px;
+    }
+    #closeSectionSelectSend {
+        font-size: 18px;
     }
 }
