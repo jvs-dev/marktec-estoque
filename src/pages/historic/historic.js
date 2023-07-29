@@ -957,6 +957,8 @@ let q = query(collection(db, "transfers"), where("status", "!=", ""));
 let unsubscribe = onSnapshot(q, (snapshot) => {
     snapshot.docChanges().forEach((change) => {
         if (change.type === "modified") {
+            let historicSection = document.getElementById("historicSection")
+            historicSection.innerHTML = ""
             loadData()
         }
     });
@@ -966,6 +968,8 @@ let e = query(collection(db, "discharges"), where("itemsUsed", "!=", {}));
 let unsubscribed = onSnapshot(e, (snapshot) => {
     snapshot.docChanges().forEach((change) => {
         if (change.type === "modified") {
+            let historicSection = document.getElementById("historicSection")
+            historicSection.innerHTML = ""
             loadData()
         }
     });

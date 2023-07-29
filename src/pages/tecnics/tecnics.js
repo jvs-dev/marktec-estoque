@@ -22,6 +22,7 @@ let tecnicFocus = ""
 
 closeTecnicItems.onclick = function () {
     tecnicItemsSection.style.display = "none"
+    tecnicFocus = ""
 }
 
 
@@ -69,6 +70,7 @@ function loadTecnics() {
                     <img src="${doc.data().photo}" alt="" class="tecnic__img">
                     <p class="tecnic__p">${doc.data().fullName}</p>`
                 article.onclick = function () {
+                    tecnicFocus = doc.data().email
                     let TecnicImg = document.getElementById("TecnicImg")
                     let TecnicName = document.getElementById("TecnicName")
                     TecnicName.textContent = doc.data().fullName
@@ -124,10 +126,11 @@ let q = query(collection(db, "items"), where("active", "==", true));
 let unsubscribe = onSnapshot(q, (snapshot) => {
     snapshot.docChanges().forEach((change) => {
         if (change.type === "modified") {
-            console.log("oi");
+            console.log(tecnicFocus);
             if (tecnicFocus != "") {
+                let tecnicItems = document.getElementById("tecnicItems")
+                tecnicItems.innerHTML = ""
                 loadTecnicItems(tecnicFocus)
-                console.log(tecnicFocus);
             }
         }
     });
