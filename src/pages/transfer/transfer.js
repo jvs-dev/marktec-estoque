@@ -43,6 +43,18 @@ function loadData() {
                     userWork = doc.data().work
                 }
                 loadStock(user.email, doc.data().work)
+                let SendSearchInput = document.getElementById("SendSearchInput")
+                SendSearchInput.addEventListener("input", (evt) => {
+                    if (evt.target.value != "") {
+                        let SectionItemsCardsSend = document.getElementById("SectionItemsCardsSend")
+                        SectionItemsCardsSend.innerHTML = ""
+                        searchItem(user.email, doc.data().work, evt.target.value)
+                    } else {
+                        let SectionItemsCardsSend = document.getElementById("SectionItemsCardsSend")
+                        SectionItemsCardsSend.innerHTML = ""
+                        loadStock(user.email, doc.data().work)
+                    }
+                })
             });
         }
     })
@@ -281,6 +293,256 @@ async function loadStock(email, work) {
                             setTimeout(() => {
                                 editUsedQuantyAlert.textContent = ""
                             }, 5000);
+                        }
+                    }
+                }
+            });
+        });
+    }
+}
+
+
+async function searchItem(email, work, text) {
+    let SectionItemsCardsSend = document.getElementById("SectionItemsCardsSend")
+    SectionItemsCardsSend.innerHTML = ""
+    if (work == "Técnico") {
+        let backI = 1
+        let querySnapshot = await getDocs(collection(db, "tecnics", `${email}`, "stock"));
+        SectionItemsCardsSend.innerHTML = ""
+        querySnapshot.forEach((doc) => {
+            if (doc.data().itemName.toLowerCase().includes(text.toLowerCase())) {
+                let SectionItemsCardsSend = document.getElementById("SectionItemsCardsSend")
+                let article = document.createElement("article")
+                SectionItemsCardsSend.insertAdjacentElement("beforeend", article)
+                article.classList.add("discharge__article")
+                if (itemsSelecteds[doc.data().itemName] != undefined && itemsSelecteds[doc.data().itemName].used != 0) {
+                    article.classList.add("used")
+                }
+                article.classList.add(`background--${backI}`)
+                if (backI == 2) {
+                    backI = 1
+                } else {
+                    backI = 2
+                }
+                article.innerHTML = `
+                <img src="${doc.data().itemImg}" alt="" class="discharge__img">
+                <div class="discharge__div">
+                    <p class="discharge__name">${doc.data().itemName}</p>
+                    <p class="discharge__used">Transferir: ${itemsSelecteds[doc.data().itemName] == undefined ? "0" : itemsSelecteds[doc.data().itemName].used} ${doc.data().measure}</p>
+                </div>`
+                article.onclick = function () {
+                    let editQuanty = document.getElementById("centralizeSend")
+                    editQuanty.style.display = "flex"
+                    let closeEditSendQuanty = document.getElementById("closeEditSendQuanty")
+                    closeEditSendQuanty.onclick = function () {
+                        editQuanty.style.display = "none"
+                        let clearInput = document.getElementById("sendQuantyInput")
+                        clearInput.value = ""
+                        editQuanty.style.display = "none"
+                    }
+                    let confirmUsedQuantyBtn = document.getElementById("confirmSendQuantyBtn")
+                    confirmUsedQuantyBtn.onclick = function () {
+                        let usedQuantyInput = document.getElementById("sendQuantyInput").value
+                        if (usedQuantyInput != "" && usedQuantyInput != 0) {
+                            if (doc.data().measure == "Unidades" && parseInt(usedQuantyInput) == parseFloat(usedQuantyInput)) {
+                                if (Number(usedQuantyInput) <= Number(doc.data().tecnicStock)) {
+                                    let name = doc.data().itemName;
+                                    itemsSelecteds[name] = { used: usedQuantyInput, name: doc.data().itemName, measure: doc.data().measure, img: doc.data().itemImg, value: doc.data().itemValue };
+                                    let clearInput = document.getElementById("sendQuantyInput")
+                                    clearInput.value = ""
+                                    editQuanty.style.display = "none"
+                                    article.classList.add(`background--${backI}`)
+                                    if (backI == 2) {
+                                        backI = 1
+                                    } else {
+                                        backI = 2
+                                    }
+                                    article.innerHTML = `
+                                    <img src="${doc.data().itemImg}" alt="" class="discharge__img">
+                                    <div class="discharge__div">
+                                        <p class="discharge__name">${doc.data().itemName}</p>
+                                        <p class="discharge__used">Transferir: ${itemsSelecteds[doc.data().itemName] == undefined ? "0" : itemsSelecteds[doc.data().itemName].used} ${doc.data().measure}</p>
+                                    </div>`
+                                    if (itemsSelecteds[doc.data().itemName].used != 0) {
+                                        article.classList.add("used")
+                                        addToForm(email, itemsSelecteds)
+                                    }
+                                    console.log(itemsSelecteds);
+                                } else {
+                                    let editUsedQuantyAlert = document.getElementById("editSendQuantyAlert")
+                                    editUsedQuantyAlert.textContent = "Quantia em estoque insuficiente"
+                                    setTimeout(() => {
+                                        editUsedQuantyAlert.textContent = ""
+                                    }, 5000);
+                                }
+                            } else {
+                                let editUsedQuantyAlert = document.getElementById("editSendQuantyAlert")
+                                editUsedQuantyAlert.textContent = "Digite um valor inteiro para unidades"
+                                setTimeout(() => {
+                                    editUsedQuantyAlert.textContent = ""
+                                }, 5000);
+                            }
+                            if (doc.data().measure != "Unidades") {
+                                if (Number(usedQuantyInput) <= Number(doc.data().tecnicStock)) {
+                                    let name = doc.data().itemName;
+                                    itemsSelecteds[name] = { used: usedQuantyInput, name: doc.data().itemName, measure: doc.data().measure, img: doc.data().itemImg, value: doc.data().itemValue };
+
+                                    let clearInput = document.getElementById("sendQuantyInput")
+                                    clearInput.value = ""
+                                    editQuanty.style.display = "none"
+                                    article.classList.add(`background--${backI}`)
+                                    if (backI == 2) {
+                                        backI = 1
+                                    } else {
+                                        backI = 2
+                                    }
+                                    article.innerHTML = `
+                                    <img src="${doc.data().itemImg}" alt="" class="discharge__img">
+                                    <div class="discharge__div">
+                                        <p class="discharge__name">${doc.data().itemName}</p>
+                                        <p class="discharge__used">Transferir: ${itemsSelecteds[doc.data().itemName] == undefined ? "0" : itemsSelecteds[doc.data().itemName].used} ${doc.data().measure}</p>
+                                    </div>`
+                                    if (itemsSelecteds[doc.data().itemName].used != 0) {
+                                        article.classList.add("used")
+                                        addToForm(email, itemsSelecteds)
+                                    }
+                                } else {
+                                    let editUsedQuantyAlert = document.getElementById("editSendQuantyAlert")
+                                    editUsedQuantyAlert.textContent = "Quantia em estoque insuficiente"
+                                    setTimeout(() => {
+                                        editUsedQuantyAlert.textContent = ""
+                                    }, 5000);
+                                }
+                            }
+                        } else {
+                            let editUsedQuantyAlert = document.getElementById("editSendQuantyAlert")
+                            editUsedQuantyAlert.textContent = "Digite um valor diferente de 0"
+                            setTimeout(() => {
+                                editUsedQuantyAlert.textContent = ""
+                            }, 5000);
+                        }
+                    }
+                }
+            }
+        });
+    } else {
+        let backI = 1
+        let q = query(collection(db, "items"), where("active", "==", true));
+        SectionItemsCardsSend.innerHTML = ""
+        let unsubscribe = onSnapshot(q, (querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                if (doc.data().itemName.toLowerCase().includes(text.toLowerCase())) {
+                    let SectionItemsCardsSend = document.getElementById("SectionItemsCardsSend")
+                    let article = document.createElement("article")
+                    SectionItemsCardsSend.insertAdjacentElement("beforeend", article)
+                    article.classList.add("discharge__article")
+                    if (itemsSelecteds[doc.data().itemName] != undefined && itemsSelecteds[doc.data().itemName].used != 0) {
+                        article.classList.add("used")
+                    }
+                    article.classList.add(`background--${backI}`)
+                    if (backI == 2) {
+                        backI = 1
+                    } else {
+                        backI = 2
+                    }
+                    article.innerHTML = `
+                    <img src="${doc.data().itemImg}" alt="" class="discharge__img">
+                    <div class="discharge__div">
+                        <p class="discharge__name">${doc.data().itemName}</p>
+                        <p class="discharge__used">Transferir: ${itemsSelecteds[doc.data().itemName] == undefined ? "0" : itemsSelecteds[doc.data().itemName].used} ${doc.data().measure}</p>
+                    </div>`
+                    article.onclick = function () {
+                        let editQuanty = document.getElementById("centralizeSend")
+                        editQuanty.style.display = "flex"
+                        let closeEditSendQuanty = document.getElementById("closeEditSendQuanty")
+                        closeEditSendQuanty.onclick = function () {
+                            editQuanty.style.display = "none"
+                            let clearInput = document.getElementById("sendQuantyInput")
+                            clearInput.value = ""
+                            editQuanty.style.display = "none"
+                        }
+                        let confirmUsedQuantyBtn = document.getElementById("confirmSendQuantyBtn")
+                        confirmUsedQuantyBtn.onclick = function () {
+                            let usedQuantyInput = document.getElementById("sendQuantyInput").value
+                            if (usedQuantyInput != "" && usedQuantyInput != 0) {
+                                if (doc.data().measure == "Unidades") {
+                                    if (parseInt(usedQuantyInput) == parseFloat(usedQuantyInput)) {
+                                        if (Number(usedQuantyInput) <= Number(doc.data().inStock)) {
+                                            let name = doc.data().itemName;
+                                            itemsSelecteds[name] = { used: Number(usedQuantyInput), name: doc.data().itemName, measure: doc.data().measure, img: doc.data().itemImg, value: doc.data().itemValue };
+                                            let clearInput = document.getElementById("sendQuantyInput")
+                                            clearInput.value = ""
+                                            editQuanty.style.display = "none"
+                                            article.classList.add(`background--${backI}`)
+                                            if (backI == 2) {
+                                                backI = 1
+                                            } else {
+                                                backI = 2
+                                            }
+                                            article.innerHTML = `
+                                            <img src="${doc.data().itemImg}" alt="" class="discharge__img">
+                                            <div class="discharge__div">
+                                                <p class="discharge__name">${doc.data().itemName}</p>
+                                                <p class="discharge__used">Transferir: ${itemsSelecteds[doc.data().itemName] == undefined ? "0" : itemsSelecteds[doc.data().itemName].used} ${doc.data().measure}</p>
+                                            </div>`
+                                            if (itemsSelecteds[doc.data().itemName].used != 0) {
+                                                article.classList.add("used")
+                                                addToForm(email, itemsSelecteds, doc.data().itemName, work)
+                                            }
+                                        } else {
+                                            let editUsedQuantyAlert = document.getElementById("editSendQuantyAlert")
+                                            editUsedQuantyAlert.textContent = "Quantia em estoque insuficiente"
+                                            setTimeout(() => {
+                                                editUsedQuantyAlert.textContent = ""
+                                            }, 5000);
+                                        }
+                                    } else {
+                                        let editUsedQuantyAlert = document.getElementById("editSendQuantyAlert")
+                                        editUsedQuantyAlert.textContent = "Digite um valor inteiro para unidades"
+                                        setTimeout(() => {
+                                            editUsedQuantyAlert.textContent = ""
+                                        }, 5000);
+                                    }
+                                }
+                                if (doc.data().measure != "Unidades") {
+                                    if (Number(usedQuantyInput) <= Number(doc.data().inStock)) {
+                                        let name = doc.data().itemName;
+                                        itemsSelecteds[name] = { used: Number(usedQuantyInput), name: doc.data().itemName, measure: doc.data().measure, img: doc.data().itemImg, value: doc.data().itemValue };
+
+                                        let clearInput = document.getElementById("sendQuantyInput")
+                                        clearInput.value = ""
+                                        editQuanty.style.display = "none"
+                                        article.classList.add(`background--${backI}`)
+                                        if (backI == 2) {
+                                            backI = 1
+                                        } else {
+                                            backI = 2
+                                        }
+                                        article.innerHTML = `
+                                        <img src="${doc.data().itemImg}" alt="" class="discharge__img">
+                                        <div class="discharge__div">
+                                            <p class="discharge__name">${doc.data().itemName}</p>
+                                            <p class="discharge__used">Transferir: ${itemsSelecteds[doc.data().itemName] == undefined ? "0" : itemsSelecteds[doc.data().itemName].used} ${doc.data().measure}</p>
+                                        </div>`
+                                        if (itemsSelecteds[doc.data().itemName].used != 0) {
+                                            article.classList.add("used")
+                                            addToForm(email, itemsSelecteds, doc.data().itemName, work)
+                                        }
+                                    } else {
+                                        let editUsedQuantyAlert = document.getElementById("editSendQuantyAlert")
+                                        editUsedQuantyAlert.textContent = "Quantia em estoque insuficiente"
+                                        setTimeout(() => {
+                                            editUsedQuantyAlert.textContent = ""
+                                        }, 5000);
+                                    }
+                                }
+                            } else {
+                                let editUsedQuantyAlert = document.getElementById("editSendQuantyAlert")
+                                editUsedQuantyAlert.textContent = "Digite um valor diferente de 0"
+                                setTimeout(() => {
+                                    editUsedQuantyAlert.textContent = ""
+                                }, 5000);
+                            }
                         }
                     }
                 }
