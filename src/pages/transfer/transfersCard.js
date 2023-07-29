@@ -301,7 +301,7 @@ async function timeExpired(id) {
     let docRef = doc(db, "transfers", `${id}`);
     await updateDoc(docRef, {
         timeExpired: true,
-        status: "expirado"
+        status: "Expirado"
     });
 }
 

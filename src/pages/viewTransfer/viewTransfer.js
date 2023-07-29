@@ -1,4 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js";
+
 const firebaseConfig = {
     apiKey: "AIzaSyDiTWkrXRNH4XlHNHIh8RlMKMoArVULYyE",
     authDomain: "marktec-deposit.firebaseapp.com",
@@ -12,11 +13,15 @@ import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, onAuthS
 import { getFirestore, collection, addDoc, doc, setDoc, onSnapshot, query, where, updateDoc } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
 const db = getFirestore(app);
 const auth = getAuth();
+let actualUser = ""
 
 function loadData() {
     onAuthStateChanged(auth, (user) => {
         if (user) {
             const uid = user.uid;
+            let unsub = onSnapshot(doc(db, "users", `${user.email}`), (doc) => {
+                actualUser = doc.data().fullName
+            })
             verifyUrl()
         }
     });
@@ -59,10 +64,69 @@ function verifyUrl() {
                     <span class="viewDischargeSection__allTotal" id="allTotalSpan"></span>
                 </div>
                 <img src="assets/logo.png" alt="" class="viewDischargeSection__logo">
+                <button id="generatePDF">Gerar PDF</button>
             </div>
             <a href="#" class="viewDischargeSection__back"><ion-icon
                     name="arrow-back-outline"></ion-icon>Voltar</a>
             <p class="viewDischargeSection__copyright">©Marktec telecom</p>`
+            let generatePDF = document.getElementById("generatePDF")
+            let timeElapsed = Date.now();
+            let today = new Date(timeElapsed);
+            let date = today.toLocaleDateString()
+            let dataAtual = new Date();
+            let hora = dataAtual.getHours();
+            let minutos = dataAtual.getMinutes();
+            let horaFormatada = hora < 10 ? '0' + hora : hora;
+            let minutosFormatados = minutos < 10 ? '0' + minutos : minutos;
+            let hours = horaFormatada + ":" + minutosFormatados
+            let sender = doc.data().senderName
+            let reciver = doc.data().reciverName
+            let requestDate = doc.data().date
+            let requesthour = doc.data().hours
+            let requestStatus = doc.data().status
+            let requestmotive = doc.data().motive
+            let requestDescription = doc.data().description
+            let requestAcceptHours = ""
+            let itemsToTransferList = ""
+            let transferTxt = "a ser transferidos"
+            let reqId = doc.id
+            function returnList() {
+                Object.keys(doc.data().itemsToTransfer).forEach(element => {
+                    itemsToTransferList = `${itemsToTransferList}<li>${doc.data().itemsToTransfer[element].used} ${doc.data().itemsToTransfer[element].measure} - ${doc.data().itemsToTransfer[element].name}.</li>`
+                });
+            }
+            returnList()
+            if (requestStatus == "Aceito") {
+                requestAcceptHours = ` e aceita ás ${doc.data().acceptHour}`
+                transferTxt = "transferidos"
+            }
+            if (requestStatus == "Aceito") {
+                requestStatus = "Aceito (Items transferidos)"
+            }
+            if (requestStatus == "Pendente") {
+                requestStatus = "Pendente (Items não transferidos)"
+            }
+            if (requestStatus.toLowerCase() == "expirado") {
+                requestStatus = "Expirado (Items não transferidos)"
+            }
+            if (requestStatus == "Insuficiente") {
+                requestStatus = "Insuficiente (Items não transferidos)"
+            }
+            generatePDF.onclick = function () {
+                let doc = new jsPDF()
+                doc.fromHTML(`<h1 style="font-size: 32px; font-weight: 500; font-family: 'Poppins', sans-serif;">Comprovante de transferência</h1>`, 10, 10)
+                doc.fromHTML(`<p style="font-size: 18px; font-family: 'Poppins', sans-serif;">ID da transferência: ${reqId}</p>`, 10, 21)
+                doc.fromHTML(`<p style="font-size: 18px; font-family: 'Poppins', sans-serif;">© Marktec Telecom</p>`, 10, 27)
+                doc.fromHTML(`<p style="font-size: 18px; font-family: 'Poppins', sans-serif;">Comprovante emitido por ${actualUser} dia ${date} ás ${hours}.</p>`, 10, 40)
+                doc.fromHTML(`<p style="font-size: 18px; font-family: 'Poppins', sans-serif;">Transferido de ${sender} para ${reciver}.</p>`, 10, 48)
+                doc.fromHTML(`<p style="font-size: 18px; font-family: 'Poppins', sans-serif;">Transferência solicitada dia ${requestDate} ás ${requesthour}${requestAcceptHours}.</p>`, 10, 56)
+                doc.fromHTML(`<p style="font-size: 18px; font-family: 'Poppins', sans-serif;">Status da transferência: ${requestStatus}.</p>`, 10, 64)
+                doc.fromHTML(`<p style="font-size: 18px; font-family: 'Poppins', sans-serif;">Motivo da transferência: ${requestmotive}.</p>`, 10, 72)
+                doc.fromHTML(`<p style="font-size: 18px; font-family: 'Poppins', sans-serif;">Descrição da transferência: ${requestDescription}.</p>`, 10, 80)
+                doc.fromHTML(`<p style="font-size: 18px; font-family: 'Poppins', sans-serif;">Items ${transferTxt}:</p>`, 10, 88)
+                doc.fromHTML(`<ul style="font-size: 18px; font-family: 'Poppins', sans-serif;"><br>${itemsToTransferList}</ul>`, 10, 96)
+                doc.save(`transfer.pdf`)
+            }
             let i = 1
             let total = 0
             let viewDischargeSection__back = document.querySelector(".viewDischargeSection__back")

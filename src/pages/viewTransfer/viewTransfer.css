@@ -268,6 +268,23 @@
     margin-top: 30px;
 }
 
+#generatePDF {
+    border: solid 2px transparent;
+    background: var(--green);
+    color: #fff;
+    border-radius: 20px;
+    padding: 5px 20px;
+    text-transform: uppercase;
+    margin-top: 25px;
+    font-size: 20px;
+    transition: 0.2s;
+}
+#generatePDF:hover {
+    border: solid 2px var(--green);
+    color: var(--green);
+    background: #fff;
+}
+
 @media only screen and (max-width: 500px) {
     .squares {
         display: none;
@@ -358,5 +375,8 @@
         right: 50%;
         left: auto;
         transform: translateX(50%);
+    }
+    #generatePDF {
+        font-size: 18px;
     }
 }
