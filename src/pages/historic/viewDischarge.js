@@ -13,6 +13,7 @@ import { getFirestore, collection, addDoc, doc, setDoc, onSnapshot, query, where
 const db = getFirestore(app);
 const auth = getAuth();
 let actualUser = ""
+let actualUserWork = ""
 
 function loadData() {
     onAuthStateChanged(auth, (user) => {
@@ -20,6 +21,7 @@ function loadData() {
             const uid = user.uid;
             let unsub = onSnapshot(doc(db, "users", `${user.email}`), (doc) => {
                 actualUser = doc.data().fullName
+                actualUserWork = doc.data().work
             })
             verifyUrl()
         }
@@ -50,8 +52,8 @@ function verifyUrl() {
                 <header class="viewDischargeSection__header">
                     <span class="viewDischargeSection__header__span span--1">utilizado</span>
                     <span class="viewDischargeSection__header__span span--2">Nome</span>
-                    <span class="viewDischargeSection__header__span span--3">Preço</span>
-                    <span class="viewDischargeSection__header__span span--4">Total</span>
+                    <span class="viewDischargeSection__header__span span--3">${actualUserWork != "Técnico" ? "Preço" : ""}</span>
+                    <span class="viewDischargeSection__header__span span--4">${actualUserWork != "Técnico" ? "Total" : ""}</span>
                 </header>
                 <section class="viewDischargeSection__section" id="viewCardSection">
                 </section>
@@ -132,14 +134,22 @@ function verifyUrl() {
                         itemTotal = Number(doc.data().itemsUsed[element].value.replace(".", "").replace(",", "."))
                     }
                 }
-                article.innerHTML = `
-                <span class="viewDischargeSection__itemQuanty">${doc.data().itemsUsed[element].used} ${doc.data().itemsUsed[element].measure}</span>
-                <p class="viewDischargeSection__itemName">${doc.data().itemsUsed[element].name}</p>
-                <span class="viewDischargeSection__itemPrice">$${doc.data().itemsUsed[element].value}</span>
-                <span class="viewDischargeSection__itemTotalPrice">$${(itemTotal * doc.data().itemsUsed[element].used).toFixed(2)}</span>`
-                total = total + (itemTotal * doc.data().itemsUsed[element].used)
-                let allTotalSpan = document.getElementById("allTotalSpan")
-                allTotalSpan.textContent = `$${total.toFixed(2)}`
+                if (actualUserWork != "Técnico") {
+                    article.innerHTML = `
+                        <span class="viewDischargeSection__itemQuanty">${doc.data().itemsUsed[element].used} ${doc.data().itemsUsed[element].measure}</span>
+                        <p class="viewDischargeSection__itemName">${doc.data().itemsUsed[element].name}</p>
+                        <span class="viewDischargeSection__itemPrice">$${doc.data().itemsUsed[element].value}</span>
+                        <span class="viewDischargeSection__itemTotalPrice">$${(itemTotal * doc.data().itemsUsed[element].used).toFixed(2)}</span>`
+                } else {
+                    article.innerHTML = `
+                        <span class="viewDischargeSection__itemQuanty">${doc.data().itemsUsed[element].used} ${doc.data().itemsUsed[element].measure}</span>
+                        <p class="viewDischargeSection__itemName" style="width: 100%;">${doc.data().itemsUsed[element].name}</p>`
+                }
+                if (actualUserWork != "Técnico") {
+                    total = total + (itemTotal * doc.data().itemsUsed[element].used)
+                    let allTotalSpan = document.getElementById("allTotalSpan")
+                    allTotalSpan.textContent = `$${total.toFixed(2)}`
+                }
                 switch (i) {
                     case 1:
                         i = 2

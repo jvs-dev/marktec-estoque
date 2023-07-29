@@ -19,6 +19,8 @@ let searchInput = document.getElementById("searchInput")
 let searchFilter = document.getElementById("searchFilter")
 let filterOption = document.querySelectorAll('.filterList__li');
 let closeErrorPopUp = document.getElementById("closeErrorPopUp")
+let actualUserWork = ""
+let actualUserName = ""
 
 closeErrorPopUp.onclick = function () {
     let errorPopUp = document.getElementById("errorPopUp")
@@ -135,6 +137,8 @@ function loadData() {
         if (user) {
             const uid = user.uid;
             let unsub = onSnapshot(doc(db, `users`, `${user.email}`), (doc) => {
+                actualUserWork = doc.data().work
+                actualUserName = doc.data().fullName
                 if (doc.data().admin == true) {
                     transfer.style.display = "none"
                     acceptUser.style.display = "flex"
@@ -165,6 +169,25 @@ function loadData() {
                     addItem.style.display = "none"
                     if (doc.data().work == "Técnico") {
                         loadTecnicRequests(user.email, doc.data().fullName)
+                        searchInput.addEventListener("input", () => {
+                            filterList.classList.remove("active")
+                            setTimeout(() => {
+                                filterList.style.display = "none"
+                            }, 200);
+                            if (searchInput.value != "") {
+                                search(searchInput.value)
+                            } else {
+                                let historicSection = document.getElementById("historicSection")
+                                historicSection.classList.remove("searching")
+                                historicSection.innerHTML = ""
+                                loadTecnicRequests(user.email, doc.data().fullName)
+                                let errorPopUp = document.getElementById("errorPopUp")
+                                errorPopUp.classList.remove("active")
+                                setTimeout(() => {
+                                    errorPopUp.style.display = "none"
+                                }, 200);
+                            }
+                        })
                     } else {
                         loadRequests()
                         searchInput.addEventListener("input", () => {
@@ -225,15 +248,6 @@ function search(text) {
                 case "hora":
                     searchHour(text.toLocaleLowerCase())
                     break;
-                case "descrição":
-                    searchDescription(text.toLocaleLowerCase())
-                    break;
-                case "motivo":
-                    searchMotive(text.toLocaleLowerCase())
-                    break;
-                case "items":
-                    searchItem(text.toLocaleLowerCase())
-                    break;
                 case "todos":
                     let errorPopUp = document.getElementById("errorPopUp")
                     errorPopUp.style.display = "flex"
@@ -258,19 +272,53 @@ function search(text) {
 
 
 function searchReciver(text) {
-    let historicSection = document.getElementById("historicSection")
-    historicSection.classList.remove("searching")
-    historicSection.innerHTML = ""
-    let q = query(collection(db, "transfers"), where("status", "!=", ``));
-    let unsubscribe = onSnapshot(q, (querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-            if (doc.data().reciverName.toLocaleLowerCase().includes(`${text}`)) {
-                let historicSection = document.getElementById("historicSection")
-                let article = document.createElement("article")
-                historicSection.insertAdjacentElement("beforeend", article)
-                article.style.order = `-${doc.data().timestamp.seconds}`
-                article.classList.add("NewTransferCard")
-                article.innerHTML = `
+    if (actualUserWork != "Técnico") {
+        let historicSection = document.getElementById("historicSection")
+        historicSection.classList.remove("searching")
+        historicSection.innerHTML = ""
+        let q = query(collection(db, "transfers"), where("status", "!=", ``));
+        let unsubscribe = onSnapshot(q, (querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                if (doc.data().reciverName.toLocaleLowerCase().includes(`${text}`)) {
+                    let historicSection = document.getElementById("historicSection")
+                    let article = document.createElement("article")
+                    historicSection.insertAdjacentElement("beforeend", article)
+                    article.style.order = `-${doc.data().timestamp.seconds}`
+                    article.classList.add("NewTransferCard")
+                    article.innerHTML = `
+                        <div class="NewTransferCard__div">
+                            <h2 class="NewTransferCard__h2">Transferência</h2>
+                            <p class="NewTransferCard__status" style="color: ${returnColor(doc.data().status)};">${doc.data().status}</p>
+                        </div>
+                        <p class="NewTransferCard__p"><ion-icon name="person-remove-outline"
+                                class="NewTransferCard__p__icon md hydrated" role="img"></ion-icon>Remetente: ${doc.data().senderName}</p>
+                        <p class="NewTransferCard__p"><ion-icon name="person-add-outline"
+                                class="NewTransferCard__p__icon md hydrated" role="img"></ion-icon>receptor: ${doc.data().reciverName}</p>
+                            <p class="NewTransferCard__motive">Motivo: ${doc.data().motive}.</p>
+                            <span class="NewTransferCard__description">Descrição: ${doc.data().description}.</span>
+                        <span class="NewTransferCard__date">${doc.data().hours}<br>${doc.data().date}</span>
+                        <button class="NewTransferCard__more"><ion-icon name="arrow-forward-outline" role="img" class="md hydrated"></ion-icon></button>`
+                    article.onclick = function () {
+                        window.location = "view-transfer.html?id=" + doc.id;
+                    }
+                }
+            })
+        })
+    } else {
+        let historicSection = document.getElementById("historicSection")
+        historicSection.classList.remove("searching")
+        historicSection.innerHTML = ""
+        let q = query(collection(db, "transfers"), where("status", "!=", ``));
+        let unsubscribe = onSnapshot(q, (querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                if (doc.data().reciverName.toLocaleLowerCase().includes(`${text}`)) {
+                    if (doc.data().senderName == actualUserName || doc.data().reciverName == actualUserName) {
+                        let historicSection = document.getElementById("historicSection")
+                        let article = document.createElement("article")
+                        historicSection.insertAdjacentElement("beforeend", article)
+                        article.style.order = `-${doc.data().timestamp.seconds}`
+                        article.classList.add("NewTransferCard")
+                        article.innerHTML = `
                     <div class="NewTransferCard__div">
                         <h2 class="NewTransferCard__h2">Transferência</h2>
                         <p class="NewTransferCard__status" style="color: ${returnColor(doc.data().status)};">${doc.data().status}</p>
@@ -283,276 +331,26 @@ function searchReciver(text) {
                         <span class="NewTransferCard__description">Descrição: ${doc.data().description}.</span>
                     <span class="NewTransferCard__date">${doc.data().hours}<br>${doc.data().date}</span>
                     <button class="NewTransferCard__more"><ion-icon name="arrow-forward-outline" role="img" class="md hydrated"></ion-icon></button>`
-                article.onclick = function () {
-                    window.location = "view-transfer.html?id=" + doc.id;
+                        article.onclick = function () {
+                            window.location = "view-transfer.html?id=" + doc.id;
+                        }
+                    }
                 }
-            }
+            })
         })
-    })
+    }
 }
 
 
 function searchSender(text) {
-    let historicSection = document.getElementById("historicSection")
-    historicSection.classList.remove("searching")
-    historicSection.innerHTML = ""
-    let q = query(collection(db, "transfers"), where("status", "!=", ``));
-    let unsubscribe = onSnapshot(q, (querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-            if (doc.data().senderName.toLocaleLowerCase().includes(`${text}`)) {
-                let historicSection = document.getElementById("historicSection")
-                let article = document.createElement("article")
-                historicSection.insertAdjacentElement("beforeend", article)
-                article.style.order = `-${doc.data().timestamp.seconds}`
-                article.classList.add("NewTransferCard")
-                article.innerHTML = `
-                    <div class="NewTransferCard__div">
-                        <h2 class="NewTransferCard__h2">Transferência</h2>
-                        <p class="NewTransferCard__status" style="color: ${returnColor(doc.data().status)};">${doc.data().status}</p>
-                    </div>
-                    <p class="NewTransferCard__p"><ion-icon name="person-remove-outline"
-                            class="NewTransferCard__p__icon md hydrated" role="img"></ion-icon>Remetente: ${doc.data().senderName}</p>
-                    <p class="NewTransferCard__p"><ion-icon name="person-add-outline"
-                            class="NewTransferCard__p__icon md hydrated" role="img"></ion-icon>receptor: ${doc.data().reciverName}</p>
-                        <p class="NewTransferCard__motive">Motivo: ${doc.data().motive}.</p>
-                        <span class="NewTransferCard__description">Descrição: ${doc.data().description}.</span>
-                    <span class="NewTransferCard__date">${doc.data().hours}<br>${doc.data().date}</span>
-                    <button class="NewTransferCard__more"><ion-icon name="arrow-forward-outline" role="img" class="md hydrated"></ion-icon></button>`
-                article.onclick = function () {
-                    window.location = "view-transfer.html?id=" + doc.id;
-                }
-            }
-        })
-    })
-}
-
-function searchDate(text) {
-    let historicSection = document.getElementById("historicSection")
-    historicSection.classList.remove("searching")
-    historicSection.innerHTML = ""
-    let q = query(collection(db, "transfers"), where("status", "!=", ``));
-    let unsubscribe = onSnapshot(q, (querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-            if (doc.data().date.includes(`${text}`)) {
-                let historicSection = document.getElementById("historicSection")
-                let article = document.createElement("article")
-                historicSection.insertAdjacentElement("beforeend", article)
-                article.style.order = `-${doc.data().timestamp.seconds}`
-                article.classList.add("NewTransferCard")
-                article.innerHTML = `
-                    <div class="NewTransferCard__div">
-                        <h2 class="NewTransferCard__h2">Transferência</h2>
-                        <p class="NewTransferCard__status" style="color: ${returnColor(doc.data().status)};">${doc.data().status}</p>
-                    </div>
-                    <p class="NewTransferCard__p"><ion-icon name="person-remove-outline"
-                            class="NewTransferCard__p__icon md hydrated" role="img"></ion-icon>Remetente: ${doc.data().senderName}</p>
-                    <p class="NewTransferCard__p"><ion-icon name="person-add-outline"
-                            class="NewTransferCard__p__icon md hydrated" role="img"></ion-icon>receptor: ${doc.data().reciverName}</p>
-                        <p class="NewTransferCard__motive">Motivo: ${doc.data().motive}.</p>
-                        <span class="NewTransferCard__description">Descrição: ${doc.data().description}.</span>
-                    <span class="NewTransferCard__date">${doc.data().hours}<br>${doc.data().date}</span>
-                    <button class="NewTransferCard__more"><ion-icon name="arrow-forward-outline" role="img" class="md hydrated"></ion-icon></button>`
-                article.onclick = function () {
-                    window.location = "view-transfer.html?id=" + doc.id;
-                }
-            }
-        })
-    })
-    let e = query(collection(db, "discharges"), where("itemsUsed", "!=", {}));
-    let unsubscri = onSnapshot(e, (querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-            if (doc.data().date.includes(`${text}`)) {
-                let historicSection = document.getElementById("historicSection")
-                let article = document.createElement("article")
-                historicSection.insertAdjacentElement("beforeend", article)
-                article.classList.add("dischargeCard")
-                article.style.order = `-${doc.data().timestamp.seconds}`
-                article.innerHTML = `
-                <div class="dischargeCard__div">
-                    <h2 class="dischargeCard__h2">Relatório de baixa</h2>
-                    <p class="dischargeCard__service">${doc.data().service}</p>
-                </div>
-                <p class="dischargeCard__p"><i class="bi bi-car-front-fill dischargeCard__p__icon"></i>técnico: ${doc.data().tecnicName}</p>
-                <p class="dischargeCard__p"><ion-icon name="person-outline" class="dischargeCard__p__icon"></ion-icon>Cliente: ${doc.data().clientName}</p>
-                <p class="dischargeCard__description">${doc.data().description}.</p>
-                <span class="dischargeCard__date">${doc.data().hours}<br>${doc.data().date}</span>
-                <button class="dischargeCard__more"><ion-icon name="arrow-forward-outline"></ion-icon></button>`
-                article.onclick = function () {
-                    window.location = "?id=" + doc.id;
-                }
-            }
-        })
-
-    })
-}
-
-
-
-
-function searchHour(text) {
-    let historicSection = document.getElementById("historicSection")
-    historicSection.classList.remove("searching")
-    historicSection.innerHTML = ""
-    let q = query(collection(db, "transfers"), where("status", "!=", ``));
-    let unsubscribe = onSnapshot(q, (querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-            if (doc.data().hours.includes(`${text}`)) {
-                let historicSection = document.getElementById("historicSection")
-                let article = document.createElement("article")
-                historicSection.insertAdjacentElement("beforeend", article)
-                article.style.order = `-${doc.data().timestamp.seconds}`
-                article.classList.add("NewTransferCard")
-                article.innerHTML = `
-                    <div class="NewTransferCard__div">
-                        <h2 class="NewTransferCard__h2">Transferência</h2>
-                        <p class="NewTransferCard__status" style="color: ${returnColor(doc.data().status)};">${doc.data().status}</p>
-                    </div>
-                    <p class="NewTransferCard__p"><ion-icon name="person-remove-outline"
-                            class="NewTransferCard__p__icon md hydrated" role="img"></ion-icon>Remetente: ${doc.data().senderName}</p>
-                    <p class="NewTransferCard__p"><ion-icon name="person-add-outline"
-                            class="NewTransferCard__p__icon md hydrated" role="img"></ion-icon>receptor: ${doc.data().reciverName}</p>
-                        <p class="NewTransferCard__motive">Motivo: ${doc.data().motive}.</p>
-                        <span class="NewTransferCard__description">Descrição: ${doc.data().description}.</span>
-                    <span class="NewTransferCard__date">${doc.data().hours}<br>${doc.data().date}</span>
-                    <button class="NewTransferCard__more"><ion-icon name="arrow-forward-outline" role="img" class="md hydrated"></ion-icon></button>`
-                article.onclick = function () {
-                    window.location = "view-transfer.html?id=" + doc.id;
-                }
-            }
-        })
-    })
-    let e = query(collection(db, "discharges"), where("itemsUsed", "!=", {}));
-    let unsubscri = onSnapshot(e, (querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-            if (doc.data().hours.includes(`${text}`)) {
-                let historicSection = document.getElementById("historicSection")
-                let article = document.createElement("article")
-                historicSection.insertAdjacentElement("beforeend", article)
-                article.classList.add("dischargeCard")
-                article.style.order = `-${doc.data().timestamp.seconds}`
-                article.innerHTML = `
-                <div class="dischargeCard__div">
-                    <h2 class="dischargeCard__h2">Relatório de baixa</h2>
-                    <p class="dischargeCard__service">${doc.data().service}</p>
-                </div>
-                <p class="dischargeCard__p"><i class="bi bi-car-front-fill dischargeCard__p__icon"></i>técnico: ${doc.data().tecnicName}</p>
-                <p class="dischargeCard__p"><ion-icon name="person-outline" class="dischargeCard__p__icon"></ion-icon>Cliente: ${doc.data().clientName}</p>
-                <p class="dischargeCard__description">${doc.data().description}.</p>
-                <span class="dischargeCard__date">${doc.data().hours}<br>${doc.data().date}</span>
-                <button class="dischargeCard__more"><ion-icon name="arrow-forward-outline"></ion-icon></button>`
-                article.onclick = function () {
-                    window.location = "?id=" + doc.id;
-                }
-            }
-        })
-
-    })
-}
-function searchDescription(text) {
-    let historicSection = document.getElementById("historicSection")
-    historicSection.classList.remove("searching")
-    historicSection.innerHTML = ""
-    let q = query(collection(db, "transfers"), where("status", "!=", ``));
-    let unsubscribe = onSnapshot(q, (querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-            if (doc.data().description.toLocaleLowerCase().includes(`${text}`)) {
-                let historicSection = document.getElementById("historicSection")
-                let article = document.createElement("article")
-                historicSection.insertAdjacentElement("beforeend", article)
-                article.style.order = `-${doc.data().timestamp.seconds}`
-                article.classList.add("NewTransferCard")
-                article.innerHTML = `
-                    <div class="NewTransferCard__div">
-                        <h2 class="NewTransferCard__h2">Transferência</h2>
-                        <p class="NewTransferCard__status" style="color: ${returnColor(doc.data().status)};">${doc.data().status}</p>
-                    </div>
-                    <p class="NewTransferCard__p"><ion-icon name="person-remove-outline"
-                            class="NewTransferCard__p__icon md hydrated" role="img"></ion-icon>Remetente: ${doc.data().senderName}</p>
-                    <p class="NewTransferCard__p"><ion-icon name="person-add-outline"
-                            class="NewTransferCard__p__icon md hydrated" role="img"></ion-icon>receptor: ${doc.data().reciverName}</p>
-                        <p class="NewTransferCard__motive">Motivo: ${doc.data().motive}.</p>
-                        <span class="NewTransferCard__description">Descrição: ${doc.data().description}.</span>
-                    <span class="NewTransferCard__date">${doc.data().hours}<br>${doc.data().date}</span>
-                    <button class="NewTransferCard__more"><ion-icon name="arrow-forward-outline" role="img" class="md hydrated"></ion-icon></button>`
-                article.onclick = function () {
-                    window.location = "view-transfer.html?id=" + doc.id;
-                }
-            }
-        })
-    })
-    let e = query(collection(db, "discharges"), where("itemsUsed", "!=", {}));
-    let unsubscri = onSnapshot(e, (querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-            if (doc.data().description.toLocaleLowerCase().includes(`${text}`)) {
-                let historicSection = document.getElementById("historicSection")
-                let article = document.createElement("article")
-                historicSection.insertAdjacentElement("beforeend", article)
-                article.classList.add("dischargeCard")
-                article.style.order = `-${doc.data().timestamp.seconds}`
-                article.innerHTML = `
-                <div class="dischargeCard__div">
-                    <h2 class="dischargeCard__h2">Relatório de baixa</h2>
-                    <p class="dischargeCard__service">${doc.data().service}</p>
-                </div>
-                <p class="dischargeCard__p"><i class="bi bi-car-front-fill dischargeCard__p__icon"></i>técnico: ${doc.data().tecnicName}</p>
-                <p class="dischargeCard__p"><ion-icon name="person-outline" class="dischargeCard__p__icon"></ion-icon>Cliente: ${doc.data().clientName}</p>
-                <p class="dischargeCard__description">${doc.data().description}.</p>
-                <span class="dischargeCard__date">${doc.data().hours}<br>${doc.data().date}</span>
-                <button class="dischargeCard__more"><ion-icon name="arrow-forward-outline"></ion-icon></button>`
-                article.onclick = function () {
-                    window.location = "?id=" + doc.id;
-                }
-            }
-        })
-
-    })
-}
-function searchMotive(text) {
-    let historicSection = document.getElementById("historicSection")
-    historicSection.classList.remove("searching")
-    historicSection.innerHTML = ""
-    let q = query(collection(db, "transfers"), where("status", "!=", ``));
-    let unsubscribe = onSnapshot(q, (querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-            if (doc.data().motive.toLocaleLowerCase().includes(`${text}`)) {
-                let historicSection = document.getElementById("historicSection")
-                let article = document.createElement("article")
-                historicSection.insertAdjacentElement("beforeend", article)
-                article.style.order = `-${doc.data().timestamp.seconds}`
-                article.classList.add("NewTransferCard")
-                article.innerHTML = `
-                    <div class="NewTransferCard__div">
-                        <h2 class="NewTransferCard__h2">Transferência</h2>
-                        <p class="NewTransferCard__status" style="color: ${returnColor(doc.data().status)};">${doc.data().status}</p>
-                    </div>
-                    <p class="NewTransferCard__p"><ion-icon name="person-remove-outline"
-                            class="NewTransferCard__p__icon md hydrated" role="img"></ion-icon>Remetente: ${doc.data().senderName}</p>
-                    <p class="NewTransferCard__p"><ion-icon name="person-add-outline"
-                            class="NewTransferCard__p__icon md hydrated" role="img"></ion-icon>receptor: ${doc.data().reciverName}</p>
-                        <p class="NewTransferCard__motive">Motivo: ${doc.data().motive}.</p>
-                        <span class="NewTransferCard__description">Descrição: ${doc.data().description}.</span>
-                    <span class="NewTransferCard__date">${doc.data().hours}<br>${doc.data().date}</span>
-                    <button class="NewTransferCard__more"><ion-icon name="arrow-forward-outline" role="img" class="md hydrated"></ion-icon></button>`
-                article.onclick = function () {
-                    window.location = "view-transfer.html?id=" + doc.id;
-                }
-            }
-        })
-    })
-}
-
-function searchItem(text) {
-    console.log("oi");
-    let historicSection = document.getElementById("historicSection")
-    historicSection.classList.remove("searching")
-    historicSection.innerHTML = ""
-    let q = query(collection(db, "transfers"), where("status", "!=", ``));
-    let unsubscribe = onSnapshot(q, (querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-            let i = 0
-            while (Object.keys(doc.data().itemsToTransfer).length > i) {
-                console.log(`${Object.keys(doc.data().itemsToTransfer).length} => ${i + 1}`);
-                if (Object.keys(doc.data().itemsToTransfer)[i].toLocaleLowerCase().includes(`${text}`)) {
+    if (actualUserWork != "Técnico") {
+        let historicSection = document.getElementById("historicSection")
+        historicSection.classList.remove("searching")
+        historicSection.innerHTML = ""
+        let q = query(collection(db, "transfers"), where("status", "!=", ``));
+        let unsubscribe = onSnapshot(q, (querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                if (doc.data().senderName.toLocaleLowerCase().includes(`${text}`)) {
                     let historicSection = document.getElementById("historicSection")
                     let article = document.createElement("article")
                     historicSection.insertAdjacentElement("beforeend", article)
@@ -574,84 +372,376 @@ function searchItem(text) {
                     article.onclick = function () {
                         window.location = "view-transfer.html?id=" + doc.id;
                     }
-                    i = Object.keys(doc.data().itemsToTransfer).length + i
                 }
-                i++
-            }
+            })
         })
-    })
-    /* let e = query(collection(db, "discharges"), where("itemsUsed", "!=", {}));
-    let unsubscri = onSnapshot(e, (querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-            if (doc.data().date.includes(`${text}`)) {
+    } else {
+        let historicSection = document.getElementById("historicSection")
+        historicSection.classList.remove("searching")
+        historicSection.innerHTML = ""
+        let q = query(collection(db, "transfers"), where("status", "!=", ``));
+        let unsubscribe = onSnapshot(q, (querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                if (doc.data().senderName.toLocaleLowerCase().includes(`${text}`)) {
+                    if (doc.data().senderName == actualUserName || doc.data().reciverName == actualUserName) {
+                        let historicSection = document.getElementById("historicSection")
+                        let article = document.createElement("article")
+                        historicSection.insertAdjacentElement("beforeend", article)
+                        article.style.order = `-${doc.data().timestamp.seconds}`
+                        article.classList.add("NewTransferCard")
+                        article.innerHTML = `
+                    <div class="NewTransferCard__div">
+                        <h2 class="NewTransferCard__h2">Transferência</h2>
+                        <p class="NewTransferCard__status" style="color: ${returnColor(doc.data().status)};">${doc.data().status}</p>
+                    </div>
+                    <p class="NewTransferCard__p"><ion-icon name="person-remove-outline"
+                            class="NewTransferCard__p__icon md hydrated" role="img"></ion-icon>Remetente: ${doc.data().senderName}</p>
+                    <p class="NewTransferCard__p"><ion-icon name="person-add-outline"
+                            class="NewTransferCard__p__icon md hydrated" role="img"></ion-icon>receptor: ${doc.data().reciverName}</p>
+                        <p class="NewTransferCard__motive">Motivo: ${doc.data().motive}.</p>
+                        <span class="NewTransferCard__description">Descrição: ${doc.data().description}.</span>
+                    <span class="NewTransferCard__date">${doc.data().hours}<br>${doc.data().date}</span>
+                    <button class="NewTransferCard__more"><ion-icon name="arrow-forward-outline" role="img" class="md hydrated"></ion-icon></button>`
+                        article.onclick = function () {
+                            window.location = "view-transfer.html?id=" + doc.id;
+                        }
+                    }
+                }
+            })
+        })
+    }
+
+}
+
+function searchDate(text) {
+    if (actualUserWork != "Técnico") {
+        let historicSection = document.getElementById("historicSection")
+        historicSection.classList.remove("searching")
+        historicSection.innerHTML = ""
+        let q = query(collection(db, "transfers"), where("status", "!=", ``));
+        let unsubscribe = onSnapshot(q, (querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                if (doc.data().date.includes(`${text}`)) {
+                    let historicSection = document.getElementById("historicSection")
+                    let article = document.createElement("article")
+                    historicSection.insertAdjacentElement("beforeend", article)
+                    article.style.order = `-${doc.data().timestamp.seconds}`
+                    article.classList.add("NewTransferCard")
+                    article.innerHTML = `
+                        <div class="NewTransferCard__div">
+                            <h2 class="NewTransferCard__h2">Transferência</h2>
+                            <p class="NewTransferCard__status" style="color: ${returnColor(doc.data().status)};">${doc.data().status}</p>
+                        </div>
+                        <p class="NewTransferCard__p"><ion-icon name="person-remove-outline"
+                                class="NewTransferCard__p__icon md hydrated" role="img"></ion-icon>Remetente: ${doc.data().senderName}</p>
+                        <p class="NewTransferCard__p"><ion-icon name="person-add-outline"
+                                class="NewTransferCard__p__icon md hydrated" role="img"></ion-icon>receptor: ${doc.data().reciverName}</p>
+                            <p class="NewTransferCard__motive">Motivo: ${doc.data().motive}.</p>
+                            <span class="NewTransferCard__description">Descrição: ${doc.data().description}.</span>
+                        <span class="NewTransferCard__date">${doc.data().hours}<br>${doc.data().date}</span>
+                        <button class="NewTransferCard__more"><ion-icon name="arrow-forward-outline" role="img" class="md hydrated"></ion-icon></button>`
+                    article.onclick = function () {
+                        window.location = "view-transfer.html?id=" + doc.id;
+                    }
+                }
+            })
+        })
+        let e = query(collection(db, "discharges"), where("itemsUsed", "!=", {}));
+        let unsubscri = onSnapshot(e, (querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                if (doc.data().date.includes(`${text}`)) {
+                    let historicSection = document.getElementById("historicSection")
+                    let article = document.createElement("article")
+                    historicSection.insertAdjacentElement("beforeend", article)
+                    article.classList.add("dischargeCard")
+                    article.style.order = `-${doc.data().timestamp.seconds}`
+                    article.innerHTML = `
+                    <div class="dischargeCard__div">
+                        <h2 class="dischargeCard__h2">Relatório de baixa</h2>
+                        <p class="dischargeCard__service">${doc.data().service}</p>
+                    </div>
+                    <p class="dischargeCard__p"><i class="bi bi-car-front-fill dischargeCard__p__icon"></i>técnico: ${doc.data().tecnicName}</p>
+                    <p class="dischargeCard__p"><ion-icon name="person-outline" class="dischargeCard__p__icon"></ion-icon>Cliente: ${doc.data().clientName}</p>
+                    <p class="dischargeCard__description">${doc.data().description}.</p>
+                    <span class="dischargeCard__date">${doc.data().hours}<br>${doc.data().date}</span>
+                    <button class="dischargeCard__more"><ion-icon name="arrow-forward-outline"></ion-icon></button>`
+                    article.onclick = function () {
+                        window.location = "?id=" + doc.id;
+                    }
+                }
+            })
+
+        })
+    } else {
+        let historicSection = document.getElementById("historicSection")
+        historicSection.classList.remove("searching")
+        historicSection.innerHTML = ""
+        let q = query(collection(db, "transfers"), where("status", "!=", ``));
+        let unsubscribe = onSnapshot(q, (querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                if (doc.data().date.includes(`${text}`)) {
+                    if (doc.data().senderName == actualUserName || doc.data().reciverName == actualUserName) {
+                        let historicSection = document.getElementById("historicSection")
+                        let article = document.createElement("article")
+                        historicSection.insertAdjacentElement("beforeend", article)
+                        article.style.order = `-${doc.data().timestamp.seconds}`
+                        article.classList.add("NewTransferCard")
+                        article.innerHTML = `
+                    <div class="NewTransferCard__div">
+                        <h2 class="NewTransferCard__h2">Transferência</h2>
+                        <p class="NewTransferCard__status" style="color: ${returnColor(doc.data().status)};">${doc.data().status}</p>
+                    </div>
+                    <p class="NewTransferCard__p"><ion-icon name="person-remove-outline"
+                            class="NewTransferCard__p__icon md hydrated" role="img"></ion-icon>Remetente: ${doc.data().senderName}</p>
+                    <p class="NewTransferCard__p"><ion-icon name="person-add-outline"
+                            class="NewTransferCard__p__icon md hydrated" role="img"></ion-icon>receptor: ${doc.data().reciverName}</p>
+                        <p class="NewTransferCard__motive">Motivo: ${doc.data().motive}.</p>
+                        <span class="NewTransferCard__description">Descrição: ${doc.data().description}.</span>
+                    <span class="NewTransferCard__date">${doc.data().hours}<br>${doc.data().date}</span>
+                    <button class="NewTransferCard__more"><ion-icon name="arrow-forward-outline" role="img" class="md hydrated"></ion-icon></button>`
+                        article.onclick = function () {
+                            window.location = "view-transfer.html?id=" + doc.id;
+                        }
+                    }
+                }
+            })
+        })
+        let e = query(collection(db, "discharges"), where("itemsUsed", "!=", {}));
+        let unsubscri = onSnapshot(e, (querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                if (doc.data().date.includes(`${text}`)) {
+                    if (doc.data().tecnicName == actualUserName) {
+                        let historicSection = document.getElementById("historicSection")
+                        let article = document.createElement("article")
+                        historicSection.insertAdjacentElement("beforeend", article)
+                        article.classList.add("dischargeCard")
+                        article.style.order = `-${doc.data().timestamp.seconds}`
+                        article.innerHTML = `
+                <div class="dischargeCard__div">
+                    <h2 class="dischargeCard__h2">Relatório de baixa</h2>
+                    <p class="dischargeCard__service">${doc.data().service}</p>
+                </div>
+                <p class="dischargeCard__p"><i class="bi bi-car-front-fill dischargeCard__p__icon"></i>técnico: ${doc.data().tecnicName}</p>
+                <p class="dischargeCard__p"><ion-icon name="person-outline" class="dischargeCard__p__icon"></ion-icon>Cliente: ${doc.data().clientName}</p>
+                <p class="dischargeCard__description">${doc.data().description}.</p>
+                <span class="dischargeCard__date">${doc.data().hours}<br>${doc.data().date}</span>
+                <button class="dischargeCard__more"><ion-icon name="arrow-forward-outline"></ion-icon></button>`
+                        article.onclick = function () {
+                            window.location = "?id=" + doc.id;
+                        }
+                    }
+                }
+            })
+
+        })
+    }
+
+}
+
+
+
+
+function searchHour(text) {
+    if (actualUserWork != "Técnico") {
+        let historicSection = document.getElementById("historicSection")
+        historicSection.classList.remove("searching")
+        historicSection.innerHTML = ""
+        let q = query(collection(db, "transfers"), where("status", "!=", ``));
+        let unsubscribe = onSnapshot(q, (querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                if (doc.data().hours.includes(`${text}`)) {
+                    let historicSection = document.getElementById("historicSection")
+                    let article = document.createElement("article")
+                    historicSection.insertAdjacentElement("beforeend", article)
+                    article.style.order = `-${doc.data().timestamp.seconds}`
+                    article.classList.add("NewTransferCard")
+                    article.innerHTML = `
+                    <div class="NewTransferCard__div">
+                        <h2 class="NewTransferCard__h2">Transferência</h2>
+                        <p class="NewTransferCard__status" style="color: ${returnColor(doc.data().status)};">${doc.data().status}</p>
+                    </div>
+                    <p class="NewTransferCard__p"><ion-icon name="person-remove-outline"
+                            class="NewTransferCard__p__icon md hydrated" role="img"></ion-icon>Remetente: ${doc.data().senderName}</p>
+                    <p class="NewTransferCard__p"><ion-icon name="person-add-outline"
+                            class="NewTransferCard__p__icon md hydrated" role="img"></ion-icon>receptor: ${doc.data().reciverName}</p>
+                        <p class="NewTransferCard__motive">Motivo: ${doc.data().motive}.</p>
+                        <span class="NewTransferCard__description">Descrição: ${doc.data().description}.</span>
+                    <span class="NewTransferCard__date">${doc.data().hours}<br>${doc.data().date}</span>
+                    <button class="NewTransferCard__more"><ion-icon name="arrow-forward-outline" role="img" class="md hydrated"></ion-icon></button>`
+                    article.onclick = function () {
+                        window.location = "view-transfer.html?id=" + doc.id;
+                    }
+                }
+            })
+        })
+        let e = query(collection(db, "discharges"), where("itemsUsed", "!=", {}));
+        let unsubscri = onSnapshot(e, (querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                if (doc.data().hours.includes(`${text}`)) {
+                    let historicSection = document.getElementById("historicSection")
+                    let article = document.createElement("article")
+                    historicSection.insertAdjacentElement("beforeend", article)
+                    article.classList.add("dischargeCard")
+                    article.style.order = `-${doc.data().timestamp.seconds}`
+                    article.innerHTML = `
+                <div class="dischargeCard__div">
+                    <h2 class="dischargeCard__h2">Relatório de baixa</h2>
+                    <p class="dischargeCard__service">${doc.data().service}</p>
+                </div>
+                <p class="dischargeCard__p"><i class="bi bi-car-front-fill dischargeCard__p__icon"></i>técnico: ${doc.data().tecnicName}</p>
+                <p class="dischargeCard__p"><ion-icon name="person-outline" class="dischargeCard__p__icon"></ion-icon>Cliente: ${doc.data().clientName}</p>
+                <p class="dischargeCard__description">${doc.data().description}.</p>
+                <span class="dischargeCard__date">${doc.data().hours}<br>${doc.data().date}</span>
+                <button class="dischargeCard__more"><ion-icon name="arrow-forward-outline"></ion-icon></button>`
+                    article.onclick = function () {
+                        window.location = "?id=" + doc.id;
+                    }
+                }
+            })
+
+        })
+    } else {
+        let historicSection = document.getElementById("historicSection")
+        historicSection.classList.remove("searching")
+        historicSection.innerHTML = ""
+        let q = query(collection(db, "transfers"), where("status", "!=", ``));
+        let unsubscribe = onSnapshot(q, (querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                if (doc.data().hours.includes(`${text}`)) {
+                    if (doc.data().senderName == actualUserName || doc.data().reciverName == actualUserName) {
+                        let historicSection = document.getElementById("historicSection")
+                        let article = document.createElement("article")
+                        historicSection.insertAdjacentElement("beforeend", article)
+                        article.style.order = `-${doc.data().timestamp.seconds}`
+                        article.classList.add("NewTransferCard")
+                        article.innerHTML = `
+                        <div class="NewTransferCard__div">
+                            <h2 class="NewTransferCard__h2">Transferência</h2>
+                            <p class="NewTransferCard__status" style="color: ${returnColor(doc.data().status)};">${doc.data().status}</p>
+                        </div>
+                        <p class="NewTransferCard__p"><ion-icon name="person-remove-outline"
+                                class="NewTransferCard__p__icon md hydrated" role="img"></ion-icon>Remetente: ${doc.data().senderName}</p>
+                        <p class="NewTransferCard__p"><ion-icon name="person-add-outline"
+                                class="NewTransferCard__p__icon md hydrated" role="img"></ion-icon>receptor: ${doc.data().reciverName}</p>
+                            <p class="NewTransferCard__motive">Motivo: ${doc.data().motive}.</p>
+                            <span class="NewTransferCard__description">Descrição: ${doc.data().description}.</span>
+                        <span class="NewTransferCard__date">${doc.data().hours}<br>${doc.data().date}</span>
+                        <button class="NewTransferCard__more"><ion-icon name="arrow-forward-outline" role="img" class="md hydrated"></ion-icon></button>`
+                        article.onclick = function () {
+                            window.location = "view-transfer.html?id=" + doc.id;
+                        }
+                    }
+                }
+            })
+        })
+        let e = query(collection(db, "discharges"), where("itemsUsed", "!=", {}));
+        let unsubscri = onSnapshot(e, (querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                if (doc.data().hours.includes(`${text}`)) {
+                    if (doc.data().tecnicName == actualUserName) {
+                        let historicSection = document.getElementById("historicSection")
+                        let article = document.createElement("article")
+                        historicSection.insertAdjacentElement("beforeend", article)
+                        article.classList.add("dischargeCard")
+                        article.style.order = `-${doc.data().timestamp.seconds}`
+                        article.innerHTML = `
+                <div class="dischargeCard__div">
+                    <h2 class="dischargeCard__h2">Relatório de baixa</h2>
+                    <p class="dischargeCard__service">${doc.data().service}</p>
+                </div>
+                <p class="dischargeCard__p"><i class="bi bi-car-front-fill dischargeCard__p__icon"></i>técnico: ${doc.data().tecnicName}</p>
+                <p class="dischargeCard__p"><ion-icon name="person-outline" class="dischargeCard__p__icon"></ion-icon>Cliente: ${doc.data().clientName}</p>
+                <p class="dischargeCard__description">${doc.data().description}.</p>
+                <span class="dischargeCard__date">${doc.data().hours}<br>${doc.data().date}</span>
+                <button class="dischargeCard__more"><ion-icon name="arrow-forward-outline"></ion-icon></button>`
+                        article.onclick = function () {
+                            window.location = "?id=" + doc.id;
+                        }
+                    }
+                }
+            })
+
+        })
+    }
+}
+
+
+
+function searchDischarges() {
+    if (actualUserWork != "Técnico") {
+        let historicSection = document.getElementById("historicSection")
+        historicSection.classList.remove("searching")
+        historicSection.innerHTML = ""
+        let e = query(collection(db, "discharges"), where("itemsUsed", "!=", {}));
+        let unsubscri = onSnapshot(e, (querySnapshot) => {
+            querySnapshot.forEach((doc) => {
                 let historicSection = document.getElementById("historicSection")
                 let article = document.createElement("article")
                 historicSection.insertAdjacentElement("beforeend", article)
                 article.classList.add("dischargeCard")
                 article.style.order = `-${doc.data().timestamp.seconds}`
                 article.innerHTML = `
-                <div class="dischargeCard__div">
-                    <h2 class="dischargeCard__h2">Relatório de baixa</h2>
-                    <p class="dischargeCard__service">${doc.data().service}</p>
-                </div>
-                <p class="dischargeCard__p"><i class="bi bi-car-front-fill dischargeCard__p__icon"></i>técnico: ${doc.data().tecnicName}</p>
-                <p class="dischargeCard__p"><ion-icon name="person-outline" class="dischargeCard__p__icon"></ion-icon>Cliente: ${doc.data().clientName}</p>
-                <p class="dischargeCard__description">${doc.data().description}.</p>
-                <span class="dischargeCard__date">${doc.data().hours}<br>${doc.data().date}</span>
-                <button class="dischargeCard__more"><ion-icon name="arrow-forward-outline"></ion-icon></button>`
+                    <div class="dischargeCard__div">
+                        <h2 class="dischargeCard__h2">Relatório de baixa</h2>
+                        <p class="dischargeCard__service">${doc.data().service}</p>
+                    </div>
+                    <p class="dischargeCard__p"><i class="bi bi-car-front-fill dischargeCard__p__icon"></i>técnico: ${doc.data().tecnicName}</p>
+                    <p class="dischargeCard__p"><ion-icon name="person-outline" class="dischargeCard__p__icon"></ion-icon>Cliente: ${doc.data().clientName}</p>
+                    <p class="dischargeCard__description">${doc.data().description}.</p>
+                    <span class="dischargeCard__date">${doc.data().hours}<br>${doc.data().date}</span>
+                    <button class="dischargeCard__more"><ion-icon name="arrow-forward-outline"></ion-icon></button>`
                 article.onclick = function () {
                     window.location = "?id=" + doc.id;
                 }
-            }
+            })
         })
-
-    }) */
-}
-
-
-function searchDischarges() {
-    let historicSection = document.getElementById("historicSection")
-    historicSection.classList.remove("searching")
-    historicSection.innerHTML = ""
-    let e = query(collection(db, "discharges"), where("itemsUsed", "!=", {}));
-    let unsubscri = onSnapshot(e, (querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-            let historicSection = document.getElementById("historicSection")
-            let article = document.createElement("article")
-            historicSection.insertAdjacentElement("beforeend", article)
-            article.classList.add("dischargeCard")
-            article.style.order = `-${doc.data().timestamp.seconds}`
-            article.innerHTML = `
-                <div class="dischargeCard__div">
-                    <h2 class="dischargeCard__h2">Relatório de baixa</h2>
-                    <p class="dischargeCard__service">${doc.data().service}</p>
-                </div>
-                <p class="dischargeCard__p"><i class="bi bi-car-front-fill dischargeCard__p__icon"></i>técnico: ${doc.data().tecnicName}</p>
-                <p class="dischargeCard__p"><ion-icon name="person-outline" class="dischargeCard__p__icon"></ion-icon>Cliente: ${doc.data().clientName}</p>
-                <p class="dischargeCard__description">${doc.data().description}.</p>
-                <span class="dischargeCard__date">${doc.data().hours}<br>${doc.data().date}</span>
-                <button class="dischargeCard__more"><ion-icon name="arrow-forward-outline"></ion-icon></button>`
-            article.onclick = function () {
-                window.location = "?id=" + doc.id;
-            }
+    } else {
+        let historicSection = document.getElementById("historicSection")
+        historicSection.classList.remove("searching")
+        historicSection.innerHTML = ""
+        let e = query(collection(db, "discharges"), where("itemsUsed", "!=", {}));
+        let unsubscri = onSnapshot(e, (querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                if (doc.data().tecnicName == actualUserName) {
+                    let historicSection = document.getElementById("historicSection")
+                    let article = document.createElement("article")
+                    historicSection.insertAdjacentElement("beforeend", article)
+                    article.classList.add("dischargeCard")
+                    article.style.order = `-${doc.data().timestamp.seconds}`
+                    article.innerHTML = `
+                        <div class="dischargeCard__div">
+                            <h2 class="dischargeCard__h2">Relatório de baixa</h2>
+                            <p class="dischargeCard__service">${doc.data().service}</p>
+                        </div>
+                        <p class="dischargeCard__p"><i class="bi bi-car-front-fill dischargeCard__p__icon"></i>técnico: ${doc.data().tecnicName}</p>
+                        <p class="dischargeCard__p"><ion-icon name="person-outline" class="dischargeCard__p__icon"></ion-icon>Cliente: ${doc.data().clientName}</p>
+                        <p class="dischargeCard__description">${doc.data().description}.</p>
+                        <span class="dischargeCard__date">${doc.data().hours}<br>${doc.data().date}</span>
+                        <button class="dischargeCard__more"><ion-icon name="arrow-forward-outline"></ion-icon></button>`
+                    article.onclick = function () {
+                        window.location = "?id=" + doc.id;
+                    }
+                }
+            })
         })
-    })
+    }
 }
 
 
 function searchTransfers() {
-    let historicSection = document.getElementById("historicSection")
-    historicSection.classList.remove("searching")
-    historicSection.innerHTML = ""
-    let q = query(collection(db, "transfers"), where("status", "!=", ``));
-    let unsubscribe = onSnapshot(q, (querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-            let historicSection = document.getElementById("historicSection")
-            let article = document.createElement("article")
-            historicSection.insertAdjacentElement("beforeend", article)
-            article.style.order = `-${doc.data().timestamp.seconds}`
-            article.classList.add("NewTransferCard")
-            article.innerHTML = `
+    if (actualUserWork != "Técnico") {
+        let historicSection = document.getElementById("historicSection")
+        historicSection.classList.remove("searching")
+        historicSection.innerHTML = ""
+        let q = query(collection(db, "transfers"), where("status", "!=", ``));
+        let unsubscribe = onSnapshot(q, (querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                let historicSection = document.getElementById("historicSection")
+                let article = document.createElement("article")
+                historicSection.insertAdjacentElement("beforeend", article)
+                article.style.order = `-${doc.data().timestamp.seconds}`
+                article.classList.add("NewTransferCard")
+                article.innerHTML = `
                             <div class="NewTransferCard__div">
                                 <h2 class="NewTransferCard__h2">Transferência</h2>
                                 <p class="NewTransferCard__status" style="color: ${returnColor(doc.data().status)};">${doc.data().status}</p>
@@ -664,11 +754,44 @@ function searchTransfers() {
                                 <span class="NewTransferCard__description">Descrição: ${doc.data().description}.</span>
                             <span class="NewTransferCard__date">${doc.data().hours}<br>${doc.data().date}</span>
                             <button class="NewTransferCard__more"><ion-icon name="arrow-forward-outline" role="img" class="md hydrated"></ion-icon></button>`
-            article.onclick = function () {
-                window.location = "view-transfer.html?id=" + doc.id;
-            }
+                article.onclick = function () {
+                    window.location = "view-transfer.html?id=" + doc.id;
+                }
+            })
         })
-    })
+    } else {
+        let historicSection = document.getElementById("historicSection")
+        historicSection.classList.remove("searching")
+        historicSection.innerHTML = ""
+        let q = query(collection(db, "transfers"), where("status", "!=", ``));
+        let unsubscribe = onSnapshot(q, (querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                if (doc.data().senderName == actualUserName || doc.data().reciverName == actualUserName) {
+                    let historicSection = document.getElementById("historicSection")
+                    let article = document.createElement("article")
+                    historicSection.insertAdjacentElement("beforeend", article)
+                    article.style.order = `-${doc.data().timestamp.seconds}`
+                    article.classList.add("NewTransferCard")
+                    article.innerHTML = `
+                                <div class="NewTransferCard__div">
+                                    <h2 class="NewTransferCard__h2">Transferência</h2>
+                                    <p class="NewTransferCard__status" style="color: ${returnColor(doc.data().status)};">${doc.data().status}</p>
+                                </div>
+                                <p class="NewTransferCard__p"><ion-icon name="person-remove-outline"
+                                        class="NewTransferCard__p__icon md hydrated" role="img"></ion-icon>Remetente: ${doc.data().senderName}</p>
+                                <p class="NewTransferCard__p"><ion-icon name="person-add-outline"
+                                        class="NewTransferCard__p__icon md hydrated" role="img"></ion-icon>receptor: ${doc.data().reciverName}</p>
+                                    <p class="NewTransferCard__motive">Motivo: ${doc.data().motive}.</p>
+                                    <span class="NewTransferCard__description">Descrição: ${doc.data().description}.</span>
+                                <span class="NewTransferCard__date">${doc.data().hours}<br>${doc.data().date}</span>
+                                <button class="NewTransferCard__more"><ion-icon name="arrow-forward-outline" role="img" class="md hydrated"></ion-icon></button>`
+                    article.onclick = function () {
+                        window.location = "view-transfer.html?id=" + doc.id;
+                    }
+                }
+            })
+        })
+    }
 }
 
 
