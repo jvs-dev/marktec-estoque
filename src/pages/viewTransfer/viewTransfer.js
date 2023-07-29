@@ -125,7 +125,7 @@ function verifyUrl() {
                 doc.fromHTML(`<p style="font-size: 18px; font-family: 'Poppins', sans-serif;">Descrição da transferência: ${requestDescription}.</p>`, 10, 80)
                 doc.fromHTML(`<p style="font-size: 18px; font-family: 'Poppins', sans-serif;">Items ${transferTxt}:</p>`, 10, 88)
                 doc.fromHTML(`<ul style="font-size: 18px; font-family: 'Poppins', sans-serif;"><br>${itemsToTransferList}</ul>`, 10, 96)
-                doc.save(`Transferência${date}.pdf`)
+                doc.save(`Transferência_${date}.pdf`)
             }
             let i = 1
             let total = 0
