@@ -12,11 +12,15 @@ import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, onAuthS
 import { getFirestore, collection, addDoc, doc, setDoc, onSnapshot, query, where, updateDoc } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
 const db = getFirestore(app);
 const auth = getAuth();
+let actualUser = ""
 
 function loadData() {
     onAuthStateChanged(auth, (user) => {
         if (user) {
             const uid = user.uid;
+            let unsub = onSnapshot(doc(db, "users", `${user.email}`), (doc) => {
+                actualUser = doc.data().fullName
+            })
             verifyUrl()
         }
     });
@@ -59,10 +63,52 @@ function verifyUrl() {
                     <span class="viewDischargeSection__allTotal" id="allTotalSpan"></span>
                 </div>
                 <img src="assets/logo.png" alt="" class="viewDischargeSection__logo">
+                <button id="generatePDF">Gerar PDF</button>
             </div>
             <a href="#" class="viewDischargeSection__back"><ion-icon
                     name="arrow-back-outline"></ion-icon>Voltar</a>
             <p class="viewDischargeSection__copyright">©Marktec telecom</p>`
+            let generatePDF = document.getElementById("generatePDF")
+            let timeElapsed = Date.now();
+            let today = new Date(timeElapsed);
+            let date = today.toLocaleDateString()
+            let dataAtual = new Date();
+            let hora = dataAtual.getHours();
+            let minutos = dataAtual.getMinutes();
+            let horaFormatada = hora < 10 ? '0' + hora : hora;
+            let minutosFormatados = minutos < 10 ? '0' + minutos : minutos;
+            let hours = horaFormatada + ":" + minutosFormatados
+            let tecnicName = doc.data().tecnicName
+            let clientName = doc.data().clientName
+            let dischargeDate = doc.data().date
+            let dischargeHour = doc.data().hours
+            let service = doc.data().service
+            let location = doc.data().location
+            let description = doc.data().description
+            let itemsUsedList = ""
+            let reqId = doc.id
+            function returnList() {
+                Object.keys(doc.data().itemsUsed).forEach(element => {
+                    itemsUsedList = `${itemsUsedList}<li>${doc.data().itemsUsed[element].used} ${doc.data().itemsUsed[element].measure} - ${doc.data().itemsUsed[element].name}.</li>`
+                });
+            }
+            returnList()
+            generatePDF.onclick = function () {
+                let doc = new jsPDF()
+                doc.fromHTML(`<h1 style="font-size: 32px; font-weight: 500; font-family: 'Poppins', sans-serif;">Comprovante de baixa</h1>`, 10, 10)
+                doc.fromHTML(`<p style="font-size: 18px; font-family: 'Poppins', sans-serif;">ID da baixa: ${reqId}</p>`, 10, 21)
+                doc.fromHTML(`<p style="font-size: 18px; font-family: 'Poppins', sans-serif;">© Marktec Telecom</p>`, 10, 27)
+                doc.fromHTML(`<p style="font-size: 18px; font-family: 'Poppins', sans-serif;">Comprovante emitido por ${actualUser} dia ${date} ás ${hours}.</p>`, 10, 40)
+                doc.fromHTML(`<p style="font-size: 18px; font-family: 'Poppins', sans-serif;">Items usados por ${tecnicName}.</p>`, 10, 48)
+                doc.fromHTML(`<p style="font-size: 18px; font-family: 'Poppins', sans-serif;">Baixa realizada dia ${dischargeDate} ás ${dischargeHour}.</p>`, 10, 56)
+                doc.fromHTML(`<p style="font-size: 18px; font-family: 'Poppins', sans-serif;">Serviço feito: ${service}.</p>`, 10, 64)
+                doc.fromHTML(`<p style="font-size: 18px; font-family: 'Poppins', sans-serif;">Local da ${service}: ${location}.</p>`, 10, 72)
+                doc.fromHTML(`<p style="font-size: 18px; font-family: 'Poppins', sans-serif;">Nome do cliente: ${clientName}.</p>`, 10, 80)
+                doc.fromHTML(`<p style="font-size: 18px; font-family: 'Poppins', sans-serif;">Descrição da baixa: ${description}.</p>`, 10, 88)
+                doc.fromHTML(`<p style="font-size: 18px; font-family: 'Poppins', sans-serif;">Items usados:</p>`, 10, 96)
+                doc.fromHTML(`<ul style="font-size: 18px; font-family: 'Poppins', sans-serif;"><br>${itemsUsedList}</ul>`, 10, 104)
+                doc.save(`Baixa${date}.pdf`)
+            }
             let i = 1
             let total = 0
             let viewDischargeSection__back = document.querySelector(".viewDischargeSection__back")
