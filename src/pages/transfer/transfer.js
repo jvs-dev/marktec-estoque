@@ -32,6 +32,19 @@ function loadData() {
             let usersdocref = onSnapshot(doc(db, `users`, `${user.email}`), (doc) => {
                 actualUserName = doc.data().fullName
                 loadUsers()
+                if (doc.data().work != "Técnico") {
+                    let usedButton = document.getElementById("usedButton")
+                    let sendButton = document.getElementById("sendButton")
+                    sendButton.style.marginLeft = "150px"
+                    usedButton.style.display = "none"
+                } else {
+                    let restockButton = document.getElementById("restockButton")
+                    let itemOutputButton = document.getElementById("itemOutputButton")
+                    restockButton.style.display = "none"
+                    itemOutputButton.style.display = "none"
+                    restockButton.id=""
+                    itemOutputButton.id=""
+                }
                 if (doc.data().admin == true) {
                     transfer.style.display = "none"
                     acceptUser.style.display = "flex"

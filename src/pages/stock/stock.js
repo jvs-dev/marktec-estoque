@@ -30,7 +30,7 @@ searchInput.addEventListener("input", (evt) => {
                     let article = document.createElement("article")
                     stockSection.insertAdjacentElement("beforeend", article)
                     article.classList.add("card__stock")
-                    if (Number(doc.data().inStock) + doc.data().withTecnics < doc.data().quantyMin) {
+                    if (Number(doc.data().inStock) + doc.data().withTecnics < Number(doc.data().quantyMin) + 1) {
                         article.classList.add("lowStock")
                     }
                     article.innerHTML = `
@@ -90,7 +90,7 @@ async function loadItems() {
             let article = document.createElement("article")
             stockSection.insertAdjacentElement("beforeend", article)
             article.classList.add("card__stock")
-            if (Number(doc.data().inStock) + doc.data().withTecnics < doc.data().quantyMin) {
+            if (Number(doc.data().inStock) + doc.data().withTecnics < Number(doc.data().quantyMin) + 1) {
                 article.classList.add("lowStock")
             }
             article.innerHTML = `

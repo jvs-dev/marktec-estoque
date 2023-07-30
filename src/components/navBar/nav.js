@@ -57,16 +57,16 @@ function loadData() {
 }
 
 function loadRequests(actualUser) {
-    let q = query(collection(db, "transfers"), where("reciverEmail", "==", `${actualUser}`));
-    let unsubscribe = onSnapshot(q, (querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-            if (doc.data().status != "Pendente") {
-                transfer.classList.remove("awaiting")
-            } else {
-                transfer.classList.add("awaiting")
-            }
+    if (window.location.pathname != "/transfer.html") {
+        let q = query(collection(db, "transfers"), where("reciverEmail", "==", `${actualUser}`));
+        let unsubscribe = onSnapshot(q, (querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                if (doc.data().status == "Pendente") {
+                    transfer.classList.add("awaiting")
+                }
+            })
         })
-    })
+    }
 }
 
 loadData()

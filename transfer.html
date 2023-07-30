@@ -33,6 +33,8 @@
     <link rel="stylesheet" href="src/components/cards/dischargeCard.css">
     <link rel="stylesheet" href="src/pages/transfer/transfersCard.css">
     <link rel="stylesheet" href="src/components/section/update-section.css">
+    <link rel="stylesheet" href="src/pages/transfer/restock/restock.css">
+    <link rel="stylesheet" href="src/pages/transfer/item-output/itemOutput.css">
 </head>
 
 <body>
@@ -121,6 +123,59 @@
             <p id="dischargeItemsAlert"></p>
             <button id="dischargeItems">Fazer relatório</button>
         </section>
+
+
+
+
+
+
+
+        <section id="outputSection">
+
+
+            <section id="sectionSelectOutput">
+
+                <div id="centralizeOutput">
+                    <article class="editUsedQuanty">
+                        <button id="closeEditOutputQuanty"><ion-icon name="close-outline"></ion-icon></button>
+                        <h2 class="editUsedQuanty__h2">Quantia usada</h2>
+                        <div class="section__div">
+                            <ion-icon name="stats-chart-outline" class="section__icon"></ion-icon>
+                            <input type="number" placeholder="Digite a quantia usada" class="section__input"
+                                id="OutputQuantyInput">
+                        </div>
+                        <p id="editOutputQuantyAlert"></p>
+                        <button id="confirmOutputQuantyBtn">Confirmar</button>
+                    </article>
+                </div>
+                <button id="closeSectionSelectOutput">Confirmar</button>
+                <h2 class="discharge__h2">Adicionar items usados</h2>
+                <div class="section__search--div">
+                    <ion-icon name="search-outline" class="section__search--icon"></ion-icon>
+                    <input type="search" placeholder="Pesquisar" id="OutputSearchInput">
+                </div>
+                <section id="SectionItemsCardsOutput">
+                </section>
+            </section>
+
+            <button id="closeOutputSection"><ion-icon name="close-outline"></ion-icon></button>
+            <h2 class="discharge__h2">Saída de Items</h2>
+            <div class="section__div">
+                <ion-icon name="document-text-outline" class="section__icon"></ion-icon>
+                <input type="text" placeholder="Descrição do relatório" class="section__input" id="descriptionOutput">
+            </div>
+            <h2 class="discharge__h2 subtitle">Items removidos</h2>
+            <section id="OutputSelectedSection">
+
+            </section>
+            <button id="addOutputItems">Adicionar items removidos</button>
+            <p id="OutputItemsAlert"></p>
+            <button id="OutputItems">Fazer relatório</button>
+        </section>
+
+
+
+
 
 
 
@@ -246,7 +301,9 @@
 
 
                 </section>
+                <button class="main__button" id="itemOutputButton"><i class="bi bi-clipboard-minus"></i></button>
                 <button class="main__button" id="usedButton"><i class="bi bi-clipboard-minus"></i></button>
+                <button class="main__button" id="restockButton"><i class="bi bi-clipboard-plus"></i></button>
                 <button class="main__button" id="sendButton"><ion-icon name="send-outline"></ion-icon></button>
             </section>
 
@@ -269,6 +326,8 @@
     <script type="module" src="src/pages/transfer/transfersCard.js"></script>
     <script type="module" src="src/components/navBar/nav.js"></script>
     <script type="module" src="src/components/navMobile/navMobile.js"></script>
+    <script type="module" src="src/pages/transfer/item-output/itemOutput.js"></script>
+    <script type="module" src="src/pages/transfer/restock/restock.js"></script>
 </body>
 
 </html>
