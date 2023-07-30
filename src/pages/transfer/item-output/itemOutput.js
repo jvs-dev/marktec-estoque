@@ -87,7 +87,7 @@ async function loadStock(email, work) {
                     <img src="${doc.data().itemImg}" alt="" class="discharge__img">
                     <div class="discharge__div">
                         <p class="discharge__name">${doc.data().itemName}</p>
-                        <p class="discharge__used">Transferir: ${itemsSelecteds[doc.data().itemName] == undefined ? "0" : itemsSelecteds[doc.data().itemName].used} ${doc.data().measure}</p>
+                        <p class="discharge__used">Remover: ${itemsSelecteds[doc.data().itemName] == undefined ? "0" : itemsSelecteds[doc.data().itemName].used} ${doc.data().measure}</p>
                     </div>`
             article.onclick = function () {
                 let editQuanty = document.getElementById("centralizeOutput")
@@ -121,7 +121,7 @@ async function loadStock(email, work) {
                                             <img src="${doc.data().itemImg}" alt="" class="discharge__img">
                                             <div class="discharge__div">
                                                 <p class="discharge__name">${doc.data().itemName}</p>
-                                                <p class="discharge__used">Transferir: ${itemsSelecteds[doc.data().itemName] == undefined ? "0" : itemsSelecteds[doc.data().itemName].used} ${doc.data().measure}</p>
+                                                <p class="discharge__used">Remover: ${itemsSelecteds[doc.data().itemName] == undefined ? "0" : itemsSelecteds[doc.data().itemName].used} ${doc.data().measure}</p>
                                             </div>`
                                     if (itemsSelecteds[doc.data().itemName].used != 0) {
                                         article.classList.add("used")
@@ -160,7 +160,7 @@ async function loadStock(email, work) {
                                         <img src="${doc.data().itemImg}" alt="" class="discharge__img">
                                         <div class="discharge__div">
                                             <p class="discharge__name">${doc.data().itemName}</p>
-                                            <p class="discharge__used">Transferir: ${itemsSelecteds[doc.data().itemName] == undefined ? "0" : itemsSelecteds[doc.data().itemName].used} ${doc.data().measure}</p>
+                                            <p class="discharge__used">Remover: ${itemsSelecteds[doc.data().itemName] == undefined ? "0" : itemsSelecteds[doc.data().itemName].used} ${doc.data().measure}</p>
                                         </div>`
                                 if (itemsSelecteds[doc.data().itemName].used != 0) {
                                     article.classList.add("used")
@@ -213,7 +213,7 @@ async function searchItem(email, work, text) {
             <img src="${doc.data().itemImg}" alt="" class="discharge__img">
             <div class="discharge__div">
                 <p class="discharge__name">${doc.data().itemName}</p>
-                <p class="discharge__used">Usou: ${itemsSelecteds[doc.data().itemName] == undefined ? "0" : itemsSelecteds[doc.data().itemName].used} ${doc.data().measure}</p>
+                <p class="discharge__used">Remover: ${itemsSelecteds[doc.data().itemName] == undefined ? "0" : itemsSelecteds[doc.data().itemName].used} ${doc.data().measure}</p>
             </div>`
             article.onclick = function () {
                 let editQuanty = document.getElementById("centralizeOutput")
@@ -230,7 +230,7 @@ async function searchItem(email, work, text) {
                     let usedQuantyInput = document.getElementById("OutputQuantyInput").value
                     if (usedQuantyInput != "" && usedQuantyInput != 0) {
                         if (doc.data().measure == "Unidades" && parseInt(usedQuantyInput) == parseFloat(usedQuantyInput)) {
-                            if (Number(usedQuantyInput) <= Number(doc.data().tecnicStock)) {
+                            if (Number(usedQuantyInput) <= Number(doc.data().inStock)) {
                                 let name = doc.data().itemName;
                                 itemsSelecteds[name] = { used: Number(usedQuantyInput), name: doc.data().itemName, measure: doc.data().measure, img: doc.data().itemImg, value: doc.data().itemValue };
                                 let clearInput = document.getElementById("OutputQuantyInput")
@@ -246,7 +246,7 @@ async function searchItem(email, work, text) {
                                 <img src="${doc.data().itemImg}" alt="" class="discharge__img">
                                 <div class="discharge__div">
                                     <p class="discharge__name">${doc.data().itemName}</p>
-                                    <p class="discharge__used">Usou: ${itemsSelecteds[doc.data().itemName] == undefined ? "0" : itemsSelecteds[doc.data().itemName].used} ${doc.data().measure}</p>
+                                    <p class="discharge__used">Remover: ${itemsSelecteds[doc.data().itemName] == undefined ? "0" : itemsSelecteds[doc.data().itemName].used} ${doc.data().measure}</p>
                                 </div>`
                                 if (itemsSelecteds[doc.data().itemName].used != 0) {
                                     article.classList.add("used")
@@ -267,7 +267,7 @@ async function searchItem(email, work, text) {
                             }, 5000);
                         }
                         if (doc.data().measure != "Unidades") {
-                            if (Number(usedQuantyInput) <= Number(doc.data().tecnicStock)) {
+                            if (Number(usedQuantyInput) <= Number(doc.data().inStock)) {
                                 let name = doc.data().itemName;
                                 itemsSelecteds[name] = { used: Number(usedQuantyInput), name: doc.data().itemName, measure: doc.data().measure, img: doc.data().itemImg, value: doc.data().itemValue };
 
@@ -284,7 +284,7 @@ async function searchItem(email, work, text) {
                                 <img src="${doc.data().itemImg}" alt="" class="discharge__img">
                                 <div class="discharge__div">
                                     <p class="discharge__name">${doc.data().itemName}</p>
-                                    <p class="discharge__used">Usou: ${itemsSelecteds[doc.data().itemName] == undefined ? "0" : itemsSelecteds[doc.data().itemName].used} ${doc.data().measure}</p>
+                                    <p class="discharge__used">Remover: ${itemsSelecteds[doc.data().itemName] == undefined ? "0" : itemsSelecteds[doc.data().itemName].used} ${doc.data().measure}</p>
                                 </div>`
                                 if (itemsSelecteds[doc.data().itemName].used != 0) {
                                     article.classList.add("used")
@@ -337,7 +337,7 @@ async function addToForm(email, object, nameItem, work) {
                             <img src="${object[doc.data().itemName].img}" alt="" class="discharge__img">
                             <div class="discharge__div">
                                 <p class="discharge__name">${object[doc.data().itemName].name}</p>
-                                <p class="discharge__used">Transferir: ${object[doc.data().itemName].used} ${doc.data().measure}</p>
+                                <p class="discharge__used">Remover: ${object[doc.data().itemName].used} ${doc.data().measure}</p>
                             </div>`
                 let removeItem = document.createElement("button")
                 article.insertAdjacentElement("afterbegin", removeItem)
@@ -384,7 +384,7 @@ OutputItems.onclick = function () {
         setUsedItems()
     } else {
         let dischargeItemsAlert = document.getElementById("OutputItemsAlert")
-        OutputItems.innerHTML = `TRANSFERIR`
+        OutputItems.innerHTML = `FAZER RELATÓRIO`
         OutputItems.classList.remove("loading")
         dischargeItemsAlert.textContent = "Preencha todos os campos e selecione um item para fazer o relatório"
         dischargeItemsAlert.style.color = "#f00"
@@ -451,7 +451,7 @@ function clearInputs() {
     OutputSelectedSection.innerHTML = ""
     loadData()
     OutputSelectedSection.innerHTML = ""
-    OutputItems.innerHTML = `TRANSFERIR`
+    OutputItems.innerHTML = `FAZER RELATÓRIO`
     OutputItems.classList.remove("loading")
     dischargeItemsAlert.textContent = "Relatório feito com sucesso"
     dischargeItemsAlert.style.color = "#0f0"

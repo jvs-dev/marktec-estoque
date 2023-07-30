@@ -149,7 +149,7 @@
                     </article>
                 </div>
                 <button id="closeSectionSelectOutput">Confirmar</button>
-                <h2 class="discharge__h2">Adicionar items usados</h2>
+                <h2 class="discharge__h2">Adicionar items removidos</h2>
                 <div class="section__search--div">
                     <ion-icon name="search-outline" class="section__search--icon"></ion-icon>
                     <input type="search" placeholder="Pesquisar" id="OutputSearchInput">
@@ -173,6 +173,53 @@
             <button id="OutputItems">Fazer relatório</button>
         </section>
 
+
+
+
+
+
+        <section id="RestockSection">
+
+
+            <section id="sectionSelectRestock">
+
+                <div id="centralizeRestock">
+                    <article class="editUsedQuanty">
+                        <button id="closeEditRestockQuanty"><ion-icon name="close-outline"></ion-icon></button>
+                        <h2 class="editUsedQuanty__h2">Quantia entrada</h2>
+                        <div class="section__div">
+                            <ion-icon name="stats-chart-outline" class="section__icon"></ion-icon>
+                            <input type="number" placeholder="Digite a quantia usada" class="section__input"
+                                id="RestockQuantyInput">
+                        </div>
+                        <p id="editRestockQuantyAlert"></p>
+                        <button id="confirmRestockQuantyBtn">Confirmar</button>
+                    </article>
+                </div>
+                <button id="closeSectionSelectRestock">Confirmar</button>
+                <h2 class="discharge__h2">Adicionar items acrescentados</h2>
+                <div class="section__search--div">
+                    <ion-icon name="search-outline" class="section__search--icon"></ion-icon>
+                    <input type="search" placeholder="Pesquisar" id="RestockSearchInput">
+                </div>
+                <section id="SectionItemsCardsRestock">
+                </section>
+            </section>
+
+            <button id="closeRestockSection"><ion-icon name="close-outline"></ion-icon></button>
+            <h2 class="discharge__h2">Entrada de Items</h2>
+            <div class="section__div">
+                <ion-icon name="document-text-outline" class="section__icon"></ion-icon>
+                <input type="text" placeholder="Descrição do relatório" class="section__input" id="descriptionRestock">
+            </div>
+            <h2 class="discharge__h2 subtitle">Items adicionados</h2>
+            <section id="RestockSelectedSection">
+
+            </section>
+            <button id="addRestockItems">Adicionar items acrescentados</button>
+            <p id="RestockItemsAlert"></p>
+            <button id="RestockItems">Fazer relatório</button>
+        </section>
 
 
 
