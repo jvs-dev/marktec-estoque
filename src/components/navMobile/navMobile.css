@@ -47,7 +47,7 @@
     color: var(--green);
 }
 #navMobile.active {
-    height: 340px;
+    height: 300px;
 }
 #navMobile.active .openCloseNav {
     rotate: 135deg;

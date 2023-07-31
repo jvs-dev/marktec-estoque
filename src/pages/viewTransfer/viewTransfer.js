@@ -90,6 +90,7 @@ function verifyUrl() {
             let requestDescription = doc.data().description
             let requestAcceptHours = ""
             let itemsToTransferList = ""
+            let totalValue = ""
             let transferTxt = "a ser transferidos"
             let reqId = doc.id
             function returnList() {
@@ -98,6 +99,25 @@ function verifyUrl() {
                 });
             }
             returnList()
+            function returnTotalValue() {
+                if (actualUserWork != "Técnico") {
+                    Object.keys(doc.data().itemsToTransfer).forEach(element => {
+                        let itemPrice = Number(doc.data().itemsToTransfer[element].value)
+                        if (doc.data().itemsToTransfer[element].value.includes(",")) {
+                            if (doc.data().itemsToTransfer[element].value.includes(".") == false) {
+                                itemPrice = Number(doc.data().itemsToTransfer[element].value.replace(",", "."))
+                            }
+                        }
+                        if (doc.data().itemsToTransfer[element].value.includes(".")) {
+                            if (doc.data().itemsToTransfer[element].value.includes(",")) {
+                                itemPrice = Number(doc.data().itemsToTransfer[element].value.replace(".", "").replace(",", "."))
+                            }
+                        }
+                        totalValue = Number(totalValue) + itemPrice * doc.data().itemsToTransfer[element].used
+                    })
+                    return `${totalValue}`.replace(".", ",")
+                }
+            }
             if (requestStatus == "Aceito") {
                 requestAcceptHours = ` e aceita ás ${doc.data().acceptHour}`
                 transferTxt = "transferidos"
@@ -125,8 +145,8 @@ function verifyUrl() {
                 doc.fromHTML(`<p style="font-size: 18px; font-family: 'Poppins', sans-serif;">Status da transferência: ${requestStatus}.</p>`, 10, 64)
                 doc.fromHTML(`<p style="font-size: 18px; font-family: 'Poppins', sans-serif;">Motivo da transferência: ${requestmotive}.</p>`, 10, 72)
                 doc.fromHTML(`<p style="font-size: 18px; font-family: 'Poppins', sans-serif;">Descrição da transferência: ${requestDescription}.</p>`, 10, 80)
-                doc.fromHTML(`<p style="font-size: 18px; font-family: 'Poppins', sans-serif;">Items ${transferTxt}:</p>`, 10, 88)
-                doc.fromHTML(`<ul style="font-size: 18px; font-family: 'Poppins', sans-serif;"><br>${itemsToTransferList}</ul>`, 10, 96)
+                doc.fromHTML(`<p style="font-size: 18px; font-family: 'Poppins', sans-serif;">Itens ${transferTxt}:</p>`, 10, 88)
+                doc.fromHTML(`<ul style="font-size: 18px; font-family: 'Poppins', sans-serif;"><br>${itemsToTransferList}${actualUserWork != "Técnico" ? `<p style="font-size: 18px; font-family: 'Poppins', sans-serif;">Total transferido: <span style="font-weight: 500;">$${returnTotalValue()}</span>.</p>` : ""}</ul>`, 10, 96)
                 doc.save(`Transferência_${date}.pdf`)
             }
             let i = 1
@@ -157,11 +177,11 @@ function verifyUrl() {
                         <span class="viewDischargeSection__itemQuanty">${doc.data().itemsToTransfer[element].used} ${doc.data().itemsToTransfer[element].measure}</span>
                         <p class="viewDischargeSection__itemName">${doc.data().itemsToTransfer[element].name}</p>
                         <span class="viewDischargeSection__itemPrice">$${doc.data().itemsToTransfer[element].value}</span>
-                        <span class="viewDischargeSection__itemTotalPrice">$${(itemTotal * doc.data().itemsToTransfer[element].used).toFixed(2)}</span>`   
+                        <span class="viewDischargeSection__itemTotalPrice">$${(itemTotal * doc.data().itemsToTransfer[element].used).toFixed(2)}</span>`
                 } else {
                     article.innerHTML = `
                         <span class="viewDischargeSection__itemQuanty">${doc.data().itemsToTransfer[element].used} ${doc.data().itemsToTransfer[element].measure}</span>
-                        <p class="viewDischargeSection__itemName">${doc.data().itemsToTransfer[element].name}</p>`   
+                        <p class="viewDischargeSection__itemName">${doc.data().itemsToTransfer[element].name}</p>`
                 }
                 if (actualUserWork != "Técnico") {
                     total = total + (itemTotal * doc.data().itemsToTransfer[element].used)

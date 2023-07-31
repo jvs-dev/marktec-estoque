@@ -90,24 +90,25 @@ async function loadTecnicItems(email) {
     tecnicItems.innerHTML = ""
     let querySnapshot = await getDocs(collection(db, "tecnics", `${email}`, "stock"));
     querySnapshot.forEach((doc) => {
-        let article = document.createElement("article")
-        tecnicItems.insertAdjacentElement("beforeend", article)
-        article.classList.add("tecnicItensCard")
-        article.style.background = `var(--background-${i})`
-        article.innerHTML = `
-            <img class="tecnicItensCard__img" src="${doc.data().itemImg}" alt="Imagem do ${doc.data().itemName}">
-            <div class="tecnicItensCard__div">
-                <p class="tecnicItensCard__p">${doc.data().itemName}</p>
-                <span class="tecnicItensCard__span">Possui: ${doc.data().tecnicStock} ${doc.data().measure}</span>
-            </div>`
-        article.style.order = `-${Math.round(doc.data().tecnicStock)}`
-        switch (i) {
-            case 0:
-                i = 1
-                break;
-            default:
-                i = 0
-                break;
+        if (doc.data().tecnicStock > 0) {
+            let article = document.createElement("article")
+            tecnicItems.insertAdjacentElement("beforeend", article)
+            article.classList.add("tecnicItensCard")
+            article.style.background = `var(--background-${i})`
+            article.innerHTML = `
+                <img class="tecnicItensCard__img" src="${doc.data().itemImg}" alt="Imagem do ${doc.data().itemName}">
+                <div class="tecnicItensCard__div">
+                    <p class="tecnicItensCard__p">${doc.data().itemName}</p>
+                    <span class="tecnicItensCard__span">Possui: ${doc.data().tecnicStock} ${doc.data().measure}</span>
+                </div>`
+            switch (i) {
+                case 0:
+                    i = 1
+                    break;
+                default:
+                    i = 0
+                    break;
+            }   
         }
     })
 }

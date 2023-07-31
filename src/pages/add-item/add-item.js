@@ -9,7 +9,7 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, onAuthStateChanged, sendPasswordResetEmail, signOut } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, doc, setDoc, onSnapshot, query, where, updateDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, doc, getDoc, setDoc, onSnapshot, query, where, updateDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
 const db = getFirestore(app);
 const auth = getAuth();
 let transfer = document.getElementById("transfer")
@@ -71,8 +71,10 @@ createItem.onclick = function () {
     let itemName = document.getElementById("itemName").value
     let itemImg = document.getElementById("itemImg").value
     let itemValue = document.getElementById("itemValue").value
-    if (quantyMin != "" && measure != "" && inStock != "" && itemName != "" && itemImg != "" && itemValue != "") {
-        sucessAddItem(itemName, measure, quantyMin, Number(inStock), itemImg, itemValue)
+    let itemGroup = document.getElementById("itemGroup").value
+    let itemBrand = document.getElementById("itemBrand").value
+    if (quantyMin != "" && measure != "" && inStock != "" && itemName != "" && itemImg != "" && itemValue != "" && itemGroup != "" && itemBrand != "") {
+        verifyItemName(itemName, measure, quantyMin, Number(inStock), itemImg, itemValue, itemGroup, itemBrand)
     } else {
         helpAdd.style.color = "red"
         helpAdd.textContent = "Por favor, preencha todos os campos."
@@ -84,7 +86,7 @@ createItem.onclick = function () {
     }
 }
 
-async function sucessAddItem(itemName, measure, quantyMin, inStock, itemImg, itemValue) {
+async function sucessAddItem(itemName, measure, quantyMin, inStock, itemImg, itemValue, itemGroup, itemBrand) {
     await setDoc(doc(db, "items", `${itemName}`), {
         itemName: `${itemName}`,
         itemImg: `${itemImg}`,
@@ -92,10 +94,12 @@ async function sucessAddItem(itemName, measure, quantyMin, inStock, itemImg, ite
         measure: `${measure}`,
         quantyMin: quantyMin,
         itemValue: `${itemValue}`,
+        itemGroup: `${itemGroup}`,
+        itemBrand: `${itemBrand}`,
         withTecnics: 0,
         active: true
     });
-    returnTecnicEmail(itemName, measure, quantyMin, inStock, itemImg, itemValue)
+    returnTecnicEmail(itemName, measure, quantyMin, inStock, itemImg, itemValue, itemGroup, itemBrand)
     helpAdd.style.color = "#0f0"
     helpAdd.textContent = "Item adicionado com sucesso."
     let quantyMinInput = document.getElementById("quantyMin")
@@ -103,11 +107,15 @@ async function sucessAddItem(itemName, measure, quantyMin, inStock, itemImg, ite
     let itemNameInput = document.getElementById("itemName")
     let itemImgInput = document.getElementById("itemImg")
     let itemValueInput = document.getElementById("itemValue")
+    let itemGroupInput = document.getElementById("itemGroup")
+    let itemBrandInput = document.getElementById("itemBrand")
     itemNameInput.value = ""
     quantyMinInput.value = ""
     inStockInput.value = ""
     itemImgInput.value = ""
     itemValueInput.value = ""
+    itemGroupInput.value = ""
+    itemBrandInput.value = ""
     createItem.innerHTML = "ADICIONAR"
     createItem.classList.remove("loading")
     setTimeout(() => {
@@ -115,25 +123,44 @@ async function sucessAddItem(itemName, measure, quantyMin, inStock, itemImg, ite
     }, 3000);
 }
 
-async function returnTecnicEmail(itemName, measure, quantyMin, inStock, itemImg, itemValue) {
+async function returnTecnicEmail(itemName, measure, quantyMin, inStock, itemImg, itemValue, itemGroup, itemBrand) {
     let q = query(collection(db, "tecnics"), where("permission", "==", true));
     let unsubscribe = onSnapshot(q, (querySnapshot) => {
         let tecnicsName = [];
         querySnapshot.forEach((doc) => {
             tecnicsName.push(doc.id);
         });
-        addTecnicItem(itemName, measure, quantyMin, inStock, itemImg, itemValue, tecnicsName)
+        addTecnicItem(itemName, measure, quantyMin, inStock, itemImg, itemValue, tecnicsName, itemGroup, itemBrand)
     });
 }
 
-async function addTecnicItem(itemName, measure, quantyMin, inStock, itemImg, itemValue, tecnicsName) {
+async function addTecnicItem(itemName, measure, quantyMin, inStock, itemImg, itemValue, tecnicsName, itemGroup, itemBrand) {
     tecnicsName.forEach(name => {
         setDoc(doc(db, "tecnics", `${name}`, "stock", `${itemName}`), {
             itemName: itemName,
             itemImg: itemImg,
             itemValue: itemValue,
+            itemGroup: itemGroup,
+            itemBrand: itemBrand,
             measure: measure,
             tecnicStock: 0
         });
     });
+}
+
+
+async function verifyItemName(itemName, measure, quantyMin, inStock, itemImg, itemValue, itemGroup, itemBrand) {
+    let docRef = doc(db, "items", `${itemName}`);
+    let docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+        helpAdd.style.color = "red"
+        helpAdd.textContent = "Este item já foi adicionado."
+        createItem.innerHTML = "ADICIONAR"
+        createItem.classList.remove("loading")
+        setTimeout(() => {
+            helpAdd.textContent = ""
+        }, 3000);
+    } else {
+        sucessAddItem(itemName, measure, quantyMin, inStock, itemImg, itemValue, itemGroup, itemBrand)
+    }
 }

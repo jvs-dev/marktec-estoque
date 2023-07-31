@@ -325,4 +325,7 @@
     .section__icon {
         font-size: 30px;
     }
+    .section__button {
+        margin-bottom: 40px;
+    }
 }

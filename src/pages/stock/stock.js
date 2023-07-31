@@ -98,9 +98,9 @@ async function loadItems() {
             <div class="card__div--1">
                 <h2 class="card__h2">${doc.data().itemName}</h2>
                 <div class="card__div--2">
-                    <span class="card__span">Em estoque: ${Number(doc.data().inStock)}</span>
-                    <span class="card__span">Com técnicos: ${doc.data().withTecnics}</span>
-                    <span class="card__span">Total: ${Number(doc.data().inStock) + doc.data().withTecnics}</span>
+                    <span class="card__span">Em estoque: ${Number(doc.data().inStock)} ${doc.data().measure}.</span>
+                    <span class="card__span">Com técnicos: ${doc.data().withTecnics} ${doc.data().measure}.</span>
+                    <span class="card__span">Total: ${Number(doc.data().inStock) + doc.data().withTecnics} ${doc.data().measure}.</span>
                 </div>
             </div>`
             switch (i) {

@@ -5,7 +5,8 @@
 .main__acceptUser {
     width: 100vw;
     min-height: 100vh;
-    background: linear-gradient(246.26deg, #0AD4B5 -17.89%, rgba(255, 255, 255, 0) 100%);
+    background: linear-gradient(135deg, #0AD4B5 30.72%, rgba(255, 255, 255, 0.00) 30.73%), linear-gradient(45deg, #FF9700 23.23%, rgba(255, 255, 255, 0.00) 23.31%), linear-gradient(110deg, #F1F1F1 32.51%, #FFF 32.56%);
+    background-attachment: fixed;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -24,7 +25,7 @@
     background: #fff;
     padding: 10px 20px;
     border-radius: 20px;
-    border: solid 2px var(--green);
+    box-shadow: 0px 2px 10px #00000070;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -41,7 +42,7 @@
 .awaitSection__fullName {
     margin: 0px;
     font-size: 30px;
-    color: var(--green);
+    color: var(--black);
     font-weight: 600;
 }
 

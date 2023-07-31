@@ -15,7 +15,7 @@
     padding: 40px 0px 40px 90px;
     overflow: auto;
     background-repeat: no-repeat;
-    background-position: fixed;
+    background-attachment: fixed;
 }
 
 .section__search--div {

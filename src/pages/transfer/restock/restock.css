@@ -57,7 +57,7 @@
     display: none;
     flex-direction: column;
     align-items: center;
-    padding: 40px 0px;
+    padding: 40px 0px 100px 0px;
     overflow-y: auto;
     overflow-x: hidden;
     top: 0;
@@ -142,19 +142,20 @@
     background: var(--green);
     color: #fff;
     border-radius: 25px;
-    position: absolute;
+    position: fixed;
     bottom: 0;
     margin: 0px 0px 20px 0px;
     padding: 8px 25px;
     font-size: 22px;
     border: solid 2px transparent;
     text-transform: uppercase;
+    z-index: 2;
     transition: 0.2s;
 }
 
 #closeSectionSelectRestock:hover {
     border: solid 2px var(--green);
-    background: transparent;
+    background: #fff;
     color: var(--green);
     box-shadow: 0px 0px 20px var(--green);
 }
