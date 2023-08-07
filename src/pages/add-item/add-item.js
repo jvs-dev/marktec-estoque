@@ -9,16 +9,18 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, onAuthStateChanged, sendPasswordResetEmail, signOut } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, doc, getDoc, setDoc, onSnapshot, query, where, updateDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, doc, getDoc, setDoc, onSnapshot, query, where, updateDoc, arrayUnion, arrayRemove, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
 const db = getFirestore(app);
 const auth = getAuth();
 let transfer = document.getElementById("transfer")
 let acceptUser = document.getElementById("acceptUser")
 let addItem = document.getElementById("addItem")
-
 let createItem = document.getElementById("createItem")
 let helpAdd = document.getElementById("helpAdd")
 let addField = document.getElementById("addField")
+let actualUserName = ""
+let actualUserEmail = ""
+let userWork = ""
 
 setInterval(() => {
     let itemImg = document.getElementById("itemImg").value
@@ -31,6 +33,9 @@ function loadData() {
         if (user) {
             const uid = user.uid;
             let unsub = onSnapshot(doc(db, `users`, `${user.email}`), (doc) => {
+                actualUserName = doc.data().fullName
+                actualUserEmail = doc.data().email
+                userWork = doc.data().work
                 if (doc.data().admin == true) {
                     transfer.style.display = "none"
                     acceptUser.style.display = "flex"
@@ -46,6 +51,7 @@ function loadData() {
                     }
                 }
             });
+            disable()
         }
     });
 }
@@ -100,6 +106,7 @@ async function sucessAddItem(itemName, measure, quantyMin, inStock, itemImg, ite
         active: true
     });
     returnTecnicEmail(itemName, measure, quantyMin, inStock, itemImg, itemValue, itemGroup, itemBrand)
+    addItemNotify(itemName, inStock, measure)
     helpAdd.style.color = "#0f0"
     helpAdd.textContent = "Item adicionado com sucesso."
     let quantyMinInput = document.getElementById("quantyMin")
@@ -163,4 +170,45 @@ async function verifyItemName(itemName, measure, quantyMin, inStock, itemImg, it
     } else {
         sucessAddItem(itemName, measure, quantyMin, inStock, itemImg, itemValue, itemGroup, itemBrand)
     }
+}
+
+
+
+
+async function addItemNotify(itemName, inStock, measure) {
+    let timeElapsed = Date.now();
+    let today = new Date(timeElapsed);
+    let date = today.toLocaleDateString()
+    let dataAtual = new Date();
+    let hora = dataAtual.getHours();
+    let minutos = dataAtual.getMinutes();
+    let horaFormatada = hora < 10 ? '0' + hora : hora;
+    let minutosFormatados = minutos < 10 ? '0' + minutos : minutos;
+    let hours = horaFormatada + ":" + minutosFormatados
+    let docRef = await addDoc(collection(db, "notifications"), {
+        type: "item added",
+        ItemAdded: `${itemName}`,
+        initialQuanty: inStock,
+        measure: `${measure}`,
+        hours: hours,
+        date: date,
+        userName: actualUserName,
+        userEmail: actualUserEmail,
+        userWork: userWork,
+        timestamp: serverTimestamp()
+    });
+}
+
+
+
+
+function disable() {
+    setTimeout(() => {
+        let offline_window = document.getElementById("main__offline")
+        offline_window.style.transition = "0.5s"
+        offline_window.style.opacity = "0"
+        setTimeout(() => {
+            offline_window.style.display = "none"
+        }, 500);
+    }, 1000);
 }

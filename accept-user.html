@@ -25,6 +25,9 @@
     <link rel="stylesheet" href="src/pages/accept-user/accept-user.css">
     <link rel="stylesheet" href="src/components/scroll/scroll.css">
     <link rel="stylesheet" href="src/components/navMobile/navMobile.css">
+    <link rel="stylesheet" href="src/pages/accept-user/accept-user.css">
+    <link rel="stylesheet" href="src/components/loader/ball-spinner.css">
+    <link rel="stylesheet" href="src/components/expiredAccountTime/card.css">
 </head>
 
 <body>
@@ -51,27 +54,112 @@
             <nav id="navMobile">
                 <span id="timeLeftMobile"></span>
                 <ion-icon class="openCloseNav" id="openCloseNav" name="add-outline"></ion-icon>
-                <a href="transfer.html" class="navMobile__a" id="transferMobile"><ion-icon name="swap-horizontal-outline" class="navMobile__icon"></ion-icon></a>
+                <a href="transfer.html" class="navMobile__a" id="transferMobile"><ion-icon
+                        name="swap-horizontal-outline" class="navMobile__icon"></ion-icon></a>
                 <a href="historic.html" class="navMobile__a"><i class="bi bi-clock-history navMobile__icon"></i></a>
-                <a href="tecnics.html" class="navMobile__a" id="tecnicsMobile"><i class="bi bi-car-front-fill navMobile__icon"></i></a>
+                <a href="tecnics.html" class="navMobile__a" id="tecnicsMobile"><i
+                        class="bi bi-car-front-fill navMobile__icon"></i></a>
                 <a href="stock.html" class="navMobile__a"><i class="bi bi-box-seam navMobile__icon"></i></a>
-                <a href="index.html" class="navMobile__a"><ion-icon name="home-outline" class="navMobile__icon"></ion-icon></a>
+                <a href="index.html" class="navMobile__a"><ion-icon name="home-outline"
+                        class="navMobile__icon"></ion-icon></a>
             </nav>
             <nav class="home__nav navBar">
                 <ul class="nav__ul">
-                    <a href="index.html" class="nav__a"><li class="nav__li"><ion-icon name="home-outline" class="nav__icon"></ion-icon></li></a>
-                    <a href="stock.html" class="nav__a"><li class="nav__li"><i class="bi bi-box-seam nav__icon"></i></li></a>
-                    <a href="tecnics.html" class="nav__a"><li class="nav__li"><i class="bi bi-car-front-fill nav__icon"></i></li></a>
-                    <a href="historic.html" class="nav__a"><li class="nav__li"><i class="bi bi-clock-history nav__icon"></i></li></a>
-                    <a id="transfer" href="transfer.html" class="nav__a"><li class="nav__li"><ion-icon name="swap-horizontal-outline" class="nav__icon"></ion-icon></li></a>
-                    <a href="add-item.html" id="addItem" class="nav__a"><li class="nav__li"><i class="bi bi-plus-circle nav__icon"></i></li></a>
-                    <a href="accept-user.html" id="acceptUser" class="nav__a active"><li class="nav__li"><i class="bi bi-person-vcard nav__icon active"></i></li></a>
+                    <a href="index.html" class="nav__a">
+                        <li class="nav__li"><ion-icon name="home-outline" class="nav__icon"></ion-icon></li>
+                    </a>
+                    <a href="stock.html" class="nav__a">
+                        <li class="nav__li"><i class="bi bi-box-seam nav__icon"></i></li>
+                    </a>
+                    <a href="tecnics.html" class="nav__a">
+                        <li class="nav__li"><i class="bi bi-car-front-fill nav__icon"></i></li>
+                    </a>
+                    <a href="historic.html" class="nav__a">
+                        <li class="nav__li"><i class="bi bi-clock-history nav__icon"></i></li>
+                    </a>
+                    <a id="transfer" href="transfer.html" class="nav__a">
+                        <li class="nav__li"><ion-icon name="swap-horizontal-outline" class="nav__icon"></ion-icon></li>
+                    </a>
+                    <a href="add-item.html" id="addItem" class="nav__a">
+                        <li class="nav__li"><i class="bi bi-plus-circle nav__icon"></i></li>
+                    </a>
+                    <a href="accept-user.html" id="acceptUser" class="nav__a active">
+                        <li class="nav__li"><i class="bi bi-person-vcard nav__icon active"></i></li>
+                    </a>
                     <p class="nav__p"><span id="timeLeft"></span></p>
                 </ul>
                 <div class="nav__line"></div>
             </nav>
-            <h2 class="acceptUser__h2">Aguardando Permissão</h2>
-            <section id="awaitSection">
+            <section id="signin_section">
+                <form action="" class="section__form">
+                    <h2 class="section__title">Criar conta</h2>
+                    <p class="section__p">Preencha os campos com as informações do funcionário</p>
+
+                    <div class="section__div">
+                        <ion-icon name="briefcase-outline" class="section__icon"></ion-icon>
+                        <select name="" id="work" class="section__select">
+                            <option value="Técnico">Técnico</option>
+                            <option value="Estoquista">Estoquista</option>
+                            <option value="Administrador">Administrador</option>
+                        </select>
+                    </div>
+                    <div class="section__div">
+                        <ion-icon name="person-outline" class="section__icon"></ion-icon>
+                        <input type="text" placeholder="Nome completo" class="section__input" id="fullName">
+                    </div>
+                    <div class="section__div">
+                        <ion-icon name="mail-outline" class="section__icon"></ion-icon>
+                        <input type="email" placeholder="Email" class="section__input" id="email">
+                    </div>
+                    <div class="section__div">
+                        <ion-icon name="lock-closed-outline" class="section__icon"></ion-icon>
+                        <input type="password" placeholder="Senha" class="section__input" id="password">
+                        <ion-icon name="eye-outline" class="section__icon" id="showSignIn"></ion-icon>
+                    </div>
+                    <div class="section__divTime" id="divDefineTime">
+                        <p class="setTime__p">Défina o horário que este usuário poderá acessar a conta.</p>
+                        <div class="setTime__div">
+                            Inicio da sessão: <div class="section__div">
+                                <i class="bi bi-hourglass-top section__icon"></i>
+                                <input type="time" placeholder="horario de acesso" class="section__input" id="initTime">
+                            </div>
+                        </div>
+                        <div class="setTime__div">
+                            fim da sessão:
+                            <div class="section__div">
+                                <i class="bi bi-hourglass-bottom section__icon"></i>
+                                <input type="time" placeholder="horario de acesso" class="section__input" id="finalTime">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form__div checkbox--div" id="createAccountPermissionDiv">
+                        <div class="checkbox-wrapper-12">
+                            <div class="cbx">
+                                <input id="cbxPermission" type="checkbox">
+                                <label for="cbxPermission"></label>
+                                <svg width="15" height="14" viewBox="0 0 15 14" fill="none">
+                                    <path d="M2 8.36364L6.23077 12L13 2"></path>
+                                </svg>
+                            </div>
+
+                            <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
+                                <defs>
+                                    <filter id="goo-12">
+                                        <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur">
+                                        </feGaussianBlur>
+                                        <feColorMatrix in="blur" mode="matrix"
+                                            values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -7" result="goo-12">
+                                        </feColorMatrix>
+                                        <feBlend in="SourceGraphic" in2="goo-12"></feBlend>
+                                    </filter>
+                                </defs>
+                            </svg>
+                        </div>
+                        <p>Este funcionário pode criar novas contas?</p>
+                    </div>
+                    <p class="section__help" id="helpSignin"></p>
+                    <button type="button" class="section__button" id="createAccount">Criar conta</button>
+                </form>
             </section>
         </section>
     </main>

@@ -23,9 +23,10 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 65vw;
+    width: 100vw;
     height: 100vh;
     background-color: var(--white);
+    padding: 40px;
     transition: 0.5s;
 }
 
@@ -77,6 +78,7 @@
     padding: 10px 0px;
     border-radius: 10px;
     width: 60%;
+    max-width: 500px;
     display: flex;
     align-items: center;
     margin: 5px 0px;
@@ -268,11 +270,13 @@
     border-radius: 100%;
     box-shadow: -180px 154px 0px var(--gray);
 }
+
 #signInSpan {
     display: none;
     color: var(--orange);
     text-decoration: underline;
 }
+
 #loginSpan {
     display: none;
     color: var(--orange);
@@ -283,48 +287,61 @@
     #swich-section {
         display: none;
     }
+
     #login_section {
         width: 100vw;
+        padding: 0px;
     }
+
     .section__title {
         font-size: 35px;
         letter-spacing: normal;
     }
+
     .section__p {
         margin: 5px 0px 10px 0px;
     }
+
     .section__form {
         padding: 0px 20px;
     }
+
     .section__div {
         width: 90%;
         margin: 10px 0px;
     }
+
     .section__help {
         text-align: center;
         margin: 0px 0px 10px 0px;
     }
+
     .logo {
         display: none;
     }
+
     #signInSpan {
         display: flex;
         position: absolute;
         bottom: 0;
         margin: 0px 0px 40px 0px;
     }
+
     #loginSpan {
         display: flex;
         position: absolute;
         bottom: 0;
         margin: 0px 0px 40px 0px;
     }
+
     #signin_section {
         width: 100vw;
     }
+
     .section__icon {
         font-size: 30px;
     }
+
     .section__button {
         margin-bottom: 40px;
     }

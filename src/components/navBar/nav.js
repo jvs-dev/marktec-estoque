@@ -17,16 +17,6 @@ let transfer = document.getElementById("transfer")
 let tecnics = document.getElementById("tecnics")
 const q = query(collection(db, "users"), where("permission", "==", false));
 
-
-const unsubscribe = onSnapshot(q, (querySnapshot) => {
-    acceptUser.classList.remove("awaiting")
-    querySnapshot.forEach((doc) => {
-        if (doc.data().permission == false) {
-            acceptUser.classList.add("awaiting")
-        }
-    })
-})
-
 function loadData() {
     onAuthStateChanged(auth, (user) => {
         if (user) {
@@ -38,9 +28,15 @@ function loadData() {
                     addItem.style.display = "flex"
                 } else {
                     if (doc.data().work == "Estoquista") {
-                        acceptUser.style.display = "none"
-                        addItem.style.display = "flex"
-                        loadRequests(user.email)
+                        if (doc.data().createAccountPermission == true) {
+                            addItem.style.display = "flex"
+                            acceptUser.style.display = "flex"
+                            loadRequests(user.email)
+                        } else {
+                            acceptUser.style.display = "none"
+                            addItem.style.display = "flex"
+                            loadRequests(user.email)
+                        }
                     } else {
                         transfer.style.display = "flex"
                         acceptUser.style.display = "none"

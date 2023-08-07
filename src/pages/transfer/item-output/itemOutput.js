@@ -130,6 +130,7 @@ async function loadStock(email, work) {
                                 } else {
                                     let editUsedQuantyAlert = document.getElementById("editOutputQuantyAlert")
                                     editUsedQuantyAlert.textContent = "Quantia em estoque insuficiente"
+                                    outputTentateive(doc.data().itemName, Number(usedQuantyInput))
                                     setTimeout(() => {
                                         editUsedQuantyAlert.textContent = ""
                                     }, 5000);
@@ -169,6 +170,7 @@ async function loadStock(email, work) {
                             } else {
                                 let editUsedQuantyAlert = document.getElementById("editOutputQuantyAlert")
                                 editUsedQuantyAlert.textContent = "Quantia em estoque insuficiente"
+                                outputTentateive(doc.data().itemName, Number(usedQuantyInput))
                                 setTimeout(() => {
                                     editUsedQuantyAlert.textContent = ""
                                 }, 5000);
@@ -255,6 +257,7 @@ async function searchItem(email, work, text) {
                             } else {
                                 let editUsedQuantyAlert = document.getElementById("editOutputQuantyAlert")
                                 editUsedQuantyAlert.textContent = "Quantia em estoque insuficiente"
+                                outputTentateive(doc.data().itemName, Number(usedQuantyInput))
                                 setTimeout(() => {
                                     editUsedQuantyAlert.textContent = ""
                                 }, 5000);
@@ -293,6 +296,7 @@ async function searchItem(email, work, text) {
                             } else {
                                 let editUsedQuantyAlert = document.getElementById("editOutputQuantyAlert")
                                 editUsedQuantyAlert.textContent = "Quantia em estoque insuficiente"
+                                outputTentateive(doc.data().itemName, Number(usedQuantyInput))
                                 setTimeout(() => {
                                     editUsedQuantyAlert.textContent = ""
                                 }, 5000);
@@ -464,7 +468,28 @@ function clearInputs() {
 
 
 
-
+async function outputTentateive(itemName, itemQuanty) {
+    let timeElapsed = Date.now();
+    let today = new Date(timeElapsed);
+    let date = today.toLocaleDateString()
+    let dataAtual = new Date();
+    let hora = dataAtual.getHours();
+    let minutos = dataAtual.getMinutes();
+    let horaFormatada = hora < 10 ? '0' + hora : hora;
+    let minutosFormatados = minutos < 10 ? '0' + minutos : minutos;
+    let hours = horaFormatada + ":" + minutosFormatados
+    let docRef = await addDoc(collection(db, "notifications"), {
+        type: "output tentative",
+        ItemTentative: `${itemName}`,
+        tentativeQuanty: `${itemQuanty}`,
+        hours: hours,
+        date: date,
+        userName: actualUserName,
+        userEmail: actualUserEmail,
+        userWork: userWork,
+        timestamp: serverTimestamp()
+    });
+}
 
 
 

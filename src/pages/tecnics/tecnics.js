@@ -80,6 +80,7 @@ function loadTecnics() {
                 }
             }
         });
+        disable()
     });
 
 }
@@ -136,5 +137,18 @@ let unsubscribe = onSnapshot(q, (snapshot) => {
         }
     });
 });
+
+
+function disable() {
+    setTimeout(() => {
+        let offline_window = document.getElementById("main__offline")
+        offline_window.style.transition = "0.5s"
+        offline_window.style.opacity = "0"
+        setTimeout(() => {
+            offline_window.style.display = "none"
+        }, 500);
+    }, 1000);
+}
+
 
 loadData()

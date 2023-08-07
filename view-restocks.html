@@ -24,15 +24,22 @@
     <link rel="stylesheet" href="src/components/loader/cube-await.css">
     <link rel="stylesheet" href="src/pages/add-item/add-item.css">
     <link rel="stylesheet" href="src/components/loader/ball-spinner.css">
-    <link rel="stylesheet" href="src/pages/tecnics/tecnics.css">
-    <link rel="stylesheet" href="src/components/cards/tecnicItensCard.css">
+    <link rel="stylesheet" href="src/pages/historic/historic.css">
+    <link rel="stylesheet" href="src/components/cards/historicCard.css">
     <link rel="stylesheet" href="src/components/scroll/scroll.css">
     <link rel="stylesheet" href="src/components/navMobile/navMobile.css">
+    <link rel="stylesheet" href="src/components/cards/historicDischargeCard.css">
+    <link rel="stylesheet" href="src/components/cards/newTransferCard.css">
+    <link rel="stylesheet" href="src/pages/viewTransfer/viewTransfer.css">
+    <link rel="stylesheet" href="src/pages/view-restocks/view-restock.css">
     <link rel="stylesheet" href="src/components/expiredAccountTime/card.css">
 </head>
 
 <body>
     <main id="main">
+        <section id="viewDischargeSection">
+
+        </section>
         <section id="main__offline">
             <div id="wifi-loader">
                 <svg class="circle-outer" viewBox="0 0 86 86">
@@ -51,45 +58,8 @@
                 <div class="text" data-text="Conectando..."></div>
             </div>
         </section>
-        <section id="tecnicItemsSection">
-            <button id="closeTecnicItems"><ion-icon name="close-outline"></ion-icon></button>
-            <img id="TecnicImg" src="" alt="">
-            <p id="TecnicName"></p>
-            <h2 class="TecnicNameSection__h2">Com o técnico</h2>
-            <section id="tecnicItems">
-
-            </section>
-        </section>
-        <section class="main__tecnics">
-            <nav id="navMobile">
-                <span id="timeLeftMobile"></span>
-                <ion-icon class="openCloseNav" id="openCloseNav" name="add-outline"></ion-icon>
-                <a href="transfer.html" class="navMobile__a" id="transferMobile"><ion-icon name="swap-horizontal-outline" class="navMobile__icon"></ion-icon></a>
-                <a href="historic.html" class="navMobile__a"><i class="bi bi-clock-history navMobile__icon"></i></a>
-                <a href="tecnics.html" class="navMobile__a active" id="tecnicsMobile"><i class="bi bi-car-front-fill navMobile__icon active"></i></a>
-                <a href="stock.html" class="navMobile__a"><i class="bi bi-box-seam navMobile__icon"></i></a>
-                <a href="index.html" class="navMobile__a"><ion-icon name="home-outline" class="navMobile__icon"></ion-icon></a>
-            </nav>
-            <nav class="home__nav navBar">
-                <ul class="nav__ul">
-                    <a href="index.html" class="nav__a"><li class="nav__li"><ion-icon name="home-outline" class="nav__icon"></ion-icon></li></a>
-                    <a href="stock.html" class="nav__a"><li class="nav__li"><i class="bi bi-box-seam nav__icon"></i></li></a>
-                    <a id="tecnics" href="tecnics.html" class="nav__a active"><li class="nav__li"><i class="bi bi-car-front-fill nav__icon active"></i></li></a>
-                    <a href="historic.html" class="nav__a"><li class="nav__li"><i class="bi bi-clock-history nav__icon"></i></li></a>
-                    <a id="transfer" href="transfer.html" class="nav__a"><li class="nav__li"><ion-icon name="swap-horizontal-outline" class="nav__icon"></ion-icon></li></a>
-                    <a href="add-item.html" id="addItem" class="nav__a"><li class="nav__li"><i class="bi bi-plus-circle nav__icon"></i></li></a>
-                    <a href="accept-user.html" id="acceptUser" class="nav__a"><li class="nav__li"><i class="bi bi-person-vcard nav__icon"></i></li></a>
-                    <p class="nav__p"><span id="timeLeft"></span></p>
-                </ul>
-                <div class="nav__line"></div>
-            </nav>
-            <section class="main__section">
-                <h2 class="main__h2">Técnicos</h2>
-                <section id="tecnicsSection">
-                </section>
-            </section>
-        </section>
     </main>
+
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"
         integrity="sha384-zYPOMqeu1DAVkHiLqWBUTcbYfZ8osu1Nd6Z89ify25QV9guujx43ITvfi12/QExE"
@@ -100,11 +70,12 @@
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <script src="src/components/offline/offline-loading.js"></script>
-    <script type="module" src="src/components/timeLeft/timeLeft.js"></script>
     <script type="module" src="src/components/verifyPermission/verifyPermission.js"></script>
-    <script type="module" src="src/pages/tecnics/tecnics.js"></script>
-    <script type="module" src="src/components/navBar/nav.js"></script>
-    <script type="module" src="src/components/navMobile/navMobile.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js"
+        integrity="sha384-NaWTHo/8YCBYJ59830LTz/P4aQZK1sS0SneOgAvhsIl3zBu8r9RevNg5lHCHAuQ/"
+        crossorigin="anonymous"></script>
+    <script type="module" src="src/pages/view-restocks/view-restock.js"></script>
+    <script type="module" src="src/components/timeLeft/timeLeft.js"></script>
 </body>
 
 </html>

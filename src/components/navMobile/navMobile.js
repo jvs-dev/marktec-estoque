@@ -18,15 +18,7 @@ let addItemsBtn = document.createElement("a")
 let acceptUserBtn = document.createElement("a")
 let transferMobile = document.getElementById("transferMobile")
 let tecnicsMobile = document.getElementById("tecnicsMobile")
-const q = query(collection(db, "users"), where("permission", "==", false));
-const unsubscribe = onSnapshot(q, (querySnapshot) => {
-    acceptUserBtn.classList.remove("awaiting")
-    querySnapshot.forEach((doc) => {
-        if (doc.data().permission == false) {
-            acceptUserBtn.classList.add("awaiting")
-        }
-    })
-})
+
 
 function loadData() {
     onAuthStateChanged(auth, (user) => {
@@ -53,23 +45,43 @@ function loadData() {
                         addItemsBtn.classList.add("active")
                     }
                 } else {
-                    if (doc.data().work == "Estoquista") {
+                    if (doc.data().createAccountPermission == true) {
                         navMobile.insertAdjacentElement("afterbegin", addItemsBtn)
+                        navMobile.insertAdjacentElement("afterbegin", acceptUserBtn)
+                        acceptUserBtn.innerHTML = `<i class="bi bi-person-vcard navMobile__icon">`
+                        acceptUserBtn.classList.add("navMobile__a")
                         addItemsBtn.innerHTML = `<i class="bi bi-plus-circle navMobile__icon">`
                         addItemsBtn.classList.add("navMobile__a")
                         if (window.location.href.indexOf("add-item") !== -1) {
                             addItemsBtn.classList.add("active")
                         }
+                        if (window.location.href.indexOf("accept-user") !== -1) {
+                            acceptUserBtn.classList.add("active")
+                        }
+                        acceptUserBtn.href = "accept-user.html"
                         addItemsBtn.href = "add-item.html"
-                        navMobile.classList.add("userStock")
+                        navMobile.classList.add("userStockPermission")
                         transferMobile.style.display = "flex"
                         loadRequests(user.email)
                     } else {
-                        transferMobile.style.display = "flex"
-                        tecnicsMobile.style.display = "none"
-                        tecnicsMobile.innerHTML=""
-                        tecnicsMobile.href = ""
-                        loadRequests(user.email)
+                        if (doc.data().work == "Estoquista") {
+                            navMobile.insertAdjacentElement("afterbegin", addItemsBtn)
+                            addItemsBtn.innerHTML = `<i class="bi bi-plus-circle navMobile__icon">`
+                            addItemsBtn.classList.add("navMobile__a")
+                            if (window.location.href.indexOf("add-item") !== -1) {
+                                addItemsBtn.classList.add("active")
+                            }
+                            addItemsBtn.href = "add-item.html"
+                            navMobile.classList.add("userStock")
+                            transferMobile.style.display = "flex"
+                            loadRequests(user.email)
+                        } else {
+                            transferMobile.style.display = "flex"
+                            tecnicsMobile.style.display = "none"
+                            tecnicsMobile.innerHTML = ""
+                            tecnicsMobile.href = ""
+                            loadRequests(user.email)
+                        }
                     }
                 }
             });

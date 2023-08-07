@@ -82,6 +82,9 @@
 #navMobile.userStock.active {
     height: 360px;
 }
+#navMobile.userStockPermission.active {
+    height: 400px;
+}
 
 #timeLeftMobile {
     position: fixed;

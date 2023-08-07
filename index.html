@@ -28,6 +28,10 @@
     <link rel="stylesheet" href="src/components/navMobile/navMobile.css">
     <link rel="stylesheet" href="src/components/button/changePhotoBtn/changePhoto.css">
     <link rel="stylesheet" href="src/components/alert/error-popup.css">
+    <link rel="stylesheet" href="src/components/notifications/notifications.css">
+    <link rel="stylesheet" href="src/components/cards/notificationsCard.css">
+    <link rel="stylesheet" href="src/components/expiredAccountTime/card.css">
+    <link rel="stylesheet" href="src/components/button/logoutBtn.css">
 </head>
 
 <body>
@@ -54,11 +58,14 @@
             <nav id="navMobile">
                 <span id="timeLeftMobile"></span>
                 <ion-icon class="openCloseNav" id="openCloseNav" name="add-outline"></ion-icon>
-                <a href="transfer.html" class="navMobile__a" id="transferMobile"><ion-icon name="swap-horizontal-outline" class="navMobile__icon"></ion-icon></a>
+                <a href="transfer.html" class="navMobile__a" id="transferMobile"><ion-icon
+                        name="swap-horizontal-outline" class="navMobile__icon"></ion-icon></a>
                 <a href="historic.html" class="navMobile__a"><i class="bi bi-clock-history navMobile__icon"></i></a>
-                <a href="tecnics.html" class="navMobile__a" id="tecnicsMobile"><i class="bi bi-car-front-fill navMobile__icon"></i></a>
+                <a href="tecnics.html" class="navMobile__a" id="tecnicsMobile"><i
+                        class="bi bi-car-front-fill navMobile__icon"></i></a>
                 <a href="stock.html" class="navMobile__a"><i class="bi bi-box-seam navMobile__icon"></i></a>
-                <a href="index.html" class="navMobile__a active"><ion-icon name="home-outline" class="navMobile__icon active"></ion-icon></a>
+                <a href="index.html" class="navMobile__a active"><ion-icon name="home-outline"
+                        class="navMobile__icon active"></ion-icon></a>
             </nav>
             <nav class="home__nav navBar">
                 <ul class="nav__ul">
@@ -94,7 +101,31 @@
                     <button type="button" class="addImg__btn" id="closeAddImg">Confirmar</button>
                 </article>
             </div>
-            <button type="button" id="signOut">Sair <ion-icon name="log-out-outline"></ion-icon></button>
+            <div class="blackBackground" id="backgroundNotification">
+                <section class="notifications__section" id="notificationsSection">
+                    <header class="notifications__header">
+                        <h2 class="notifications__h2">Notificações</h2>
+                        <select name="" class="notifications__select" id="notificationsFilter">
+                            <option value="todayNotifications">Hoje</option>
+                            <option value="allNotifications">Todas</option>
+                        </select>
+                        <button class="notifications__button" id="closeNotifications"><ion-icon
+                                name="close-circle-outline"></ion-icon></button>
+                    </header>
+
+                    <section class="notifications__section" id="notificationsCards">
+                    </section>
+                    
+                </section>
+            </div>
+            <button type="button" class="home__notifications" id="notifications"><ion-icon
+                    name="notifications-outline"></ion-icon></ion-icon><span class="notifications__alert"
+                    id="notificationsAlert">0</span></button>
+            <!-- <button type="button" id="signOut">Sair <ion-icon name="log-out-outline"></ion-icon></button> -->
+            <button class="Btn" id="signOut">
+                <div class="sign"><svg viewBox="0 0 512 512"><path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"></path></svg></div>
+                <div class="text">Sair</div>
+              </button>              
             <div class="home__photoContainer">
                 <img src="" alt="" id="userPhoto">
                 <button type="button" id="changePhotoBtn"><ion-icon name="camera"></ion-icon></button>
@@ -119,8 +150,8 @@
                     </svg>
                 </div>
                 <div class="error__title">Foto alterada com sucesso</div>
-                <div class="error__close" id="closeErrorPopUp"><svg xmlns="http://www.w3.org/2000/svg" width="20" viewBox="0 0 20 20"
-                        height="20">
+                <div class="error__close" id="closeErrorPopUp"><svg xmlns="http://www.w3.org/2000/svg" width="20"
+                        viewBox="0 0 20 20" height="20">
                         <path fill="#393a37"
                             d="m15.8333 5.34166-1.175-1.175-4.6583 4.65834-4.65833-4.65834-1.175 1.175 4.65833 4.65834-4.65833 4.6583 1.175 1.175 4.65833-4.6583 4.6583 4.6583 1.175-1.175-4.6583-4.6583z">
                         </path>
@@ -144,6 +175,7 @@
     <script type="module" src="src/components/navBar/nav.js"></script>
     <script type="module" src="src/components/navMobile/navMobile.js"></script>
     <script type="module" src="src/components/button/changePhotoBtn/changePhoto.js"></script>
+    <script type="module" src="src/components/notifications/notifications.js"></script>
 </body>
 
 </html>

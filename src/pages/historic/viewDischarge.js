@@ -9,11 +9,13 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, onAuthStateChanged, sendPasswordResetEmail, signOut } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, doc, setDoc, onSnapshot, query, where, updateDoc } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, doc, setDoc, getDoc, onSnapshot, query, where, updateDoc } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
 const db = getFirestore(app);
 const auth = getAuth();
 let actualUser = ""
 let actualUserWork = ""
+let closeErrorPopUp2 = document.getElementById("closeErrorPopUp2")
+
 
 function loadData() {
     onAuthStateChanged(auth, (user) => {
@@ -23,10 +25,48 @@ function loadData() {
                 actualUser = doc.data().fullName
                 actualUserWork = doc.data().work
             })
-            verifyUrl()
+            verifyItemUrl()
         }
     });
 }
+
+
+closeErrorPopUp2.onclick = function () {
+    let errorPopUp2 = document.getElementById("errorPopUp2")
+    errorPopUp2.classList.remove("active")
+    setTimeout(() => {
+        errorPopUp2.style.display = "none"
+    }, 200);
+}
+
+
+async function verifyItemUrl() {
+    let urlParams = new URLSearchParams(window.location.search);
+    let dataId = urlParams.get('id');
+    if (dataId != null) {
+        let docRef = doc(db, "discharges", `${dataId}`);
+        let docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            verifyUrl()
+        } else {
+            let errorPopUp2 = document.getElementById("errorPopUp2")
+            errorPopUp2.style.display = "flex"
+            errorPopUp2.style.zIndex = "4"
+            setTimeout(() => {
+                errorPopUp2.classList.add("active")
+            }, 1);
+            setTimeout(() => {
+                errorPopUp2.classList.remove("active")
+                setTimeout(() => {
+                    errorPopUp2.style.display = "none"
+                }, 200);
+            }, 7000);
+        }
+    }
+}
+
+
+
 
 
 function verifyUrl() {

@@ -21,42 +21,48 @@ let dischargeItems = document.getElementById("dischargeItems")
 let actualUser = ""
 let itemsSelecteds = {}
 let tecnicName = ""
+let actualUserName = ""
+let actualUserEmail = ""
+let actualUserWork = ""
 
-function loadData() {
-    let SectionItemsCards = document.getElementById("SectionItemsCards")
-    SectionItemsCards.innerHTML = ""
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            const uid = user.uid;
-            actualUser = user.email
-            let usersdocref = onSnapshot(doc(db, `users`, `${user.email}`), (doc) => {
-                tecnicName = doc.data().fullName
-                if (doc.data().admin == true) {
-                    transfer.style.display = "none"
-                    acceptUser.style.display = "flex"
-                    addItem.style.display = "flex"
-                } else {
-                    transfer.style.display = "flex"
-                    acceptUser.style.display = "none"
-                    addItem.style.display = "none"
-                }
-                loadStock(user.email)
-                let dischargeSearchInput = document.getElementById("dischargeSearchInput")
-                dischargeSearchInput.addEventListener("input", (evt) => {
-                    if (evt.target.value != "") {
-                        let SectionItemsCardsSend = document.getElementById("SectionItemsCards")
-                        SectionItemsCardsSend.innerHTML = ""
-                        searchItem(user.email, doc.data().work, evt.target.value)
-                    } else {
-                        let SectionItemsCardsSend = document.getElementById("SectionItemsCards")
-                        SectionItemsCardsSend.innerHTML = ""
-                        loadStock(user.email, doc.data().work)
+            function loadData() {
+                let SectionItemsCards = document.getElementById("SectionItemsCards")
+                SectionItemsCards.innerHTML = ""
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        const uid = user.uid;
+                        actualUser = user.email
+                        let usersdocref = onSnapshot(doc(db, `users`, `${user.email}`), (doc) => {
+                            tecnicName = doc.data().fullName
+                            actualUserName = doc.data().fullName
+                            actualUserEmail = doc.data().email
+                            actualUserWork = doc.data().work
+                            if (doc.data().admin == true) {
+                                transfer.style.display = "none"
+                                acceptUser.style.display = "flex"
+                                addItem.style.display = "flex"
+                            } else {
+                                transfer.style.display = "flex"
+                                acceptUser.style.display = "none"
+                                addItem.style.display = "none"
+                            }
+                            loadStock(user.email)
+                            let dischargeSearchInput = document.getElementById("dischargeSearchInput")
+                            dischargeSearchInput.addEventListener("input", (evt) => {
+                                if (evt.target.value != "") {
+                                    let SectionItemsCardsSend = document.getElementById("SectionItemsCards")
+                                    SectionItemsCardsSend.innerHTML = ""
+                                    searchItem(user.email, doc.data().work, evt.target.value)
+                                } else {
+                                    let SectionItemsCardsSend = document.getElementById("SectionItemsCards")
+                                    SectionItemsCardsSend.innerHTML = ""
+                                    loadStock(user.email, doc.data().work)
+                                }
+                            })
+                        });
                     }
-                })
-            });
-        }
-    });
-}
+                });
+            }
 
 
 async function loadStock(email) {
@@ -124,6 +130,7 @@ async function loadStock(email) {
                         } else {
                             let editUsedQuantyAlert = document.getElementById("editUsedQuantyAlert")
                             editUsedQuantyAlert.textContent = "Quantia em estoque insuficiente"
+                            dischargeTentateive(doc.data().itemName, Number(usedQuantyInput))
                             setTimeout(() => {
                                 editUsedQuantyAlert.textContent = ""
                             }, 5000);
@@ -162,6 +169,7 @@ async function loadStock(email) {
                         } else {
                             let editUsedQuantyAlert = document.getElementById("editUsedQuantyAlert")
                             editUsedQuantyAlert.textContent = "Quantia em estoque insuficiente"
+                            dischargeTentateive(doc.data().itemName, Number(usedQuantyInput))
                             setTimeout(() => {
                                 editUsedQuantyAlert.textContent = ""
                             }, 5000);
@@ -245,6 +253,7 @@ async function searchItem(email, work, text) {
                             } else {
                                 let editUsedQuantyAlert = document.getElementById("editUsedQuantyAlert")
                                 editUsedQuantyAlert.textContent = "Quantia em estoque insuficiente"
+                                dischargeTentateive(doc.data().itemName, Number(usedQuantyInput))
                                 setTimeout(() => {
                                     editUsedQuantyAlert.textContent = ""
                                 }, 5000);
@@ -283,6 +292,7 @@ async function searchItem(email, work, text) {
                             } else {
                                 let editUsedQuantyAlert = document.getElementById("editUsedQuantyAlert")
                                 editUsedQuantyAlert.textContent = "Quantia em estoque insuficiente"
+                                dischargeTentateive(doc.data().itemName, Number(usedQuantyInput))
                                 setTimeout(() => {
                                     editUsedQuantyAlert.textContent = ""
                                 }, 5000);
@@ -454,4 +464,28 @@ function clearInputs() {
     setTimeout(() => {
         dischargeItemsAlert.textContent = ""
     }, 5000);
+}
+
+
+async function dischargeTentateive(itemName, itemQuanty) {
+    let timeElapsed = Date.now();
+    let today = new Date(timeElapsed);
+    let date = today.toLocaleDateString()
+    let dataAtual = new Date();
+    let hora = dataAtual.getHours();
+    let minutos = dataAtual.getMinutes();
+    let horaFormatada = hora < 10 ? '0' + hora : hora;
+    let minutosFormatados = minutos < 10 ? '0' + minutos : minutos;
+    let hours = horaFormatada + ":" + minutosFormatados
+    let docRef = await addDoc(collection(db, "notifications"), {
+        type: "discharge tentative",
+        ItemTentative: `${itemName}`,
+        tentativeQuanty: `${itemQuanty}`,
+        hours: hours,
+        date: date,
+        userName: actualUserName,
+        userEmail: actualUserEmail,
+        userWork: actualUserWork,
+        timestamp: serverTimestamp()
+    });
 }

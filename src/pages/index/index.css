@@ -64,38 +64,12 @@ body.displayCenter {
     color: var(--black);
 }
 
-#signOut {
-    position: absolute;
-    right: 0;
-    top: 0;
-    margin: 40px 40px 0px 0px;
-    background: transparent;
-    border: none;
-    border-bottom: solid 2px transparent;
-    cursor: pointer;
-    color: var(--orange);
-    font-size: 25px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0px;
-    transition: 0.5s;
-}
-
-#signOut ion-icon {
-    margin-left: 5px;
-    font-size: 25px;
-}
-
-#signOut:hover {
-    border-bottom: solid 2px var(--orange);
-    gap: 2px;
-}
 
 #userFullName {
     color: var(--black);
     font-size: 30px;
     margin: 20px 0px 0px 0px;
+    text-align: center;
 }
 
 #userWork {
@@ -254,5 +228,11 @@ body.displayCenter {
     #signOut {
         margin: 20px 20px 0px 0px;
         font-size: 20px;
+    }
+    .addImg__article {
+        width: 90%;
+    }
+    .addImg__input {
+        width: 100%;
     }
 }

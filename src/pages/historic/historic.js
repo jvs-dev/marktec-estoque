@@ -96,6 +96,66 @@ filterOption.forEach((btn) =>
                     </div>`
                 searchTransfers()
                 break;
+            case "entradas":
+                historicSection.classList.add("searching")
+                historicSection.innerHTML = `
+                    <div class="dot-spinner">
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                    </div>`
+                searchRestocks()
+                break;
+            case "saídas":
+                historicSection.classList.add("searching")
+                historicSection.innerHTML = `
+                    <div class="dot-spinner">
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                    </div>`
+                searchOutputs()
+                break;
+            case "exclusões":
+                historicSection.classList.add("searching")
+                historicSection.innerHTML = `
+                    <div class="dot-spinner">
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                    </div>`
+                searchDeleteds()
+                break;
+            case "itens adicionados":
+                historicSection.classList.add("searching")
+                historicSection.innerHTML = `
+                    <div class="dot-spinner">
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                    </div>`
+                searchAddedItens()
+                break;
             case "todos":
                 historicSection.classList.add("searching")
                 historicSection.innerHTML = `
@@ -168,6 +228,14 @@ function loadData() {
                     acceptUser.style.display = "none"
                     addItem.style.display = "none"
                     if (doc.data().work == "Técnico") {
+                        let restockFilterBtn = document.getElementById("restockFilterBtn")
+                        let outputFilterBtn = document.getElementById("outputFilterBtn")
+                        let deleteFilterBtn = document.getElementById("deleteFilterBtn")
+                        let addedFilterBtn = document.getElementById("addedFilterBtn")
+                        restockFilterBtn.style.display = "none"
+                        outputFilterBtn.style.display = "none"
+                        deleteFilterBtn.style.display = "none"
+                        addedFilterBtn.style.display = "none"
                         loadTecnicRequests(user.email, doc.data().fullName)
                         searchInput.addEventListener("input", () => {
                             filterList.classList.remove("active")
@@ -472,6 +540,98 @@ function searchDate(text) {
             })
 
         })
+        let e2 = query(collection(db, "outputs"), where("itemsOutputs", "!=", {}));
+        let unsubscri2 = onSnapshot(e2, (querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                if (doc.data().date.includes(`${text}`)) {
+                    let historicSection = document.getElementById("historicSection")
+                    let article = document.createElement("article")
+                    historicSection.insertAdjacentElement("beforeend", article)
+                    article.classList.add("dischargeCard")
+                    article.style.order = `-${doc.data().timestamp.seconds}`
+                    article.innerHTML = `
+                <div class="dischargeCard__div">
+                    <h2 class="dischargeCard__h2">Saída de itens</h2>
+                </div>
+                <p class="dischargeCard__p"><ion-icon name="person-outline" class="dischargeCard__p__icon"></ion-icon>Registrado por: ${doc.data().recorderName}</p>
+                <p class="dischargeCard__description" style="margin: 20px 0px 20px 0px;">Descrição: ${doc.data().description}.</p>
+                <span class="dischargeCard__date">${doc.data().hours}<br>${doc.data().date}</span>
+                <button class="dischargeCard__more"><ion-icon name="arrow-forward-outline"></ion-icon></button>`
+                    article.onclick = function () {
+                        window.location.href = "view-outputs.html?id=" + doc.id;
+                    }
+                }
+            })
+        })
+        let e3 = query(collection(db, "restock"), where("itemsOutputs", "!=", {}));
+        let unsubscri3 = onSnapshot(e3, (querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                if (doc.data().date.includes(`${text}`)) {
+                    let historicSection = document.getElementById("historicSection")
+                    let article = document.createElement("article")
+                    historicSection.insertAdjacentElement("beforeend", article)
+                    article.classList.add("dischargeCard")
+                    article.style.order = `-${doc.data().timestamp.seconds}`
+                    article.innerHTML = `
+                <div class="dischargeCard__div">
+                    <h2 class="dischargeCard__h2">Entrada de itens</h2>
+                </div>
+                <p class="dischargeCard__p"><ion-icon name="person-outline" class="dischargeCard__p__icon"></ion-icon>Registrado por: ${doc.data().recorderName}</p>
+                <p class="dischargeCard__description" style="margin: 20px 0px 20px 0px;">Descrição: ${doc.data().description}.</p>
+                <span class="dischargeCard__date">${doc.data().hours}<br>${doc.data().date}</span>
+                <button class="dischargeCard__more"><ion-icon name="arrow-forward-outline"></ion-icon></button>`
+                    article.onclick = function () {
+                        window.location.href = "view-restocks.html?id=" + doc.id;
+                    }
+                }
+            })
+        })
+        let e4 = query(collection(db, "notifications"), where("type", "==", "item added"));
+        let unsubscri4 = onSnapshot(e4, (querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                if (doc.data().date.includes(`${text}`)) {
+                    let historicSection = document.getElementById("historicSection")
+                    let article = document.createElement("article")
+                    historicSection.insertAdjacentElement("beforeend", article)
+                    article.classList.add("dischargeCard")
+                    article.style.order = `-${doc.data().timestamp.seconds}`
+                    article.innerHTML = `
+                <div class="dischargeCard__div">
+                    <h2 class="dischargeCard__h2">Novo item adicionado</h2>
+                </div>
+                <p class="dischargeCard__p"><ion-icon name="person-outline" class="dischargeCard__p__icon"></ion-icon>Criado por: ${doc.data().userName}</p>
+                <p class="dischargeCard__description" style="margin: 20px 0px 20px 0px;">Item criado: ${doc.data().ItemAdded}.<br>Criado com ${doc.data().initialQuanty} ${doc.data().measure} em estoque.</p>
+                <span class="dischargeCard__date">${doc.data().hours}<br>${doc.data().date}</span>
+                <button class="dischargeCard__more"><ion-icon name="arrow-forward-outline"></ion-icon></button>`
+                    article.onclick = function () {
+                        window.location.href = "stock.html?id=" + doc.data().ItemAdded;
+                    }
+                }
+            })
+        })
+        let e5 = query(collection(db, "notifications"), where("type", "==", "Delete item"));
+        let unsubscri5 = onSnapshot(e5, (querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                if (doc.data().date.includes(`${text}`)) {
+                    let historicSection = document.getElementById("historicSection")
+                    let article = document.createElement("article")
+                    historicSection.insertAdjacentElement("beforeend", article)
+                    article.classList.add("dischargeCard")
+                    article.style.order = `-${doc.data().timestamp.seconds}`
+                    article.innerHTML = `
+                <div class="dischargeCard__div">
+                    <h2 class="dischargeCard__h2" style="color: #f00;">Item excluido</h2>
+                </div>
+                <p class="dischargeCard__p"><ion-icon name="person-outline" class="dischargeCard__p__icon"></ion-icon>Exluido por: ${doc.data().userName}</p>
+                <p class="dischargeCard__description" style="margin: 20px 0px 20px 0px;">Item excluido: ${doc.data().ItemDeleted}.</p>
+                <span class="dischargeCard__date">${doc.data().hours}<br>${doc.data().date}</span>
+                <button class="dischargeCard__more"><ion-icon name="arrow-forward-outline"></ion-icon></button>`
+                    article.onclick = function () {
+                        window.location.href = "stock.html";
+                    }
+                }
+            })
+        })
     } else {
         let historicSection = document.getElementById("historicSection")
         historicSection.classList.remove("searching")
@@ -599,6 +759,98 @@ function searchHour(text) {
                 }
             })
 
+        })
+        let e2 = query(collection(db, "outputs"), where("itemsOutputs", "!=", {}));
+        let unsubscri2 = onSnapshot(e2, (querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                if (doc.data().hours.includes(`${text}`)) {
+                    let historicSection = document.getElementById("historicSection")
+                    let article = document.createElement("article")
+                    historicSection.insertAdjacentElement("beforeend", article)
+                    article.classList.add("dischargeCard")
+                    article.style.order = `-${doc.data().timestamp.seconds}`
+                    article.innerHTML = `
+                <div class="dischargeCard__div">
+                    <h2 class="dischargeCard__h2">Saída de itens</h2>
+                </div>
+                <p class="dischargeCard__p"><ion-icon name="person-outline" class="dischargeCard__p__icon"></ion-icon>Registrado por: ${doc.data().recorderName}</p>
+                <p class="dischargeCard__description" style="margin: 20px 0px 20px 0px;">Descrição: ${doc.data().description}.</p>
+                <span class="dischargeCard__date">${doc.data().hours}<br>${doc.data().date}</span>
+                <button class="dischargeCard__more"><ion-icon name="arrow-forward-outline"></ion-icon></button>`
+                    article.onclick = function () {
+                        window.location.href = "view-outputs.html?id=" + doc.id;
+                    }
+                }
+            })
+        })
+        let e3 = query(collection(db, "restock"), where("itemsOutputs", "!=", {}));
+        let unsubscri3 = onSnapshot(e3, (querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                if (doc.data().hours.includes(`${text}`)) {
+                    let historicSection = document.getElementById("historicSection")
+                    let article = document.createElement("article")
+                    historicSection.insertAdjacentElement("beforeend", article)
+                    article.classList.add("dischargeCard")
+                    article.style.order = `-${doc.data().timestamp.seconds}`
+                    article.innerHTML = `
+                <div class="dischargeCard__div">
+                    <h2 class="dischargeCard__h2">Entrada de itens</h2>
+                </div>
+                <p class="dischargeCard__p"><ion-icon name="person-outline" class="dischargeCard__p__icon"></ion-icon>Registrado por: ${doc.data().recorderName}</p>
+                <p class="dischargeCard__description" style="margin: 20px 0px 20px 0px;">Descrição: ${doc.data().description}.</p>
+                <span class="dischargeCard__date">${doc.data().hours}<br>${doc.data().date}</span>
+                <button class="dischargeCard__more"><ion-icon name="arrow-forward-outline"></ion-icon></button>`
+                    article.onclick = function () {
+                        window.location.href = "view-restocks.html?id=" + doc.id;
+                    }
+                }
+            })
+        })
+        let e4 = query(collection(db, "notifications"), where("type", "==", "item added"));
+        let unsubscri4 = onSnapshot(e4, (querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                if (doc.data().hours.includes(`${text}`)) {
+                    let historicSection = document.getElementById("historicSection")
+                    let article = document.createElement("article")
+                    historicSection.insertAdjacentElement("beforeend", article)
+                    article.classList.add("dischargeCard")
+                    article.style.order = `-${doc.data().timestamp.seconds}`
+                    article.innerHTML = `
+                <div class="dischargeCard__div">
+                    <h2 class="dischargeCard__h2">Novo item adicionado</h2>
+                </div>
+                <p class="dischargeCard__p"><ion-icon name="person-outline" class="dischargeCard__p__icon"></ion-icon>Criado por: ${doc.data().userName}</p>
+                <p class="dischargeCard__description" style="margin: 20px 0px 20px 0px;">Item criado: ${doc.data().ItemAdded}.<br>Criado com ${doc.data().initialQuanty} ${doc.data().measure} em estoque.</p>
+                <span class="dischargeCard__date">${doc.data().hours}<br>${doc.data().date}</span>
+                <button class="dischargeCard__more"><ion-icon name="arrow-forward-outline"></ion-icon></button>`
+                    article.onclick = function () {
+                        window.location.href = "stock.html?id=" + doc.data().ItemAdded;
+                    }
+                }
+            })
+        })
+        let e5 = query(collection(db, "notifications"), where("type", "==", "Delete item"));
+        let unsubscri5 = onSnapshot(e5, (querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                if (doc.data().hours.includes(`${text}`)) {
+                    let historicSection = document.getElementById("historicSection")
+                    let article = document.createElement("article")
+                    historicSection.insertAdjacentElement("beforeend", article)
+                    article.classList.add("dischargeCard")
+                    article.style.order = `-${doc.data().timestamp.seconds}`
+                    article.innerHTML = `
+                <div class="dischargeCard__div">
+                    <h2 class="dischargeCard__h2" style="color: #f00;">Item excluido</h2>
+                </div>
+                <p class="dischargeCard__p"><ion-icon name="person-outline" class="dischargeCard__p__icon"></ion-icon>Exluido por: ${doc.data().userName}</p>
+                <p class="dischargeCard__description" style="margin: 20px 0px 20px 0px;">Item excluido: ${doc.data().ItemDeleted}.</p>
+                <span class="dischargeCard__date">${doc.data().hours}<br>${doc.data().date}</span>
+                <button class="dischargeCard__more"><ion-icon name="arrow-forward-outline"></ion-icon></button>`
+                    article.onclick = function () {
+                        window.location.href = "stock.html";
+                    }
+                }
+            })
         })
     } else {
         let historicSection = document.getElementById("historicSection")
@@ -796,11 +1048,124 @@ function searchTransfers() {
 
 
 
+function searchRestocks() {
+    if (actualUserWork != "Técnico") {
+        let historicSection = document.getElementById("historicSection")
+        historicSection.classList.remove("searching")
+        historicSection.innerHTML = ""
+        let e3 = query(collection(db, "restock"), where("itemsOutputs", "!=", {}));
+        let unsubscri3 = onSnapshot(e3, (querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                let historicSection = document.getElementById("historicSection")
+                let article = document.createElement("article")
+                historicSection.insertAdjacentElement("beforeend", article)
+                article.classList.add("dischargeCard")
+                article.style.order = `-${doc.data().timestamp.seconds}`
+                article.innerHTML = `
+                <div class="dischargeCard__div">
+                    <h2 class="dischargeCard__h2">Entrada de itens</h2>
+                </div>
+                <p class="dischargeCard__p"><ion-icon name="person-outline" class="dischargeCard__p__icon"></ion-icon>Registrado por: ${doc.data().recorderName}</p>
+                <p class="dischargeCard__description" style="margin: 20px 0px 20px 0px;">Descrição: ${doc.data().description}.</p>
+                <span class="dischargeCard__date">${doc.data().hours}<br>${doc.data().date}</span>
+                <button class="dischargeCard__more"><ion-icon name="arrow-forward-outline"></ion-icon></button>`
+                article.onclick = function () {
+                    window.location.href = "view-restocks.html?id=" + doc.id;
+                }
+            })
+        })
+    }
+}
 
 
+function searchOutputs() {
+    if (actualUserWork != "Técnico") {
+        let historicSection = document.getElementById("historicSection")
+        historicSection.classList.remove("searching")
+        historicSection.innerHTML = ""
+        let e2 = query(collection(db, "outputs"), where("itemsOutputs", "!=", {}));
+        let unsubscri2 = onSnapshot(e2, (querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                let historicSection = document.getElementById("historicSection")
+                let article = document.createElement("article")
+                historicSection.insertAdjacentElement("beforeend", article)
+                article.classList.add("dischargeCard")
+                article.style.order = `-${doc.data().timestamp.seconds}`
+                article.innerHTML = `
+                <div class="dischargeCard__div">
+                    <h2 class="dischargeCard__h2">Saída de itens</h2>
+                </div>
+                <p class="dischargeCard__p"><ion-icon name="person-outline" class="dischargeCard__p__icon"></ion-icon>Registrado por: ${doc.data().recorderName}</p>
+                <p class="dischargeCard__description" style="margin: 20px 0px 20px 0px;">Descrição: ${doc.data().description}.</p>
+                <span class="dischargeCard__date">${doc.data().hours}<br>${doc.data().date}</span>
+                <button class="dischargeCard__more"><ion-icon name="arrow-forward-outline"></ion-icon></button>`
+                article.onclick = function () {
+                    window.location.href = "view-outputs.html?id=" + doc.id;
+                }
+            })
+        })
+    }
+}
 
 
+function searchDeleteds() {
+    if (actualUserWork != "Técnico") {
+        let historicSection = document.getElementById("historicSection")
+        historicSection.classList.remove("searching")
+        historicSection.innerHTML = ""
+        let e5 = query(collection(db, "notifications"), where("type", "==", "Delete item"));
+        let unsubscri5 = onSnapshot(e5, (querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                let historicSection = document.getElementById("historicSection")
+                let article = document.createElement("article")
+                historicSection.insertAdjacentElement("beforeend", article)
+                article.classList.add("dischargeCard")
+                article.style.order = `-${doc.data().timestamp.seconds}`
+                article.innerHTML = `
+                <div class="dischargeCard__div">
+                    <h2 class="dischargeCard__h2" style="color: #f00;">Item excluido</h2>
+                </div>
+                <p class="dischargeCard__p"><ion-icon name="person-outline" class="dischargeCard__p__icon"></ion-icon>Exluido por: ${doc.data().userName}</p>
+                <p class="dischargeCard__description" style="margin: 20px 0px 20px 0px;">Item excluido: ${doc.data().ItemDeleted}.</p>
+                <span class="dischargeCard__date">${doc.data().hours}<br>${doc.data().date}</span>
+                <button class="dischargeCard__more"><ion-icon name="arrow-forward-outline"></ion-icon></button>`
+                article.onclick = function () {
+                    window.location.href = "stock.html";
+                }
+            })
+        })
+    }
+}
 
+
+function searchAddedItens() {
+    if (actualUserWork != "Técnico") {
+        let historicSection = document.getElementById("historicSection")
+        historicSection.classList.remove("searching")
+        historicSection.innerHTML = ""
+        let e4 = query(collection(db, "notifications"), where("type", "==", "item added"));
+        let unsubscri4 = onSnapshot(e4, (querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                let historicSection = document.getElementById("historicSection")
+                let article = document.createElement("article")
+                historicSection.insertAdjacentElement("beforeend", article)
+                article.classList.add("dischargeCard")
+                article.style.order = `-${doc.data().timestamp.seconds}`
+                article.innerHTML = `
+                <div class="dischargeCard__div">
+                    <h2 class="dischargeCard__h2">Novo item adicionado</h2>
+                </div>
+                <p class="dischargeCard__p"><ion-icon name="person-outline" class="dischargeCard__p__icon"></ion-icon>Criado por: ${doc.data().userName}</p>
+                <p class="dischargeCard__description" style="margin: 20px 0px 20px 0px;">Item criado: ${doc.data().ItemAdded}.<br>Criado com ${doc.data().initialQuanty} ${doc.data().measure} em estoque.</p>
+                <span class="dischargeCard__date">${doc.data().hours}<br>${doc.data().date}</span>
+                <button class="dischargeCard__more"><ion-icon name="arrow-forward-outline"></ion-icon></button>`
+                article.onclick = function () {
+                    window.location.href = "stock.html?id=" + doc.data().ItemAdded;
+                }
+            })
+        })
+    }
+}
 
 
 
@@ -878,6 +1243,7 @@ function loadTecnicRequests(email, name) {
                 }
             }
         })
+        disable()
     })
 }
 
@@ -935,6 +1301,91 @@ function loadRequests() {
             }
         })
     })
+    let e2 = query(collection(db, "outputs"), where("itemsOutputs", "!=", {}));
+    let unsubscri2 = onSnapshot(e2, (querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            let historicSection = document.getElementById("historicSection")
+            let article = document.createElement("article")
+            historicSection.insertAdjacentElement("beforeend", article)
+            article.classList.add("dischargeCard")
+            article.style.order = `-${doc.data().timestamp.seconds}`
+            article.innerHTML = `
+                <div class="dischargeCard__div">
+                    <h2 class="dischargeCard__h2">Saída de itens</h2>
+                </div>
+                <p class="dischargeCard__p"><ion-icon name="person-outline" class="dischargeCard__p__icon"></ion-icon>Registrado por: ${doc.data().recorderName}</p>
+                <p class="dischargeCard__description" style="margin: 20px 0px 20px 0px;">Descrição: ${doc.data().description}.</p>
+                <span class="dischargeCard__date">${doc.data().hours}<br>${doc.data().date}</span>
+                <button class="dischargeCard__more"><ion-icon name="arrow-forward-outline"></ion-icon></button>`
+            article.onclick = function () {
+                window.location.href = "view-outputs.html?id=" + doc.id;
+            }
+        })
+    })
+    let e3 = query(collection(db, "restock"), where("itemsOutputs", "!=", {}));
+    let unsubscri3 = onSnapshot(e3, (querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            let historicSection = document.getElementById("historicSection")
+            let article = document.createElement("article")
+            historicSection.insertAdjacentElement("beforeend", article)
+            article.classList.add("dischargeCard")
+            article.style.order = `-${doc.data().timestamp.seconds}`
+            article.innerHTML = `
+                <div class="dischargeCard__div">
+                    <h2 class="dischargeCard__h2">Entrada de itens</h2>
+                </div>
+                <p class="dischargeCard__p"><ion-icon name="person-outline" class="dischargeCard__p__icon"></ion-icon>Registrado por: ${doc.data().recorderName}</p>
+                <p class="dischargeCard__description" style="margin: 20px 0px 20px 0px;">Descrição: ${doc.data().description}.</p>
+                <span class="dischargeCard__date">${doc.data().hours}<br>${doc.data().date}</span>
+                <button class="dischargeCard__more"><ion-icon name="arrow-forward-outline"></ion-icon></button>`
+            article.onclick = function () {
+                window.location.href = "view-restocks.html?id=" + doc.id;
+            }
+        })
+    })
+    let e4 = query(collection(db, "notifications"), where("type", "==", "item added"));
+    let unsubscri4 = onSnapshot(e4, (querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            let historicSection = document.getElementById("historicSection")
+            let article = document.createElement("article")
+            historicSection.insertAdjacentElement("beforeend", article)
+            article.classList.add("dischargeCard")
+            article.style.order = `-${doc.data().timestamp.seconds}`
+            article.innerHTML = `
+                <div class="dischargeCard__div">
+                    <h2 class="dischargeCard__h2">Novo item adicionado</h2>
+                </div>
+                <p class="dischargeCard__p"><ion-icon name="person-outline" class="dischargeCard__p__icon"></ion-icon>Criado por: ${doc.data().userName}</p>
+                <p class="dischargeCard__description" style="margin: 20px 0px 20px 0px;">Item criado: ${doc.data().ItemAdded}.<br>Criado com ${doc.data().initialQuanty} ${doc.data().measure} em estoque.</p>
+                <span class="dischargeCard__date">${doc.data().hours}<br>${doc.data().date}</span>
+                <button class="dischargeCard__more"><ion-icon name="arrow-forward-outline"></ion-icon></button>`
+            article.onclick = function () {
+                window.location.href = "stock.html?id=" + doc.data().ItemAdded;
+            }
+        })
+    })
+    let e5 = query(collection(db, "notifications"), where("type", "==", "Delete item"));
+    let unsubscri5 = onSnapshot(e5, (querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            let historicSection = document.getElementById("historicSection")
+            let article = document.createElement("article")
+            historicSection.insertAdjacentElement("beforeend", article)
+            article.classList.add("dischargeCard")
+            article.style.order = `-${doc.data().timestamp.seconds}`
+            article.innerHTML = `
+                <div class="dischargeCard__div">
+                    <h2 class="dischargeCard__h2" style="color: #f00;">Item excluido</h2>
+                </div>
+                <p class="dischargeCard__p"><ion-icon name="person-outline" class="dischargeCard__p__icon"></ion-icon>Exluido por: ${doc.data().userName}</p>
+                <p class="dischargeCard__description" style="margin: 20px 0px 20px 0px;">Item excluido: ${doc.data().ItemDeleted}.</p>
+                <span class="dischargeCard__date">${doc.data().hours}<br>${doc.data().date}</span>
+                <button class="dischargeCard__more"><ion-icon name="arrow-forward-outline"></ion-icon></button>`
+            article.onclick = function () {
+                window.location.href = "stock.html";
+            }
+        })
+        disable()
+    })
 }
 
 function returnColor(status) {
@@ -975,5 +1426,16 @@ let unsubscribed = onSnapshot(e, (snapshot) => {
     });
 });
 
+
+function disable() {
+    setTimeout(() => {
+        let offline_window = document.getElementById("main__offline")
+        offline_window.style.transition = "0.5s"
+        offline_window.style.opacity = "0"
+        setTimeout(() => {
+            offline_window.style.display = "none"
+        }, 500);
+    }, 1000);
+}
 
 loadData()

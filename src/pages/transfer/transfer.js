@@ -31,6 +31,7 @@ function loadData() {
             actualUserEmail = user.email
             let usersdocref = onSnapshot(doc(db, `users`, `${user.email}`), (doc) => {
                 actualUserName = doc.data().fullName
+                userWork = doc.data().work
                 loadUsers()
                 if (doc.data().work != "Técnico") {
                     let usedButton = document.getElementById("usedButton")
@@ -53,7 +54,6 @@ function loadData() {
                     transfer.style.display = "flex"
                     acceptUser.style.display = "none"
                     addItem.style.display = "none"
-                    userWork = doc.data().work
                 }
                 loadStock(user.email, doc.data().work)
                 let SendSearchInput = document.getElementById("SendSearchInput")
@@ -70,6 +70,7 @@ function loadData() {
                 })
             });
         }
+        disable()
     })
 }
 
@@ -138,6 +139,7 @@ async function loadStock(email, work) {
                             } else {
                                 let editUsedQuantyAlert = document.getElementById("editSendQuantyAlert")
                                 editUsedQuantyAlert.textContent = "Quantia em estoque insuficiente"
+                                transferTentateive(doc.data().itemName, Number(usedQuantyInput))
                                 setTimeout(() => {
                                     editUsedQuantyAlert.textContent = ""
                                 }, 5000);
@@ -176,6 +178,7 @@ async function loadStock(email, work) {
                             } else {
                                 let editUsedQuantyAlert = document.getElementById("editSendQuantyAlert")
                                 editUsedQuantyAlert.textContent = "Quantia em estoque insuficiente"
+                                transferTentateive(doc.data().itemName, Number(usedQuantyInput))
                                 setTimeout(() => {
                                     editUsedQuantyAlert.textContent = ""
                                 }, 5000);
@@ -256,6 +259,7 @@ async function loadStock(email, work) {
                                     } else {
                                         let editUsedQuantyAlert = document.getElementById("editSendQuantyAlert")
                                         editUsedQuantyAlert.textContent = "Quantia em estoque insuficiente"
+                                        transferTentateive(doc.data().itemName, Number(usedQuantyInput))
                                         setTimeout(() => {
                                             editUsedQuantyAlert.textContent = ""
                                         }, 5000);
@@ -295,6 +299,7 @@ async function loadStock(email, work) {
                                 } else {
                                     let editUsedQuantyAlert = document.getElementById("editSendQuantyAlert")
                                     editUsedQuantyAlert.textContent = "Quantia em estoque insuficiente"
+                                    transferTentateive(doc.data().itemName, Number(usedQuantyInput))
                                     setTimeout(() => {
                                         editUsedQuantyAlert.textContent = ""
                                     }, 5000);
@@ -384,6 +389,7 @@ async function searchItem(email, work, text) {
                                 } else {
                                     let editUsedQuantyAlert = document.getElementById("editSendQuantyAlert")
                                     editUsedQuantyAlert.textContent = "Quantia em estoque insuficiente"
+                                    transferTentateive(doc.data().itemName, Number(usedQuantyInput))
                                     setTimeout(() => {
                                         editUsedQuantyAlert.textContent = ""
                                     }, 5000);
@@ -422,6 +428,7 @@ async function searchItem(email, work, text) {
                                 } else {
                                     let editUsedQuantyAlert = document.getElementById("editSendQuantyAlert")
                                     editUsedQuantyAlert.textContent = "Quantia em estoque insuficiente"
+                                    transferTentateive(doc.data().itemName, Number(usedQuantyInput))
                                     setTimeout(() => {
                                         editUsedQuantyAlert.textContent = ""
                                     }, 5000);
@@ -505,6 +512,7 @@ async function searchItem(email, work, text) {
                                         } else {
                                             let editUsedQuantyAlert = document.getElementById("editSendQuantyAlert")
                                             editUsedQuantyAlert.textContent = "Quantia em estoque insuficiente"
+                                            transferTentateive(doc.data().itemName, Number(usedQuantyInput))
                                             setTimeout(() => {
                                                 editUsedQuantyAlert.textContent = ""
                                             }, 5000);
@@ -544,6 +552,7 @@ async function searchItem(email, work, text) {
                                     } else {
                                         let editUsedQuantyAlert = document.getElementById("editSendQuantyAlert")
                                         editUsedQuantyAlert.textContent = "Quantia em estoque insuficiente"
+                                        transferTentateive(doc.data().itemName, Number(usedQuantyInput))
                                         setTimeout(() => {
                                             editUsedQuantyAlert.textContent = ""
                                         }, 5000);
@@ -797,8 +806,41 @@ function clearInputs() {
 
 
 
+async function transferTentateive(itemName, itemQuanty) {
+    let timeElapsed = Date.now();
+    let today = new Date(timeElapsed);
+    let date = today.toLocaleDateString()
+    let dataAtual = new Date();
+    let hora = dataAtual.getHours();
+    let minutos = dataAtual.getMinutes();
+    let horaFormatada = hora < 10 ? '0' + hora : hora;
+    let minutosFormatados = minutos < 10 ? '0' + minutos : minutos;
+    let hours = horaFormatada + ":" + minutosFormatados
+    let docRef = await addDoc(collection(db, "notifications"), {
+        type: "transfer tentative",
+        ItemTentative: `${itemName}`,
+        tentativeQuanty: `${itemQuanty}`,
+        hours: hours,
+        date: date,
+        userName: actualUserName,
+        userEmail: actualUserEmail,
+        userWork: userWork,
+        timestamp: serverTimestamp()
+    });
+}
 
 
+
+function disable() {
+    setTimeout(() => {
+        let offline_window = document.getElementById("main__offline")
+        offline_window.style.transition = "0.5s"
+        offline_window.style.opacity = "0"
+        setTimeout(() => {
+            offline_window.style.display = "none"
+        }, 500);
+    }, 1000);
+}
 
 
 

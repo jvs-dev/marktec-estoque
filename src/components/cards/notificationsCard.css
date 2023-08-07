@@ -1,0 +1,39 @@
+.article--notificationsCard {
+    width: 100%;
+    padding: 20px;
+    border-bottom: solid 1px var(--black);
+}
+.notificationsCard__title {
+    font-size: 20px;
+    font-weight: 600;
+}
+.notificationsCard__div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.notificationsCard__date {
+    margin: 0px;
+}
+
+.notificationsCard__a {
+    text-decoration: none;
+    color: var(--orange);
+    font-size: 19px;
+    display: flex;
+    align-items: center;
+    border-bottom: solid 1px transparent;
+    transition: 0.2s;
+}
+.notificationsCard__a ion-icon {
+    margin-left: 5px;
+    margin-right: 5px;
+    transition: 0.2s;
+}
+.notificationsCard__a:hover {
+    border-bottom: solid 1px var(--orange);
+}
+.notificationsCard__a:hover ion-icon {
+    margin-left: 10px;
+    margin-right: 0px;
+}
