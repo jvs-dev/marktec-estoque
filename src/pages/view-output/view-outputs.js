@@ -173,7 +173,7 @@ function verifyUrl() {
                         break;
                 }
             });
-            disable
+            disable()
         });
     }
 }
