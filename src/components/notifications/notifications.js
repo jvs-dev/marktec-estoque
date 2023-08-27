@@ -9,7 +9,7 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, onAuthStateChanged, sendPasswordResetEmail, signOut } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, doc, setDoc, onSnapshot, query, where, updateDoc } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, doc, setDoc, onSnapshot, query, where, updateDoc, getDocs } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
 const db = getFirestore(app);
 const auth = getAuth();
 let actualUserWork = ""
@@ -51,7 +51,7 @@ function loadData() {
                 if (doc.data().work == "Técnico") {
                     loadDayTecnicsNotfications(user.email)
                 }
-                if (doc.data().work == "Estoquista") {
+                if (doc.data().work == "Estoquista" || doc.data().work == "Administrador") {
                     loadDayStockNotfications()
                     notificationsFilter.addEventListener("input", () => {
                         notificationsCards.innerHTML = ""
@@ -61,9 +61,6 @@ function loadData() {
                             loadAllStockNotfications()
                         }
                     })
-                }
-                if (doc.data().work == "Administrador") {
-
                 }
             });
         }
@@ -103,133 +100,161 @@ function loadDayTecnicsNotfications(email) {
 
 
 
-function loadDayStockNotfications() {
+async function loadDayStockNotfications() {
     let timeElapsed = Date.now();
     let today = new Date(timeElapsed);
     let todayDate = today.toLocaleDateString()
     let totalNotifications = 0
     let q = query(collection(db, "transfers"), where("reciverEmail", "!=", ` `));
-    let unsubscribe = onSnapshot(q, (querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-            if (doc.data().date == todayDate) {
-                if (doc.data().status.toLowerCase() == "insuficiente") {
-                    totalNotifications++
-                    let article = document.createElement("article")
-                    notificationsCards.insertAdjacentElement("beforeend", article)
-                    article.classList.add("notifications__article")
-                    article.classList.add("article--notificationsCard")
-                    article.style.order = `-${doc.data().timestamp.seconds}`
-                    article.innerHTML = `
+    let querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+        if (doc.data().date == todayDate) {
+            if (doc.data().status.toLowerCase() == "insuficiente") {
+                totalNotifications++
+                let article = document.createElement("article")
+                notificationsCards.insertAdjacentElement("beforeend", article)
+                article.classList.add("notifications__article")
+                article.classList.add("article--notificationsCard")
+                article.style.order = `-${doc.data().timestamp.seconds}`
+                article.innerHTML = `
                     <p class="notificationsCard__title">Erro ao aceitar transferência.</p>
                     <p class="notificationsCard__description">${doc.data().senderName} não tinha items suficientes para completar a transferência para ${doc.data().reciverName}.</p>
                     <div class="notificationsCard__div">
                         <p class="notificationsCard__date">${doc.data().date} ás ${doc.data().hours}.</p>
                         <a href="view-transfer.html?id=${doc.id}" class="notificationsCard__a">Ver baixa<ion-icon name="arrow-forward-outline"></ion-icon></a>
                     </div>`
-                }
             }
-        })
+        }
         notificationsAlert.innerHTML = `${totalNotifications}`
     })
     let q2 = query(collection(db, "notifications"), where("type", "!=", ` `));
-    let unsubscribe2 = onSnapshot(q2, (querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-            if (doc.data().date == todayDate) {
-                if (doc.data().type.toLowerCase() == "discharge tentative") {
-                    totalNotifications++
-                    let article = document.createElement("article")
-                    notificationsCards.insertAdjacentElement("beforeend", article)
-                    article.classList.add("notifications__article")
-                    article.classList.add("article--notificationsCard")
-                    article.style.order = `-${doc.data().timestamp.seconds}`
-                    article.innerHTML = `
+    let querySnapshot2 = await getDocs(q2);
+    querySnapshot2.forEach((doc) => {
+        if (doc.data().date == todayDate) {
+            if (doc.data().type.toLowerCase() == "discharge tentative") {
+                totalNotifications++
+                let article = document.createElement("article")
+                notificationsCards.insertAdjacentElement("beforeend", article)
+                article.classList.add("notifications__article")
+                article.classList.add("article--notificationsCard")
+                article.style.order = `-${doc.data().timestamp.seconds}`
+                article.innerHTML = `
                     <p class="notificationsCard__title">Tentativa de baixa de item impedida.</p>
                     <p class="notificationsCard__description"><strong>${doc.data().userName}</strong> Tentou dar baixa em <strong>${doc.data().tentativeQuanty}</strong> ${doc.data().ItemTentative} sem ter esta quantia registrada em seu estoque.</p>
                     <div class="notificationsCard__div">
                         <p class="notificationsCard__date">${doc.data().date} ás ${doc.data().hours}.</p>
                         <a href="tecnics.html" class="notificationsCard__a">Ver estoque do técnico<ion-icon name="arrow-forward-outline"></ion-icon></a>
                     </div>`
-                }
-                if (doc.data().type.toLowerCase() == "transfer tentative") {
-                    totalNotifications++
-                    let article = document.createElement("article")
-                    notificationsCards.insertAdjacentElement("beforeend", article)
-                    article.classList.add("notifications__article")
-                    article.classList.add("article--notificationsCard")
-                    article.style.order = `-${doc.data().timestamp.seconds}`
-                    article.innerHTML = `
+            }
+            if (doc.data().type.toLowerCase() == "transfer tentative") {
+                totalNotifications++
+                let article = document.createElement("article")
+                notificationsCards.insertAdjacentElement("beforeend", article)
+                article.classList.add("notifications__article")
+                article.classList.add("article--notificationsCard")
+                article.style.order = `-${doc.data().timestamp.seconds}`
+                article.innerHTML = `
                     <p class="notificationsCard__title">Tentativa de transferência de item impedida.</p>
                     <p class="notificationsCard__description"><strong>${doc.data().userName}</strong> Tentou transferir <strong>${doc.data().tentativeQuanty}</strong> ${doc.data().ItemTentative} sem ter esta quantia registrada em seu estoque.</p>
                     <div class="notificationsCard__div">
                         <p class="notificationsCard__date">${doc.data().date} ás ${doc.data().hours}.</p>
                         <a href="tecnics.html" class="notificationsCard__a">Ver estoque do técnico<ion-icon name="arrow-forward-outline"></ion-icon></a>
                     </div>`
-                }
-                if (doc.data().type.toLowerCase() == "output tentative") {
-                    totalNotifications++
-                    let article = document.createElement("article")
-                    notificationsCards.insertAdjacentElement("beforeend", article)
-                    article.classList.add("notifications__article")
-                    article.classList.add("article--notificationsCard")
-                    article.style.order = `-${doc.data().timestamp.seconds}`
-                    article.innerHTML = `
+            }
+            if (doc.data().type.toLowerCase() == "output tentative") {
+                totalNotifications++
+                let article = document.createElement("article")
+                notificationsCards.insertAdjacentElement("beforeend", article)
+                article.classList.add("notifications__article")
+                article.classList.add("article--notificationsCard")
+                article.style.order = `-${doc.data().timestamp.seconds}`
+                article.innerHTML = `
                     <p class="notificationsCard__title">Tentativa de registro de saída de itens impedida.</p>
                     <p class="notificationsCard__description"><strong>${doc.data().userName}</strong> tentou registrar a saída de <strong>${doc.data().tentativeQuanty}</strong> ${doc.data().ItemTentative} sem ter esta quantia no estoque.</p>
                     <div class="notificationsCard__div">
                         <p class="notificationsCard__date">${doc.data().date} ás ${doc.data().hours}.</p>
                         <a href="stock.html" class="notificationsCard__a">Ver estoque<ion-icon name="arrow-forward-outline"></ion-icon></a>
                     </div>`
-                }
-                if (doc.data().type.toLowerCase() == "update item") {
-                    totalNotifications++
-                    let article = document.createElement("article")
-                    notificationsCards.insertAdjacentElement("beforeend", article)
-                    article.classList.add("notifications__article")
-                    article.classList.add("article--notificationsCard")
-                    article.style.order = `-${doc.data().timestamp.seconds}`
-                    article.innerHTML = `
+            }
+            if (doc.data().type.toLowerCase() == "update item") {
+                totalNotifications++
+                let article = document.createElement("article")
+                notificationsCards.insertAdjacentElement("beforeend", article)
+                article.classList.add("notifications__article")
+                article.classList.add("article--notificationsCard")
+                article.style.order = `-${doc.data().timestamp.seconds}`
+                article.innerHTML = `
                     <p class="notificationsCard__title">Dados de ${doc.data().ItemUpdated} atualizados.</p>
                     <p class="notificationsCard__description">${doc.data().userName} editou os dados de <strong>${doc.data().ItemUpdated}</strong>.</p>
                     <div class="notificationsCard__div">
                         <p class="notificationsCard__date">${doc.data().date} ás ${doc.data().hours}.</p>
                         <a href="stock.html?id=${doc.data().itemIdLink}" class="notificationsCard__a">Ver item<ion-icon name="arrow-forward-outline"></ion-icon></a>
                     </div>`
-                }
-                if (doc.data().type.toLowerCase() == "delete item") {
-                    totalNotifications++
-                    let article = document.createElement("article")
-                    notificationsCards.insertAdjacentElement("beforeend", article)
-                    article.classList.add("notifications__article")
-                    article.classList.add("article--notificationsCard")
-                    article.style.order = `-${doc.data().timestamp.seconds}`
-                    article.innerHTML = `
+            }
+            if (doc.data().type.toLowerCase() == "delete item") {
+                totalNotifications++
+                let article = document.createElement("article")
+                notificationsCards.insertAdjacentElement("beforeend", article)
+                article.classList.add("notifications__article")
+                article.classList.add("article--notificationsCard")
+                article.style.order = `-${doc.data().timestamp.seconds}`
+                article.innerHTML = `
                     <p class="notificationsCard__title">Item excluido do estoque.</p>
                     <p class="notificationsCard__description">${doc.data().userName} deletou o item <strong>${doc.data().ItemDeleted}</strong> do estoque.</p>
                     <div class="notificationsCard__div">
                         <p class="notificationsCard__date">${doc.data().date} ás ${doc.data().hours}.</p>
                         <a href="stock.html" class="notificationsCard__a">Ver estoque<ion-icon name="arrow-forward-outline"></ion-icon></a>
                     </div>`
-                }
-                if (doc.data().type.toLowerCase() == "item added") {
-                    totalNotifications++
-                    let article = document.createElement("article")
-                    notificationsCards.insertAdjacentElement("beforeend", article)
-                    article.classList.add("notifications__article")
-                    article.classList.add("article--notificationsCard")
-                    article.style.order = `-${doc.data().timestamp.seconds}`
-                    article.innerHTML = `
+            }
+            if (doc.data().type.toLowerCase() == "item added") {
+                totalNotifications++
+                let article = document.createElement("article")
+                notificationsCards.insertAdjacentElement("beforeend", article)
+                article.classList.add("notifications__article")
+                article.classList.add("article--notificationsCard")
+                article.style.order = `-${doc.data().timestamp.seconds}`
+                article.innerHTML = `
                     <p class="notificationsCard__title">Novo item adicionado ao estoque.</p>
                     <p class="notificationsCard__description">${doc.data().userName} adicionou o item <strong>${doc.data().ItemAdded}</strong> ao estoque.</p>
                     <div class="notificationsCard__div">
                         <p class="notificationsCard__date">${doc.data().date} ás ${doc.data().hours}.</p>
                         <a href="stock.html?id=${doc.data().ItemAdded}" class="notificationsCard__a">Ver item<ion-icon name="arrow-forward-outline"></ion-icon></a>
                     </div>`
-                }
             }
-        })
+            if (doc.data().type.toLowerCase() == "deleted account") {
+                totalNotifications++
+                let article = document.createElement("article")
+                notificationsCards.insertAdjacentElement("beforeend", article)
+                article.classList.add("notifications__article")
+                article.classList.add("article--notificationsCard")
+                article.style.order = `-${doc.data().timestamp.seconds}`
+                article.innerHTML = `
+                    <p class="notificationsCard__title">Conta de ${doc.data().deletedName} deletada.</p>
+                    <p class="notificationsCard__description">A conta de <strong>${doc.data().deletedName}</strong> foi deletada por <strong>${doc.data().userName}</strong>.</p>
+                    <div class="notificationsCard__div">
+                        <p class="notificationsCard__date">${doc.data().date} ás ${doc.data().hours}.</p>
+                        <a href="accept-user.html" class="notificationsCard__a">Ver usuários<ion-icon name="arrow-forward-outline"></ion-icon></a>
+                    </div>`
+            }
+            if (doc.data().type.toLowerCase() == "update accounthour") {
+                totalNotifications++
+                let article = document.createElement("article")
+                notificationsCards.insertAdjacentElement("beforeend", article)
+                article.classList.add("notifications__article")
+                article.classList.add("article--notificationsCard")
+                article.style.order = `-${doc.data().timestamp.seconds}`
+                article.innerHTML = `
+                    <p class="notificationsCard__title">Horário de uso de ${doc.data().updatedName} atualizado por ${doc.data().userName}.</p>
+                    <p class="notificationsCard__description">O horário de uso de <strong>${doc.data().updatedName}</strong> agora é das <strong>${doc.data().initTime} ás ${doc.data().finalTime}</strong>.</p>
+                    <div class="notificationsCard__div">
+                        <p class="notificationsCard__date">${doc.data().date} ás ${doc.data().hours}.</p>
+                        <a href="accept-user.html" class="notificationsCard__a">Ver usuários<ion-icon name="arrow-forward-outline"></ion-icon></a>
+                    </div>`
+            }
+        }
         notificationsAlert.innerHTML = `${totalNotifications}`
     })
-    let q3 = query(collection(db, "outputs"), where("recorderName", "!=", ` `));
+    let q3 = query(collection(db, "outputs"), where("recorderName", "!=", ` `));//trocar atualização em tempo real para receber dados uma vez
     let unsubscribe3 = onSnapshot(q3, (querySnapshot) => {
         querySnapshot.forEach((doc) => {
             if (doc.data().date == todayDate) {
@@ -394,6 +419,34 @@ function loadAllStockNotfications() {
                     <a href="stock.html?id=${doc.data().ItemAdded}" class="notificationsCard__a">Ver item<ion-icon name="arrow-forward-outline"></ion-icon></a>
                 </div>`
             }
+            if (doc.data().type.toLowerCase() == "deleted account") {
+                let article = document.createElement("article")
+                notificationsCards.insertAdjacentElement("beforeend", article)
+                article.classList.add("notifications__article")
+                article.classList.add("article--notificationsCard")
+                article.style.order = `-${doc.data().timestamp.seconds}`
+                article.innerHTML = `
+                <p class="notificationsCard__title">Conta de ${doc.data().deletedName} deletada.</p>
+                <p class="notificationsCard__description">A conta de <strong>${doc.data().deletedName}</strong> foi deletada por <strong>${doc.data().userName}</strong>.</p>
+                <div class="notificationsCard__div">
+                    <p class="notificationsCard__date">${doc.data().date} ás ${doc.data().hours}.</p>
+                    <a href="accept-user.html" class="notificationsCard__a">Ver usuários<ion-icon name="arrow-forward-outline"></ion-icon></a>
+                </div>`
+            }
+            if (doc.data().type.toLowerCase() == "update accounthour") {
+                let article = document.createElement("article")
+                notificationsCards.insertAdjacentElement("beforeend", article)
+                article.classList.add("notifications__article")
+                article.classList.add("article--notificationsCard")
+                article.style.order = `-${doc.data().timestamp.seconds}`
+                article.innerHTML = `
+                <p class="notificationsCard__title">Horário de uso de ${doc.data().updatedName} atualizado por ${doc.data().userName}.</p>
+                <p class="notificationsCard__description">O horário de uso de <strong>${doc.data().updatedName}</strong> agora é das <strong>${doc.data().initTime} ás ${doc.data().finalTime}</strong>.</p>
+                <div class="notificationsCard__div">
+                    <p class="notificationsCard__date">${doc.data().date} ás ${doc.data().hours}.</p>
+                    <a href="accept-user.html" class="notificationsCard__a">Ver usuários<ion-icon name="arrow-forward-outline"></ion-icon></a>
+                </div>`
+            }
         })
     })
     let q3 = query(collection(db, "outputs"), where("recorderName", "!=", ` `));
@@ -431,6 +484,24 @@ function loadAllStockNotfications() {
         })
     })
 }
+
+
+
+
+const q = query(collection(db, "notifications"), where("type", "!=", ""));
+const unsubscribe = onSnapshot(q, (snapshot) => {
+    snapshot.docChanges().forEach((change) => {
+        if (change.type === "added") {
+            notificationsCards.innerHTML = ""
+        }
+        if (change.type === "modified") {
+            notificationsCards.innerHTML = ""
+        }
+        if (change.type === "removed") {
+            notificationsCards.innerHTML = ""
+        }
+    });
+});
 
 
 

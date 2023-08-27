@@ -42,6 +42,10 @@ onAuthStateChanged(auth, (user) => {
                     let horarioInicio = Number(doc.data().initTime.replace(":", ""));
                     let horarioFim = Number(doc.data().finalTime.replace(":", ""));
                     if (horarioAtualNumerico >= horarioInicio && horarioAtualNumerico <= horarioFim) {
+                        let body = document.querySelector("body")
+                        if (body.classList.contains("expiredTime")) {
+                            window.location.href = "index.html"
+                        }
                     } else {
                         let body = document.querySelector("body")
                         body.style.display = "flex"
@@ -72,6 +76,10 @@ onAuthStateChanged(auth, (user) => {
                                     </div>
                                 </div>
                             </div>`
+                        let timeExpiredBtn = document.querySelector(".timeExpiredBtn")
+                        timeExpiredBtn.onclick = function () {
+                            window.location.href = "login-signin.html"
+                        }
                     }
                 }
                 closeApp()
@@ -86,7 +94,7 @@ onAuthStateChanged(auth, (user) => {
                     if (horarioAtualNumerico >= horarioInicio && horarioAtualNumerico <= horarioFim) {
                         let body = document.querySelector("body")
                         if (body.classList.contains("expiredTime")) {
-                            window.location.href="index.html"
+                            window.location.href = "index.html"
                         }
                     } else {
                         let body = document.querySelector("body")
@@ -118,6 +126,10 @@ onAuthStateChanged(auth, (user) => {
                                         </div>
                                     </div>
                                 </div>`
+                            let timeExpiredBtn = document.querySelector(".timeExpiredBtn")
+                            timeExpiredBtn.onclick = function () {
+                                window.location.href = "login-signin.html"
+                            }
                         }
                     }
                 }, 20000);

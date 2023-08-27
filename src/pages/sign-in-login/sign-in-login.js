@@ -11,7 +11,7 @@ const app = initializeApp(firebaseConfig);
 
 
 import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, signInWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, doc, setDoc, onSnapshot, getDoc, updateDoc, deleteField } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, doc, setDoc, deleteDoc, onSnapshot, getDoc, updateDoc, deleteField } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
 const db = getFirestore(app);
 
 
@@ -124,9 +124,17 @@ async function verifyAccountData(email, password) {
     let docRef = doc(db, "users", `${email}`);
     let docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
-        if (password == docSnap.data().temporaryPassword) {
-            deleteTemporaryPassword(email, password)
+        if (docSnap.data().deletedAccount != true) {
+            if (password == docSnap.data().temporaryPassword) {
+                deleteTemporaryPassword(email, password)
+            } else {
+                helpLogin.style.color = "red"
+                helpLogin.textContent = "Erro ao fazer login, verifique seus dados e tente novamente."
+                login.innerHTML = `ENTRAR`
+                login.classList.remove("loading")
+            }
         } else {
+            await deleteDoc(doc(db, "users", `${email}`));
             helpLogin.style.color = "red"
             helpLogin.textContent = "Erro ao fazer login, verifique seus dados e tente novamente."
             login.innerHTML = `ENTRAR`

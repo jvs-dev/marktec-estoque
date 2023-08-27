@@ -91,6 +91,48 @@
                 <div class="nav__line"></div>
             </nav>
             <section id="signin_section">
+
+
+                <section class="main__DeleteUser" id="deleteUserSecion">
+                    <article class="DeleteUser__article">
+                        <h3 class="DeleteUser__title">Deletar usuário</h3>
+                        <p class="DeleteUser__p" id="deleteUserText"></p>
+                        <p class="DeleteUser__alert" id="deleteUserAlert"></p>
+                        <div class="DeleteUser__div">
+                            <button class="DeleteUser__btn" id="deleteUserCancel">Cancelar</button>
+                            <button class="DeleteUser__btn" id="deleteUserConfirm">Confirmar</button>
+                        </div>
+                    </article>
+                </section>
+
+                <section class="main__editUserTime" id="editUserTimeSecion">
+                    <form class="editUserTime__form" action="">
+                        <div class="section__divTime" id="divEditTime">
+                            <p class="setTime__p">Défina o horário que este usuário poderá acessar a conta.</p>
+                            <div class="setTime__div">
+                                Inicio da sessão: <div class="section__div">
+                                    <i class="bi bi-hourglass-top section__icon"></i>
+                                    <input type="time" placeholder="horario de acesso" class="section__input" id="editInitTime">
+                                </div>
+                            </div>
+                            <div class="setTime__div">
+                                fim da sessão:
+                                <div class="section__div">
+                                    <i class="bi bi-hourglass-bottom section__icon"></i>
+                                    <input type="time" placeholder="horario de acesso" class="section__input"
+                                        id="editFinalTime">
+                                </div>
+                            </div>
+                        </div>
+                        <p id="editUserTimeAlert">Préencha todos os campos para continuar.</p>
+                        <div class="editUserTime__divBtns">
+                            <button type="button" class="editUserTime__btn" id="confirmEditUserTime">Confirmar</button>
+                            <button type="button" class="editUserTime__btn" id="cancelEditUserTime">Cancelar</button>
+                        </div>
+                    </form>
+                </section>
+
+
                 <form action="" class="section__form">
                     <h2 class="section__title">Criar conta</h2>
                     <p class="section__p">Preencha os campos com as informações do funcionário</p>
@@ -128,7 +170,8 @@
                             fim da sessão:
                             <div class="section__div">
                                 <i class="bi bi-hourglass-bottom section__icon"></i>
-                                <input type="time" placeholder="horario de acesso" class="section__input" id="finalTime">
+                                <input type="time" placeholder="horario de acesso" class="section__input"
+                                    id="finalTime">
                             </div>
                         </div>
                     </div>
@@ -160,6 +203,10 @@
                     <p class="section__help" id="helpSignin"></p>
                     <button type="button" class="section__button" id="createAccount">Criar conta</button>
                 </form>
+                <h2 class="viewAddedUsers__h2">Usuários cadastrados</h2>
+                <section id="viewAddedUsers">
+                    
+                </section>
             </section>
         </section>
     </main>
@@ -178,6 +225,7 @@
     <script type="module" src="src/pages/accept-user/accept-user.js"></script>
     <script type="module" src="src/components/navBar/nav.js"></script>
     <script type="module" src="src/components/navMobile/navMobile.js"></script>
+    <script type="module" src="src/script/deleteUser.js"></script>
 </body>
 
 </html>
