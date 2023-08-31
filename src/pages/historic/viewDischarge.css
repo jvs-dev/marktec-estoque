@@ -412,11 +412,18 @@
     }
     #generatePDF {
         font-size: 18px;
+        margin-top: 20px;
     }
     .viewDischargeSection__spanDate {
         width: auto;
         display: block;
         text-align: center;
         color: #f00;
+    }
+    .viewDischargeSection__editBtn {
+        margin: 20px 20px 0px 0px;
+    }
+    .viewDischargeSection__allTotal {
+        font-size: 25px;
     }
 }

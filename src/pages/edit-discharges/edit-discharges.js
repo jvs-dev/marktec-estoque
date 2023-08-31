@@ -475,7 +475,7 @@ dischargeItems.onclick = function () {
                        })
                 } else {
                     let dischargeItemsAlert = document.getElementById("dischargeItemsAlert")
-                    dischargeItems.innerHTML = `Fazer relatório`
+                    dischargeItems.innerHTML = `EDITAR RELATÓRIO`
                     dischargeItems.classList.remove("loading")
                     dischargeItemsAlert.textContent = "Preencha todos os campos e selecione um item para fazer o relatório"
                     dischargeItemsAlert.style.color = "#f00"
