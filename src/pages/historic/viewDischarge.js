@@ -14,6 +14,7 @@ const db = getFirestore(app);
 const auth = getAuth();
 let actualUser = ""
 let actualUserWork = ""
+let actualUserEmail = ""
 let closeErrorPopUp2 = document.getElementById("closeErrorPopUp2")
 
 
@@ -24,6 +25,7 @@ function loadData() {
             let unsub = onSnapshot(doc(db, "users", `${user.email}`), (doc) => {
                 actualUser = doc.data().fullName
                 actualUserWork = doc.data().work
+                actualUserEmail = user.email
             })
             verifyItemUrl()
         }
@@ -75,6 +77,24 @@ function verifyUrl() {
     let dataId = urlParams.get('id');
     if (dataId != null) {
         let unsub = onSnapshot(doc(db, "discharges", `${dataId}`), (doc) => {
+            let timeElapsed = Date.now();
+            let today = new Date(timeElapsed);
+            let date = today.toLocaleDateString()
+            let dataAtual = new Date();
+            let hora = dataAtual.getHours();
+            let minutos = dataAtual.getMinutes();
+            let horaFormatada = hora < 10 ? '0' + hora : hora;
+            let minutosFormatados = minutos < 10 ? '0' + minutos : minutos;
+            let hours = horaFormatada + ":" + minutosFormatados
+            let tecnicName = doc.data().tecnicName
+            let clientName = doc.data().clientName
+            let dischargeDate = doc.data().date
+            let dischargeHour = doc.data().hours
+            let service = doc.data().service
+            let location = doc.data().location
+            let description = doc.data().description
+            let itemsUsedList = ""
+            let reqId = doc.id
             viewDischargeSection.style.display = "flex"
             viewDischargeSection.innerHTML = `
             <div class="squares">
@@ -83,10 +103,11 @@ function verifyUrl() {
                 <div class="square--3"></div>
             </div>
             <div class="content">
+                ${actualUserWork == "Técnico" && actualUser == doc.data().tecnicName && date == doc.data().date && doc.data().edited != true ? `<button class="viewDischargeSection__editBtn" id="editDischargeBtn"><i class="bi bi-pencil"></i></button>` : ``}
                 <h2 class="viewDischargeSection__h2">Nota fiscal</h2>
-                <p class="viewDischargeSection__tecnic">técnico: ${doc.data().tecnicName}.</p>
+                <p class="viewDischargeSection__tecnic">técnico: ${doc.data().tecnicName}.${doc.data().edited == true ? `<br><span style="color: #f00">(editado)</span>` : ""}</p>
                 <div class="viewDischargeSection__div--1">
-                    <span class="viewDischargeSection__date">Data: ${doc.data().date} ás ${doc.data().hours}</span>
+                    <span class="viewDischargeSection__date">Data: ${doc.data().date} ás ${doc.data().hours} ${doc.data().edited == true ? `<br><span class="viewDischargeSection__spanDate">editado ás ${doc.data().editHours}</span>` : ""}</span>
                     <span class="viewDischargeSection__client">${doc.data().service} de ${doc.data().clientName}.</span>
                 </div>
                 <header class="viewDischargeSection__header">
@@ -111,24 +132,12 @@ function verifyUrl() {
                     name="arrow-back-outline"></ion-icon>Voltar</a>
             <p class="viewDischargeSection__copyright">©Marktec telecom</p>`
             let generatePDF = document.getElementById("generatePDF")
-            let timeElapsed = Date.now();
-            let today = new Date(timeElapsed);
-            let date = today.toLocaleDateString()
-            let dataAtual = new Date();
-            let hora = dataAtual.getHours();
-            let minutos = dataAtual.getMinutes();
-            let horaFormatada = hora < 10 ? '0' + hora : hora;
-            let minutosFormatados = minutos < 10 ? '0' + minutos : minutos;
-            let hours = horaFormatada + ":" + minutosFormatados
-            let tecnicName = doc.data().tecnicName
-            let clientName = doc.data().clientName
-            let dischargeDate = doc.data().date
-            let dischargeHour = doc.data().hours
-            let service = doc.data().service
-            let location = doc.data().location
-            let description = doc.data().description
-            let itemsUsedList = ""
-            let reqId = doc.id
+            if (actualUserWork == "Técnico" && actualUser == doc.data().tecnicName && date == doc.data().date && doc.data().edited != true) {
+                let editDischargeBtn = document.getElementById("editDischargeBtn")
+                editDischargeBtn.onclick = function () {
+                    window.location.href = "edit-discharge.html?id=" + doc.id;
+                }   
+            }
             function returnList() {
                 Object.keys(doc.data().itemsUsed).forEach(element => {
                     itemsUsedList = `${itemsUsedList}<li>${doc.data().itemsUsed[element].used} ${doc.data().itemsUsed[element].measure} - ${doc.data().itemsUsed[element].name}.</li>`

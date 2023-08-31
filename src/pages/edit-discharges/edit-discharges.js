@@ -15,8 +15,6 @@ const auth = getAuth();
 let closeSectionSelectDischarge = document.getElementById("closeSectionSelectDischarge")
 let sectionSelectDischarge = document.getElementById("sectionSelectDischarge")
 let addUsedItems = document.getElementById("addUsedItems")
-let closeDischargeSection = document.getElementById("closeDischargeSection")
-let usedButton = document.getElementById("usedButton")
 let dischargeItems = document.getElementById("dischargeItems")
 let actualUser = ""
 let itemsSelecteds = {}
@@ -24,6 +22,7 @@ let tecnicName = ""
 let actualUserName = ""
 let actualUserEmail = ""
 let actualUserWork = ""
+let dischargeId = ""
 
 function loadData() {
     let SectionItemsCards = document.getElementById("SectionItemsCards")
@@ -33,37 +32,86 @@ function loadData() {
             const uid = user.uid;
             actualUser = user.email
             let usersdocref = onSnapshot(doc(db, `users`, `${user.email}`), (doc) => {
+                let dischargeSection = document.getElementById("dischargeSection")
+                dischargeSection.style.display = "flex"
                 tecnicName = doc.data().fullName
                 actualUserName = doc.data().fullName
                 actualUserEmail = doc.data().email
                 actualUserWork = doc.data().work
-                if (doc.data().admin == true) {
-                    transfer.style.display = "none"
-                    acceptUser.style.display = "flex"
-                    addItem.style.display = "flex"
-                } else {
-                    transfer.style.display = "flex"
-                    acceptUser.style.display = "none"
-                    addItem.style.display = "none"
-                }
-                loadStock(user.email)
-                let dischargeSearchInput = document.getElementById("dischargeSearchInput")
-                dischargeSearchInput.addEventListener("input", (evt) => {
-                    if (evt.target.value != "") {
-                        let SectionItemsCardsSend = document.getElementById("SectionItemsCards")
-                        SectionItemsCardsSend.innerHTML = ""
-                        searchItem(user.email, doc.data().work, evt.target.value)
-                    } else {
-                        let SectionItemsCardsSend = document.getElementById("SectionItemsCards")
-                        SectionItemsCardsSend.innerHTML = ""
-                        loadStock(user.email, doc.data().work)
-                    }
-                })
+                verifyParams(actualUserWork, actualUserName, actualUserEmail)
             });
         }
     });
 }
 
+async function verifyParams(work, userName, actualUserEmail) {
+    let timeElapsed = Date.now();
+    let today = new Date(timeElapsed);
+    let actualDate = today.toLocaleDateString()
+    let urlParams = new URLSearchParams(window.location.search);
+    let dataId = urlParams.get('id');
+    if (dataId != null) {
+        let docRef = doc(db, "discharges", `${dataId}`);
+        let docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            if (work == "Técnico" && userName == docSnap.data().tecnicName && actualDate == docSnap.data().date && docSnap.data().edited != true) {
+                dischargeId = dataId
+                let description = document.getElementById("description")
+                let service = document.getElementById("service")
+                let location = document.getElementById("location")
+                let clientName = document.getElementById("clientName")
+                description.value = docSnap.data().description
+                service.value = docSnap.data().service
+                location.value = docSnap.data().location
+                clientName.value = docSnap.data().clientName
+                disable()
+                loadStock(actualUserEmail)
+                let dischargeSearchInput = document.getElementById("dischargeSearchInput")
+                dischargeSearchInput.addEventListener("input", (evt) => {
+                    if (evt.target.value != "") {
+                        let SectionItemsCardsSend = document.getElementById("SectionItemsCards")
+                        SectionItemsCardsSend.innerHTML = ""
+                        searchItem(actualUserEmail, work, evt.target.value)
+                    } else {
+                        let SectionItemsCardsSend = document.getElementById("SectionItemsCards")
+                        SectionItemsCardsSend.innerHTML = ""
+                        loadStock(actualUserEmail, work)
+                    }
+                })
+            } else {
+                let body = document.querySelector("body")
+                body.innerHTML = ""
+                window.location.href = "index.html"
+            }
+        } else {
+            let body = document.querySelector("body")
+            body.innerHTML = ""
+            window.location.href = "index.html"
+        }
+    }
+}
+
+
+async function verifyItemStock(usedQuantyInput, tecnicStock, itemName) {
+    let docRef = doc(db, "discharges", `${dischargeId}`);
+    let docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+        if (docSnap.data().itemsUsed[itemName] != undefined) {
+            let total = Number(docSnap.data().itemsUsed[itemName].used) + Number(tecnicStock)
+            if (Number(usedQuantyInput) <= Number(total)) {
+                return true
+            } else {
+                return false
+            }
+        } else {
+            if (Number(usedQuantyInput) <= Number(tecnicStock)) {
+                return true
+            } else {
+                return false
+            }
+        }
+    }
+}
 
 async function loadStock(email) {
     let backI = 1
@@ -105,36 +153,39 @@ async function loadStock(email) {
                 let usedQuantyInput = document.getElementById("usedQuantyInput").value
                 if (usedQuantyInput != "" && usedQuantyInput != 0) {
                     if (doc.data().measure == "Unidades" && parseInt(usedQuantyInput) == parseFloat(usedQuantyInput)) {
-                        if (Number(usedQuantyInput) <= Number(doc.data().tecnicStock)) {
-                            let name = doc.data().itemName;
-                            itemsSelecteds[name] = { used: Number(usedQuantyInput), name: doc.data().itemName, measure: doc.data().measure, img: doc.data().itemImg, value: doc.data().itemValue };
-                            let clearInput = document.getElementById("usedQuantyInput")
-                            clearInput.value = ""
-                            editQuanty.style.display = "none"
-                            article.classList.add(`background--${backI}`)
-                            if (backI == 2) {
-                                backI = 1
-                            } else {
-                                backI = 2
-                            }
-                            article.innerHTML = `
+                        verifyItemStock(usedQuantyInput, doc.data().tecnicStock, doc.data().itemName).then(
+                            function (result) {
+                                if (result == true) {
+                                    let name = doc.data().itemName;
+                                    itemsSelecteds[name] = { used: Number(usedQuantyInput), name: doc.data().itemName, measure: doc.data().measure, img: doc.data().itemImg, value: doc.data().itemValue };
+                                    let clearInput = document.getElementById("usedQuantyInput")
+                                    clearInput.value = ""
+                                    editQuanty.style.display = "none"
+                                    article.classList.add(`background--${backI}`)
+                                    if (backI == 2) {
+                                        backI = 1
+                                    } else {
+                                        backI = 2
+                                    }
+                                    article.innerHTML = `
                                 <img src="${doc.data().itemImg}" alt="" class="discharge__img">
                                 <div class="discharge__div">
                                     <p class="discharge__name">${doc.data().itemName}</p>
                                     <p class="discharge__used">Usou: ${itemsSelecteds[doc.data().itemName] == undefined ? "0" : itemsSelecteds[doc.data().itemName].used} ${doc.data().measure}</p>
                                 </div>`
-                            if (itemsSelecteds[doc.data().itemName].used != 0) {
-                                article.classList.add("used")
-                                addToForm(email, itemsSelecteds)
-                            }
-                        } else {
-                            let editUsedQuantyAlert = document.getElementById("editUsedQuantyAlert")
-                            editUsedQuantyAlert.textContent = "Quantia em estoque insuficiente"
-                            dischargeTentateive(doc.data().itemName, Number(usedQuantyInput))
-                            setTimeout(() => {
-                                editUsedQuantyAlert.textContent = ""
-                            }, 5000);
-                        }
+                                    if (itemsSelecteds[doc.data().itemName].used != 0) {
+                                        article.classList.add("used")
+                                        addToForm(email, itemsSelecteds)
+                                    }
+                                } else {
+                                    let editUsedQuantyAlert = document.getElementById("editUsedQuantyAlert")
+                                    editUsedQuantyAlert.textContent = "Quantia em estoque insuficiente"
+                                    dischargeTentateive(doc.data().itemName, Number(usedQuantyInput))
+                                    setTimeout(() => {
+                                        editUsedQuantyAlert.textContent = ""
+                                    }, 5000);
+                                }
+                            });
                     } else {
                         let editUsedQuantyAlert = document.getElementById("editUsedQuantyAlert")
                         editUsedQuantyAlert.textContent = "Digite um valor inteiro para unidades"
@@ -143,37 +194,39 @@ async function loadStock(email) {
                         }, 5000);
                     }
                     if (doc.data().measure != "Unidades") {
-                        if (Number(usedQuantyInput) <= Number(doc.data().tecnicStock)) {
-                            let name = doc.data().itemName;
-                            itemsSelecteds[name] = { used: Number(usedQuantyInput), name: doc.data().itemName, measure: doc.data().measure, img: doc.data().itemImg, value: doc.data().itemValue };
-
-                            let clearInput = document.getElementById("usedQuantyInput")
-                            clearInput.value = ""
-                            editQuanty.style.display = "none"
-                            article.classList.add(`background--${backI}`)
-                            if (backI == 2) {
-                                backI = 1
-                            } else {
-                                backI = 2
-                            }
-                            article.innerHTML = `
+                        verifyItemStock(usedQuantyInput, doc.data().tecnicStock, doc.data().itemName).then(
+                            function (result) {
+                                if (result == true) {
+                                    let name = doc.data().itemName;
+                                    itemsSelecteds[name] = { used: Number(usedQuantyInput), name: doc.data().itemName, measure: doc.data().measure, img: doc.data().itemImg, value: doc.data().itemValue };
+                                    let clearInput = document.getElementById("usedQuantyInput")
+                                    clearInput.value = ""
+                                    editQuanty.style.display = "none"
+                                    article.classList.add(`background--${backI}`)
+                                    if (backI == 2) {
+                                        backI = 1
+                                    } else {
+                                        backI = 2
+                                    }
+                                    article.innerHTML = `
                                 <img src="${doc.data().itemImg}" alt="" class="discharge__img">
                                 <div class="discharge__div">
                                     <p class="discharge__name">${doc.data().itemName}</p>
                                     <p class="discharge__used">Usou: ${itemsSelecteds[doc.data().itemName] == undefined ? "0" : itemsSelecteds[doc.data().itemName].used} ${doc.data().measure}</p>
                                 </div>`
-                            if (itemsSelecteds[doc.data().itemName].used != 0) {
-                                article.classList.add("used")
-                                addToForm(email, itemsSelecteds)
-                            }
-                        } else {
-                            let editUsedQuantyAlert = document.getElementById("editUsedQuantyAlert")
-                            editUsedQuantyAlert.textContent = "Quantia em estoque insuficiente"
-                            dischargeTentateive(doc.data().itemName, Number(usedQuantyInput))
-                            setTimeout(() => {
-                                editUsedQuantyAlert.textContent = ""
-                            }, 5000);
-                        }
+                                    if (itemsSelecteds[doc.data().itemName].used != 0) {
+                                        article.classList.add("used")
+                                        addToForm(email, itemsSelecteds)
+                                    }
+                                } else {
+                                    let editUsedQuantyAlert = document.getElementById("editUsedQuantyAlert")
+                                    editUsedQuantyAlert.textContent = "Quantia em estoque insuficiente"
+                                    dischargeTentateive(doc.data().itemName, Number(usedQuantyInput))
+                                    setTimeout(() => {
+                                        editUsedQuantyAlert.textContent = ""
+                                    }, 5000);
+                                }
+                            });
                     }
                 } else {
                     let editUsedQuantyAlert = document.getElementById("editUsedQuantyAlert")
@@ -319,14 +372,6 @@ addUsedItems.onclick = function () {
     SectionItemsCards.innerHTML = ""
     loadData()
 }
-closeDischargeSection.onclick = function () {
-    let dischargeSection = document.getElementById("dischargeSection")
-    dischargeSection.style.display = "none"
-}
-usedButton.onclick = function () {
-    let dischargeSection = document.getElementById("dischargeSection")
-    dischargeSection.style.display = "flex"
-}
 
 async function addToForm(email, object) {
     let dischargeSelectedSection = document.getElementById("dischargeSelectedSection")
@@ -366,7 +411,43 @@ async function addToForm(email, object) {
 }
 
 
-loadData()
+async function verifyUrl() {
+    let timeElapsed = Date.now();
+    let today = new Date(timeElapsed);
+    let date = today.toLocaleDateString()
+    let urlParams = new URLSearchParams(window.location.search);
+    let dataId = urlParams.get('id');
+    if (dataId != null) {
+        let docRef = doc(db, "discharges", `${dataId}`);
+        let docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            loadData()
+        } else {
+            let body = document.querySelector("body")
+            body.innerHTML = ""
+            window.location.href = "index.html"
+        }
+    }
+}
+
+async function lastVerify() {
+    let timeElapsed = Date.now();
+    let today = new Date(timeElapsed);
+    let actualDate = today.toLocaleDateString()
+    let urlParams = new URLSearchParams(window.location.search);
+    let dataId = urlParams.get('id');
+    if (dataId != null) {
+        let docRef = doc(db, "discharges", `${dataId}`);
+        let docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            if (actualUserWork == "Técnico" && actualUserName == docSnap.data().tecnicName && actualDate == docSnap.data().date && docSnap.data().edited != true) {
+                return true
+            } else {
+                return false
+            }
+        }
+    }
+}
 
 dischargeItems.onclick = function () {
     dischargeItems.innerHTML = `
@@ -381,23 +462,56 @@ dischargeItems.onclick = function () {
             <div class="dot-spinner__dot"></div>
         </div>`
     dischargeItems.classList.add("loading")
-    let description = document.getElementById("description").value
-    let service = document.getElementById("service").value
-    let location = document.getElementById("location").value
-    let clientName = document.getElementById("clientName").value
-    if (description != "" && service != "" && location != "" && clientName != "" && Object.keys(itemsSelecteds).length != 0) {
-        setUsedItems()
-    } else {
-        let dischargeItemsAlert = document.getElementById("dischargeItemsAlert")
-        dischargeItems.innerHTML = `Fazer relatório`
-        dischargeItems.classList.remove("loading")
-        dischargeItemsAlert.textContent = "Preencha todos os campos e selecione um item para fazer o relatório"
-        dischargeItemsAlert.style.color = "#f00"
-        setTimeout(() => {
-            dischargeItemsAlert.textContent = ""
-        }, 5000);
+    lastVerify().then(
+        function (result) {
+            if (result == true) {
+                let description = document.getElementById("description").value
+                let service = document.getElementById("service").value
+                let location = document.getElementById("location").value
+                let clientName = document.getElementById("clientName").value
+                if (description != "" && service != "" && location != "" && clientName != "" && Object.keys(itemsSelecteds).length != 0) {
+                    restockItems().then(function(valor) {
+                        setUsedItems()
+                       })
+                } else {
+                    let dischargeItemsAlert = document.getElementById("dischargeItemsAlert")
+                    dischargeItems.innerHTML = `Fazer relatório`
+                    dischargeItems.classList.remove("loading")
+                    dischargeItemsAlert.textContent = "Preencha todos os campos e selecione um item para fazer o relatório"
+                    dischargeItemsAlert.style.color = "#f00"
+                    setTimeout(() => {
+                        dischargeItemsAlert.textContent = ""
+                    }, 5000);
+                }
+            } else {
+                let body = document.querySelector("body")
+                body.innerHTML = ""
+                window.location.href = "index.html"
+            }
+        })
+}
+
+
+async function restockItems() {
+    let docRef = doc(db, "discharges", `${dischargeId}`);
+    let docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+        Object.keys(docSnap.data().itemsUsed).forEach(item => {
+            additem(docSnap.data().itemsUsed[item].name, docSnap.data().itemsUsed[item].used)
+        });
+    }
+    async function additem(itemName, used) {
+        let washingtonRef = doc(db, "tecnics", `${actualUser}`, "stock", `${itemName}`);
+        await updateDoc(washingtonRef, {
+            tecnicStock: increment(used)
+        });
+        let itemRef = doc(db, "items", `${itemName}`);
+        await updateDoc(itemRef, {
+            withTecnics: increment(used)
+        });
     }
 }
+
 
 async function setUsedItems() {
     let SectionItemsCards = document.getElementById("SectionItemsCards")
@@ -415,21 +529,30 @@ async function setUsedItems() {
     let horaFormatada = hora < 10 ? '0' + hora : hora;
     let minutosFormatados = minutos < 10 ? '0' + minutos : minutos;
     let hours = horaFormatada + ":" + minutosFormatados
-    let docRef = await addDoc(collection(db, "discharges"), {
+    let washingtonRef = doc(db, "discharges", `${dischargeId}`);
+    await updateDoc(washingtonRef, {
         service: service,
         clientName: clientName,
-        tecnicName: tecnicName,
         location: location,
         description: description,
         itemsUsed: itemsSelecteds,
-        date: date,
+        edited: true,
+        editHours: hours
+    });
+    let docRef = await addDoc(collection(db, "notifications"), {
+        type: "discharge edited",
         hours: hours,
+        date: date,
+        userName: actualUserName,
+        userEmail: actualUserEmail,
+        userWork: actualUserWork,
         timestamp: serverTimestamp()
     });
     Object.keys(itemsSelecteds).forEach(element => {
         removeTecnicItems(itemsSelecteds[element].name, itemsSelecteds[element].used)
         SectionItemsCards.innerHTML = ""
     });
+    itemsSelecteds = {}
 }
 
 async function removeTecnicItems(name, used) {
@@ -457,13 +580,12 @@ function clearInputs() {
     dischargeSelectedSection.innerHTML = ""
     SectionItemsCards.innerHTML = ""
     loadData()
-    dischargeItems.innerHTML = `Fazer relatório`
-    dischargeItems.classList.remove("loading")
-    dischargeItemsAlert.textContent = "Relatório feito com sucesso"
+    dischargeItemsAlert.textContent = "Relatório editado com sucesso"
     dischargeItemsAlert.style.color = "#0f0"
     setTimeout(() => {
         dischargeItemsAlert.textContent = ""
-    }, 5000);
+        window.location.href="index.html"
+    }, 2000);
 }
 
 
@@ -489,3 +611,17 @@ async function dischargeTentateive(itemName, itemQuanty) {
         timestamp: serverTimestamp()
     });
 }
+
+
+function disable() {
+    setTimeout(() => {
+        let offline_window = document.getElementById("main__offline")
+        offline_window.style.transition = "0.5s"
+        offline_window.style.opacity = "0"
+        setTimeout(() => {
+            offline_window.style.display = "none"
+        }, 500);
+    }, 1000);
+}
+
+verifyUrl()

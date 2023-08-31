@@ -285,6 +285,43 @@
     background: #fff;
 }
 
+
+.viewDischargeSection__editBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--green);
+    color: var(--white);
+    border: solid 2px transparent;
+    outline-width: 0px;
+    position: absolute;
+    margin: 40px 40px 0px 0px;
+    top: 0;
+    right: 0;
+    border-radius: 100%;
+    padding: 0px;
+    height: 40px;
+    aspect-ratio: 1/1;
+    font-size: 20px;
+    box-shadow: 0px 2px 10px #0000003a;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.viewDischargeSection__editBtn:hover {
+    transform: scale(1.10);
+    color: var(--green);
+    background: transparent;
+    border: solid 2px var(--green);
+}
+
+.viewDischargeSection__spanDate {
+    width: 100%;
+    display: flex;
+    text-align: left;
+    color: #f00;
+}
+
 @media only screen and (max-width: 500px) {
     .squares {
         display: none;
@@ -375,5 +412,11 @@
     }
     #generatePDF {
         font-size: 18px;
+    }
+    .viewDischargeSection__spanDate {
+        width: auto;
+        display: block;
+        text-align: center;
+        color: #f00;
     }
 }

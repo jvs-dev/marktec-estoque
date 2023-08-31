@@ -1,0 +1,35 @@
+.discharge__backBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 40px 0px 0px 40px;
+    text-decoration: none;
+    color: var(--black);
+    font-size: 20px;
+    border-bottom: solid 1px transparent;
+    transition: 0.2s;
+}
+.discharge__backBtn ion-icon {
+    margin-right: 3px;
+}
+.discharge__backBtn:hover {
+    color: var(--orange);
+}
+.discharge__backBtn:hover ion-icon {
+    animation: movement 0.8s ease infinite;
+}
+
+@keyframes movement {
+    0% {
+        transform: translateX(0px);
+    }
+    50% {
+        transform: translateX(-5px);
+    }
+    100% {
+        transform: translateX(0px);
+    }
+}
